@@ -1,55 +1,53 @@
 package com.example.spinit;
 
-import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
-import android.widget.Button;
-import android.widget.EditText;
 import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+//import com.example.spinit.ui.login.LoginActivity;
 
 public class MainActivity extends AppCompatActivity {
 
-    private EditText Name;
-    private EditText Password;
-    //private TextView info;
-    private Button Login;
+    ImageView rotateImage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-       //View nameView = inflater(R.layout.activity_main);
-
-        //holds login name and pw
-        Name = findViewById(R.id.editName);
-        Password = findViewById(R.id.editPassword);
-        Login = findViewById(R.id.loginButton);
-
-        Login.setOnClickListener(new View.OnClickListener()
-        {
-
+    }
+    public void firstStart(View view){
+        rotateImage = (ImageView)findViewById(R.id.rotate_img);
+        Animation startRotateAnimation = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.android_rotate_animation);
+        rotateImage.startAnimation(startRotateAnimation);
+        long delayMillis=1800;
+        new Handler().postDelayed(new Runnable() {
             @Override
-            public void onClick(View view)
-            {
-                validate(Name.getText().toString(), Password.getText().toString());
+            public void run() {
+                Intent  intent=new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent);
             }
-        });
+        }, delayMillis);
 
     }
-
-    private void validate(String userName, String userPW)//validate login
-    {
-        if(userName.equals("Erdi") && userPW.equals("badnews"))
-        {
-            Intent goToDash = new Intent(MainActivity.this, DashBoard.class);
-            startActivity(goToDash);
-
-        }
-
+    public void register(View view){
+        rotateImage = (ImageView)findViewById(R.id.rotate_img);
+        Animation startRotateAnimation = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.android_rotate_animation);
+        rotateImage.startAnimation(startRotateAnimation);
+        long delayMillis=1800;
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent  intent=new Intent(MainActivity.this, RegisterActivity.class);
+                startActivity(intent);
+            }
+        }, delayMillis);
     }
-
 
 
 }

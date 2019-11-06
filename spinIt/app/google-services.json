@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "79941232698",
+    "firebase_url": "https://spinit-8fa77.firebaseio.com",
+    "project_id": "spinit-8fa77",
+    "storage_bucket": "spinit-8fa77.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:79941232698:android:a16639cc3be737986e2d03",
+        "android_client_info": {
+          "package_name": "com.example.spinit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "79941232698-qmglm9tecrftbdm6d9bhrfrpmooolcqt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCv_5j-SxsqW4YoJO5nNWip3xRTtnwBBrU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "79941232698-qmglm9tecrftbdm6d9bhrfrpmooolcqt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
