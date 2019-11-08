@@ -4,4 +4,10 @@
     <string name="title_activity_spinner">Spinner</string>
     <string name="title_activity_rooms">Rooms</string>
     <string name="title_activity_profile">Profile</string>
+    <string name="sign_up_button">Sign Up</string>
+    <string name="signIn_for_google_button">Sign In with Google Account</string>
+    <string name="sign_error_message">BadNews says: Ops! OUT OF LUCK?!</string>
+    <string name="sign_out_button">Sign Out</string>
+
+
 </resources>

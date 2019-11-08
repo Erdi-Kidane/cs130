@@ -13,11 +13,13 @@ public class DashBoard extends AppCompatActivity {
     private Button spinButton;
     private Button roomButton;
     private Button profileButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dash_board);
+
         spinButton = findViewById(R.id.spinButton);
         spinButton.setOnClickListener(new View.OnClickListener()
         {
