@@ -16,7 +16,7 @@ public class Place {
     }
     double getLatitude()
     {
-        return this.longitude;
+        return this.latitude;
     }
     String URL()
     {
