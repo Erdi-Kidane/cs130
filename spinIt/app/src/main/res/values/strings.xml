@@ -4,4 +4,5 @@
     <string name="title_activity_spinner">Spinner</string>
     <string name="title_activity_rooms">Rooms</string>
     <string name="title_activity_profile">Profile</string>
+    <string name="WheelBtn">Button</string>
 </resources>
