@@ -25,7 +25,7 @@ public class Person {
     }
 
     void addFriend(String username){
-        boolean checker;
+        boolean checker = true;
         //Do a database check to see if the username is a valid
         //one and set the checker to true if it exists
 
@@ -41,7 +41,7 @@ public class Person {
         //****A database call will be needed at the end of this function****
     }
     void setUsername(String username){
-        boolean checker;
+        boolean checker = true;
         //Do a database check to see if that username is used
         //if it is, then go ahead and set checker to false
         if(!checker) {
