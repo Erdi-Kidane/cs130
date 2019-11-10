@@ -10,16 +10,7 @@ public class Place {
         this.latitude = latitude;
         this.url = url;
     }
-    double getLongitude()
-    {
-        return this.longitude;
-    }
-    double getLatitude()
-    {
-        return this.latitude;
-    }
-    String URL()
-    {
-        return this.url;
-    }
+    double getLongitude(){ return this.longitude;}
+    double getLatitude(){ return this.latitude; }
+    String getURL(){ return this.url; }
 }
