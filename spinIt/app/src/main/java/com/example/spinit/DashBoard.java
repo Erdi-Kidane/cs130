@@ -38,20 +38,13 @@ public class DashBoard extends AppCompatActivity {
                 goToRoom();
             }
         });
-        profileButton = findViewById(R.id.profileButton);
-        profileButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                goToProfile();
-            }
-        });
+        //profileButton = findViewById(R.id.profileButton);
+
     }
 
     private void goToRoom()
     {
-        Intent room = new Intent(DashBoard.this, Rooms.class);
+        Intent room = new Intent(DashBoard.this, MainActivity.class);
         startActivity(room);
     }
 
@@ -65,10 +58,8 @@ public class DashBoard extends AppCompatActivity {
     private void goToSpin()
     {
 
-
-
-            Intent spin = new Intent(DashBoard.this, Spinner.class);
-            startActivity(spin);
+        Intent spin = new Intent(DashBoard.this, Spinner.class);
+        startActivity(spin);
 
 
 
