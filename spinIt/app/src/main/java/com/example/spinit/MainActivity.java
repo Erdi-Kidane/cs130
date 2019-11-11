@@ -26,7 +26,8 @@ public class MainActivity extends AppCompatActivity {
         Name = findViewById(R.id.editName);
         Password = findViewById(R.id.editPassword);
         Login = findViewById(R.id.loginButton);
-
+        Intent goToDash = new Intent(MainActivity.this, DashBoard.class);
+        startActivity(goToDash);
         Login.setOnClickListener(new View.OnClickListener()
         {
 
