@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "406818113097",
+    "firebase_url": "https://spinit-19333.firebaseio.com",
+    "project_id": "spinit-19333",
+    "storage_bucket": "spinit-19333.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:406818113097:android:efe5e879eff0aebdf2e198",
+        "android_client_info": {
+          "package_name": "com.example.spinit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "406818113097-sglsubeq6lrl3flgrd8907e46kmvd4hq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.spinit",
+            "certificate_hash": "7122cbfe4d8b627b59a6f5b88ac0df9cdcd03a37"
+          }
+        },
+        {
+          "client_id": "406818113097-vo399vchjcmch65b8pvn70gfi570akio.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlCyNlb9pWq17USVfvOmwD6F2F6Xxpf1Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "406818113097-vo399vchjcmch65b8pvn70gfi570akio.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
