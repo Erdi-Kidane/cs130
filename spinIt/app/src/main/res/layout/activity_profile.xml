@@ -20,9 +20,7 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include
-        android:id="@+id/include"
-        layout="@layout/content_profile" />
+    <include layout="@layout/content_profile" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
@@ -33,87 +31,60 @@
         app:srcCompat="@android:drawable/ic_dialog_email" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_anchor="@+id/constraintLayout"
-        app:layout_anchorGravity="center">
+        android:layout_height="match_parent">
 
-        <EditText
-            android:id="@+id/preftxt"
-            android:layout_width="285dp"
-            android:layout_height="42dp"
-            android:layout_marginStart="76dp"
+        <Button
+            android:id="@+id/foodTypeBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="4dp"
             android:layout_marginTop="56dp"
-            android:layout_marginEnd="76dp"
-            android:layout_marginBottom="13dp"
-            android:ems="10"
-            android:hint="Enter dietary: eg. gluten-free"
-            android:inputType="textPersonName"
-            app:layout_constraintBottom_toTopOf="@+id/prefButton"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:text="Food Type List"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/prefButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="150dp"
-            android:layout_marginEnd="150dp"
-            android:layout_marginBottom="13dp"
-            android:text="Add Dietary"
-            app:layout_constraintBottom_toTopOf="@+id/prefListView"
+        <TextView
+            android:id="@+id/selectedFood"
+            android:layout_width="401dp"
+            android:layout_height="179dp"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="7dp"
+            android:layout_marginEnd="7dp"
+            android:text="MyFoodTypeList"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/preftxt" />
-
-        <ListView
-            android:id="@+id/prefListView"
-            android:layout_width="365dp"
-            android:layout_height="162dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/preftxt"
-            app:layout_constraintVertical_bias="0.154" />
+            app:layout_constraintTop_toBottomOf="@+id/foodTypeBtn" />
 
         <Button
-            android:id="@+id/foodButton"
+            android:id="@+id/dietaryBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="154dp"
-            android:layout_marginTop="60dp"
-            android:layout_marginEnd="154dp"
-            android:text="Add Food Tpye"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="55dp"
+            android:layout_marginEnd="294dp"
+            android:text="Dietary List"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/prefListView" />
+            app:layout_constraintTop_toBottomOf="@+id/selectedFood" />
 
-        <ListView
-            android:id="@+id/foodList"
-            android:layout_width="358dp"
-            android:layout_height="192dp"
-            android:layout_marginStart="37dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="37dp"
+        <TextView
+            android:id="@+id/selectedDietary"
+            android:layout_width="396dp"
+            android:layout_height="176dp"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="7dp"
+            android:layout_marginEnd="7dp"
+            android:text="MyDietaryList"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/foodButton" />
+            app:layout_constraintTop_toBottomOf="@+id/dietaryBtn" />
 
-        <EditText
-            android:id="@+id/foodType"
-            android:layout_width="285dp"
-            android:layout_height="42dp"
-            android:layout_marginStart="64dp"
-            android:layout_marginEnd="64dp"
-            android:layout_marginBottom="2dp"
-            android:ems="10"
-            android:hint="Enter food type: eg. Korean"
-            android:inputType="textPersonName"
-            app:layout_constraintBottom_toTopOf="@+id/foodButton"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

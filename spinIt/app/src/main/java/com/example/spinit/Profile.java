@@ -1,3 +1,4 @@
+//working
 package com.example.spinit;
 
 import android.os.Bundle;
@@ -5,33 +6,35 @@ import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.TextView;
+
+import android.content.DialogInterface;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 public class Profile extends AppCompatActivity {
-    private Button savePrefButton;
-    ArrayList<String> addPrefList = new ArrayList<>();
-    EditText pref;
-    ListView showPref;
-    Set<String> prefNoDuplication = new HashSet<>();
 
-    private Button saveFoodButton;
-    ArrayList<String> addFoodList = new ArrayList<>();
-    EditText foodpref;
-    ListView showFoodPref;
+    Button foodBtn;
+    TextView showSelectedFood;
+    String[] listItems;
+    boolean[] checkedItems;
+    ArrayList<Integer> kUserItems = new ArrayList<>();
+    ArrayList<String> foodListChosen = new ArrayList<>();
 
-    Set<String> foodNoDuplication = new HashSet<>();
+
+    Button dietaryBtn;
+    TextView showSelectedDietary;
+    String[] dietaryItems;
+    boolean[] checkedDietaryItems;
+    ArrayList<Integer> kUserItems2 = new ArrayList<>();
+    ArrayList<String> dietaryListChosen = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,69 +52,176 @@ public class Profile extends AppCompatActivity {
             }
         });
 
+        foodBtn = (Button) findViewById(R.id.foodTypeBtn);
+        showSelectedFood = (TextView) findViewById((R.id.selectedFood));
 
-        showPref = (ListView) findViewById((R.id.prefListView));
-        pref = (EditText) findViewById((R.id.preftxt));
-        savePrefButton = (Button)findViewById(R.id.prefButton);
-        savePrefButton.setOnClickListener(new View.OnClickListener() {
+        listItems = getResources().getStringArray(R.array.food_types);
+        checkedItems = new boolean[listItems.length];
+
+        foodBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String getInput = pref.getText().toString();
+                AlertDialog.Builder mBuilder = new AlertDialog.Builder(Profile.this);
+                mBuilder.setTitle("Available Food Types");
+                mBuilder.setMultiChoiceItems(listItems, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                        if(isChecked) {
+//                            which is the position
+                            kUserItems.add(which);
+                            foodListChosen.add(listItems[which]);
+                        }
+                        else if(kUserItems.contains(which))
+                        {
+//                            unchecking the items
+                            foodListChosen.remove(listItems[which]);
+                            kUserItems.remove(Integer.valueOf(which));
 
-//                invalid empty input
-                if(getInput == null || getInput.trim().equals(""))
-                {
-                    Toast.makeText(getBaseContext(), "Empty preference cannot be added.", Toast.LENGTH_LONG).show();
-                }
-//                ignore duplications
-                else if(prefNoDuplication.contains(getInput))
-                {
-                    Toast.makeText(getBaseContext(), "This preference is already added.", Toast.LENGTH_LONG).show();
-                }
-//                add to the preference list
-                else
-                {
-                    prefNoDuplication.add(getInput);
-                    addPrefList.add(getInput);
-                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(Profile.this, android.R.layout.simple_list_item_1, addPrefList);
-                    showPref.setAdapter(adapter);
-                    ((EditText)findViewById(R.id.preftxt)).setText("");
-                }
+                        }
+
+                    }
+                });
+                mBuilder.setCancelable(false);
+                mBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+//                        printing the selected items
+                        String item = "";
+                        for(int i=0; i<kUserItems.size(); i++)
+                        {
+                            item = item + listItems[kUserItems.get(i)];
+                            if(i!=kUserItems.size()-1)  // not last item, add comma
+                            {
+                                item = item + ", ";
+                            }
+
+                        }
+                        showSelectedFood.setText(item);
+                    }
+                });
+
+//                create other buttons
+//                clear all button
+                mBuilder.setNeutralButton("Clear", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        for(int i=0; i<checkedItems.length; i++)
+                        {
+                            checkedItems[i] = false;
+                            kUserItems.clear();
+                            showSelectedFood.setText("");
+                            foodListChosen.clear();
+                        }
+                    }
+                });
+//                Dimiss button
+                mBuilder.setNegativeButton("Dimiss", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+                AlertDialog foodDialog = mBuilder.create();
+                foodDialog.show();
+
             }
         });
 
 
 
-        showFoodPref = (ListView) findViewById((R.id.foodList));
-        foodpref = (EditText) findViewById((R.id.foodType));
-        saveFoodButton = (Button)findViewById(R.id.foodButton);
-        saveFoodButton.setOnClickListener(new View.OnClickListener() {
+
+
+        dietaryBtn = (Button) findViewById(R.id.dietaryBtn);
+        showSelectedDietary = (TextView) findViewById((R.id.selectedDietary));
+
+        dietaryItems = getResources().getStringArray(R.array.dietary_types);
+        checkedDietaryItems = new boolean[dietaryItems.length];
+
+        dietaryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String getInput = foodpref.getText().toString();
+                AlertDialog.Builder mBuilder = new AlertDialog.Builder(Profile.this);
+                mBuilder.setTitle("Available Dietary Types");
+                mBuilder.setMultiChoiceItems(dietaryItems, checkedDietaryItems, new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                        if(isChecked) {
+//                            which is the position
+                            kUserItems2.add(which);
+                            dietaryListChosen.add(dietaryItems[which]);
+                        }
+                        else if(kUserItems2.contains(which))
+                        {
+//                            unchecking the items
+                            dietaryListChosen.remove(dietaryItems[which]);
+                            kUserItems2.remove(Integer.valueOf(which));
 
-//                invalid empty input
-                if(getInput == null || getInput.trim().equals(""))
-                {
-                    Toast.makeText(getBaseContext(), "Empty food type cannot be added.", Toast.LENGTH_LONG).show();
-                }
-//                ignore duplications
-                else if(foodNoDuplication.contains(getInput))
-                {
-                    Toast.makeText(getBaseContext(), "This food type is already added.", Toast.LENGTH_LONG).show();
-                }
-//                add to the preference list
-                else
-                {
-                    foodNoDuplication.add(getInput);
-                    addFoodList.add(getInput);
-                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(Profile.this, android.R.layout.simple_list_item_1, addFoodList);
-                    showFoodPref.setAdapter(adapter);
-                    ((EditText)findViewById(R.id.foodType)).setText("");
-                }
+                        }
+
+                    }
+                });
+                mBuilder.setCancelable(false);
+                mBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+//                        printing the selected items
+                        String item = "";
+                        for(int i=0; i<kUserItems2.size(); i++)
+                        {
+                            item = item + dietaryItems[kUserItems2.get(i)];
+                            if(i!=kUserItems2.size()-1)  // not last item, add comma
+                            {
+                                item = item + ", ";
+                            }
+
+                        }
+                        showSelectedDietary.setText(item);
+                    }
+                });
+
+//                create other buttons
+//                clear all button
+                mBuilder.setNeutralButton("Clear", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        for(int i=0; i<checkedDietaryItems.length; i++)
+                        {
+                            checkedDietaryItems[i] = false;
+                            kUserItems2.clear();
+                            showSelectedDietary.setText("");
+                            dietaryListChosen.clear();
+                        }
+                    }
+                });
+//                Dimiss button
+                mBuilder.setNegativeButton("Dimiss", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+                AlertDialog dietaryDialog = mBuilder.create();
+                dietaryDialog.show();
+
             }
         });
-        //
+
+
     }
 
+    public ArrayList<String> getFoodList()
+    {
+        return foodListChosen;
+    }
+
+    public ArrayList<String> getDietaryList()
+    {
+        return dietaryListChosen;
+    }
+
+
+
 }
+
