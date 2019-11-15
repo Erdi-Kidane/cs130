@@ -1,4 +1,4 @@
-package com.example.spinit;
+package com.example.myapplication123;
 
 import org.junit.Test;
 

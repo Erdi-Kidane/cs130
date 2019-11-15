@@ -1,4 +1,4 @@
-package com.example.spinit;
+package com.example.myapplication123;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,9 +13,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.spinit.MainActivity;
-import com.example.spinit.R;
-import com.example.spinit.RegisterActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -95,14 +92,14 @@ public class LoginActivity extends AppCompatActivity {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task)
                                             {*/
-                                //if (task.isSuccessful())
-                                //{
-                                SendUserToMainActivity();
-                                Toast.makeText(LoginActivity.this, "Logged in Successful...", Toast.LENGTH_SHORT).show();
-                                loadingBar.dismiss();
-                                //}
-                                // }
-                                //});
+                                                //if (task.isSuccessful())
+                                               //{
+                                                    SendUserToMainActivity();
+                                                    Toast.makeText(LoginActivity.this, "Logged in Successful...", Toast.LENGTH_SHORT).show();
+                                                    loadingBar.dismiss();
+                                                //}
+                                           // }
+                                        //});
                             }
                             else
                             {
@@ -128,7 +125,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void SendUserToMainActivity()
     {
-        Intent mainIntent = new Intent(LoginActivity.this, DashBoard.class);
+        Intent mainIntent = new Intent(LoginActivity.this, MainPageActivity.class);
         mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(mainIntent);
         finish();

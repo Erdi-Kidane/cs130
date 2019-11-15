@@ -1,10 +1,16 @@
-package com.example.spinit;
+package com.example.myapplication123;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -12,6 +18,8 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -34,7 +42,7 @@ public class GroupChatActivity extends AppCompatActivity {
     private TextView displayTextMessages;
 
     private FirebaseAuth mAuth;
-    private DatabaseReference UsersRef, GroupNameRef, GroupMessageKeyRef;
+    private DatabaseReference UsersRef, GroupNameRef, GroupMessageKeyRef, myRef;
 
     private String currentGroupName, currentUserID, currentUserName, currentDate, currentTime;
     @Override
@@ -49,7 +57,8 @@ public class GroupChatActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         currentUserID = mAuth.getCurrentUser().getUid();
         UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
-        GroupNameRef = FirebaseDatabase.getInstance().getReference().child("Groups").child(currentGroupName);
+        myRef = FirebaseDatabase.getInstance().getReference();
+        GroupNameRef = FirebaseDatabase.getInstance().getReference().child("Groups").child(currentGroupName).child("Message");
 
 
 
@@ -178,7 +187,7 @@ public class GroupChatActivity extends AppCompatActivity {
 
         while(iterator.hasNext())
         {
-            //String chatDate = (String) ((DataSnapshot)iterator.next()).getValue();
+           //String chatDate = (String) ((DataSnapshot)iterator.next()).getValue();
             String chatMessage = (String) ((DataSnapshot)iterator.next()).getValue();
             String chatName = (String) ((DataSnapshot)iterator.next()).getValue();
             //String chatTime = (String) ((DataSnapshot)iterator.next()).getValue();
@@ -188,4 +197,114 @@ public class GroupChatActivity extends AppCompatActivity {
             mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
         }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.option_chat, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        super.onOptionsItemSelected(item);
+
+        if (item.getItemId() == R.id.main_logout_option)
+        {
+            //updateUserStatus("offline");
+            mAuth.signOut();
+            SendUserToLoginActivity();
+        }
+        if (item.getItemId() == R.id.main_invite_option)
+        {
+            RequestNewGroup();
+        }
+
+
+        return true;
+    }
+    private void SendUserToLoginActivity(){
+        Intent loginIntent = new Intent(GroupChatActivity.this,LoginActivity.class);
+        loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(loginIntent);
+        finish();
+    }
+    private void CreateNewGroup(final String memberName)
+    {
+        String currentUserID = mAuth.getCurrentUser().getUid();
+        //UsersRef.child("Groups").child(groupName).child("Host").setValue(currentUserID);
+        myRef.child("Groups").child(currentGroupName).child("Member").child(memberName).setValue("")
+        //UsersRef.child("Groups").child(groupName).child("Message").setValue("")
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task)
+                    {
+                        if (task.isSuccessful())
+                        {
+                            Toast.makeText(GroupChatActivity.this, memberName + " group is Created Successfully...", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+
+    private void RequestNewGroup()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(GroupChatActivity.this, R.style.AlertDialog);
+        builder.setTitle("Enter Group member Name :");
+
+        final EditText groupNameField = new EditText(GroupChatActivity.this);
+
+        groupNameField.setHint("e.g Kevin");
+        builder.setView(groupNameField);
+
+
+        builder.setPositiveButton("Intive", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i)
+            {
+                String groupName = groupNameField.getText().toString();
+                if (TextUtils.isEmpty(groupName))
+                {
+                    Toast.makeText(GroupChatActivity.this, "Please write Member Name...", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+
+                    DatabaseReference mdatabaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
+                    mdatabaseReference.orderByChild("name").equalTo(groupName).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if(dataSnapshot.exists()){
+                                for (DataSnapshot childSnapshot: dataSnapshot.getChildren()) {
+                                    String uid = childSnapshot.getKey();
+                                    CreateNewGroup(uid);
+                                    break;
+                                }
+                            }
+                            else{
+                                Toast.makeText(GroupChatActivity.this, "Please Type the correct member name...", Toast.LENGTH_SHORT).show();
+                            }
+
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) { // ToDo: Do something for errors too
+                        }
+                    });
+                    //CreateNewGroup(groupName);
+
+                }
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i)
+            {
+                dialogInterface.cancel();
+            }
+        });
+
+        builder.show();
+    }
+
 }

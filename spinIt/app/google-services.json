@@ -1,42 +1,42 @@
 {
   "project_info": {
-    "project_number": "406818113097",
-    "firebase_url": "https://spinit-19333.firebaseio.com",
-    "project_id": "spinit-19333",
-    "storage_bucket": "spinit-19333.appspot.com"
+    "project_number": "692472515690",
+    "firebase_url": "https://my-application123-f4e1c.firebaseio.com",
+    "project_id": "my-application123-f4e1c",
+    "storage_bucket": "my-application123-f4e1c.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:406818113097:android:efe5e879eff0aebdf2e198",
+        "mobilesdk_app_id": "1:692472515690:android:3cf0b37ec9995448f1ce13",
         "android_client_info": {
-          "package_name": "com.example.spinit"
+          "package_name": "com.example.myapplication123"
         }
       },
       "oauth_client": [
         {
-          "client_id": "406818113097-sglsubeq6lrl3flgrd8907e46kmvd4hq.apps.googleusercontent.com",
+          "client_id": "692472515690-ceic6a3e2qlrod7qm4002p0b5den577k.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.spinit",
-            "certificate_hash": "7122cbfe4d8b627b59a6f5b88ac0df9cdcd03a37"
+            "package_name": "com.example.myapplication123",
+            "certificate_hash": "2f134e48b7fef4b925d4582a6d3d10289be94dd7"
           }
         },
         {
-          "client_id": "406818113097-vo399vchjcmch65b8pvn70gfi570akio.apps.googleusercontent.com",
+          "client_id": "692472515690-7ohhlpnoa4kok8jlt2crtp0v1csjf9mo.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAlCyNlb9pWq17USVfvOmwD6F2F6Xxpf1Y"
+          "current_key": "AIzaSyAl8LjMXDpPfzFhqsWgPLXWNaQZOV41tck"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "406818113097-vo399vchjcmch65b8pvn70gfi570akio.apps.googleusercontent.com",
+              "client_id": "692472515690-7ohhlpnoa4kok8jlt2crtp0v1csjf9mo.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

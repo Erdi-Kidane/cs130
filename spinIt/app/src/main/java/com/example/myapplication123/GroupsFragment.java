@@ -1,9 +1,10 @@
-package com.example.spinit;
+package com.example.myapplication123;
 
 
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -11,11 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 
-import com.example.spinit.GroupChatActivity;
-import com.example.spinit.R;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,6 +25,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 
 /**
@@ -36,8 +38,9 @@ public class GroupsFragment extends Fragment {
     private ListView list_view;
     private ArrayAdapter<String> arrayAdapter;
     private ArrayList<String> list_of_groups = new ArrayList<>();
-    private Button btn;
+    private FirebaseAuth mAuth;
     private DatabaseReference GroupRef;
+    private String currentUserID;
 
     public GroupsFragment() {
         // Required empty public constructor
@@ -50,7 +53,8 @@ public class GroupsFragment extends Fragment {
         // Inflate the layout for this fragment
         groupFragmentView = inflater.inflate(R.layout.fragment_groups, container, false);
         GroupRef = FirebaseDatabase.getInstance().getReference().child("Groups");
-        btn = (Button)groupFragmentView.findViewById(R.id.main_page_toolbar);
+        mAuth = FirebaseAuth.getInstance();
+        currentUserID = mAuth.getCurrentUser().getUid();
         IntializeFields();
         RetrieveAndDisplayGroups();
         list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -65,7 +69,7 @@ public class GroupsFragment extends Fragment {
             }
         });
         return groupFragmentView;
-    }
+}
 
     private void RetrieveAndDisplayGroups() {
         GroupRef.addValueEventListener(new ValueEventListener() {
@@ -73,14 +77,31 @@ public class GroupsFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot)
             {
                 Set<String> set = new HashSet<>();
+                /*
                 Iterator iterator = dataSnapshot.getChildren().iterator();
 
                 while (iterator.hasNext())
                 {
-                    set.add(((DataSnapshot)iterator.next()).getKey());
+                    DataSnapshot it = (DataSnapshot) iterator.next();
+                    if(true){
+                        set.add(it.getKey());
+                    }
+                }*/
+                for (DataSnapshot ds : dataSnapshot.getChildren()){
+
+
+                        if(ds.child("Member").hasChild(currentUserID))
+                            set.add(ds.getKey());
+
+
+
+
+
+
                 }
 
                 list_of_groups.clear();
+
                 list_of_groups.addAll(set);
                 arrayAdapter.notifyDataSetChanged();
             }
