@@ -36,6 +36,7 @@ public class Profile extends AppCompatActivity {
     ArrayList<String> dietaryListChosen = new ArrayList<>();
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,15 +53,57 @@ public class Profile extends AppCompatActivity {
             }
         });
 
+
+
         foodBtn = (Button) findViewById(R.id.foodTypeBtn);
         showSelectedFood = (TextView) findViewById((R.id.selectedFood));
 
         listItems = getResources().getStringArray(R.array.food_types);
         checkedItems = new boolean[listItems.length];
 
+
+//        //    added
+//        ArrayList<String> tempList = new ArrayList<>();
+//        tempList.add("Distilleries");
+//
+//        for(String s: tempList)
+//        {
+//            for(int i=0; i<listItems.length; i++)
+//            {
+//                if(listItems[i] == s)
+//                {
+//                    checkedItems[i] = true;
+//                    kUserItems.add(i);
+//                }
+//                break;
+//            }
+//        }
+
+
+//        the following commented code working
+
+        kUserItems.add(0);
+        checkedItems[0] = true;
+        kUserItems.add(7);
+        checkedItems[7] = true;
+        String item = "";
+        for(int i=0; i<kUserItems.size(); i++)
+        {
+            item = item + listItems[kUserItems.get(i)];
+            if(i!=kUserItems.size()-1)  // not last item, add comma
+            {
+                item = item + ", ";
+            }
+
+        }
+        showSelectedFood.setText(item);
+
+
+
         foodBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 AlertDialog.Builder mBuilder = new AlertDialog.Builder(Profile.this);
                 mBuilder.setTitle("Available Food Types");
                 mBuilder.setMultiChoiceItems(listItems, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
@@ -82,7 +125,7 @@ public class Profile extends AppCompatActivity {
                     }
                 });
                 mBuilder.setCancelable(false);
-                mBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                mBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 //                        printing the selected items
@@ -138,6 +181,7 @@ public class Profile extends AppCompatActivity {
         dietaryItems = getResources().getStringArray(R.array.dietary_types);
         checkedDietaryItems = new boolean[dietaryItems.length];
 
+
         dietaryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -162,7 +206,7 @@ public class Profile extends AppCompatActivity {
                     }
                 });
                 mBuilder.setCancelable(false);
-                mBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                mBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 //                        printing the selected items
