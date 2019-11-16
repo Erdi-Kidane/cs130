@@ -41,8 +41,8 @@ public class Profile extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+//        Toolbar toolbar = findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -60,11 +60,11 @@ public class Profile extends AppCompatActivity {
 
         listItems = getResources().getStringArray(R.array.food_types);
         checkedItems = new boolean[listItems.length];
-//
-//
-        //    added
+
+        //    UPDATE already added boxes
         ArrayList<String> tempList = new ArrayList<>();
         tempList.add("Distilleries");
+        tempList.add("Coffee and Tea");
 
         for(String s: tempList)
         {
@@ -114,13 +114,11 @@ public class Profile extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which, boolean isChecked) {
                         if(isChecked) {
-//                            which is the position
                             kUserItems.add(which);
                             foodListChosen.add(listItems[which]);
                         }
                         else if(kUserItems.contains(which))
                         {
-//                            unchecking the items
                             foodListChosen.remove(listItems[which]);
                             kUserItems.remove(Integer.valueOf(which));
 
@@ -132,7 +130,6 @@ public class Profile extends AppCompatActivity {
                 mBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-//                        printing the selected items
                         String item = "";
                         for(int i=0; i<kUserItems.size(); i++)
                         {
@@ -147,8 +144,6 @@ public class Profile extends AppCompatActivity {
                     }
                 });
 
-//                create other buttons
-//                clear all button
                 mBuilder.setNeutralButton("Clear", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -161,7 +156,7 @@ public class Profile extends AppCompatActivity {
                         }
                     }
                 });
-//                Dimiss button
+
                 mBuilder.setNegativeButton("Dimiss", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -186,6 +181,8 @@ public class Profile extends AppCompatActivity {
         checkedDietaryItems = new boolean[dietaryItems.length];
 
 
+//        TO DO:
+//        HERE WE WILL ALSO NEED TO GET THE LIST AND CHECK WHICH BOXES ARE ALREADY CHECKED
         dietaryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -195,13 +192,11 @@ public class Profile extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which, boolean isChecked) {
                         if(isChecked) {
-//                            which is the position
                             kUserItems2.add(which);
                             dietaryListChosen.add(dietaryItems[which]);
                         }
                         else if(kUserItems2.contains(which))
                         {
-//                            unchecking the items
                             dietaryListChosen.remove(dietaryItems[which]);
                             kUserItems2.remove(Integer.valueOf(which));
 
@@ -213,7 +208,6 @@ public class Profile extends AppCompatActivity {
                 mBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-//                        printing the selected items
                         String item = "";
                         for(int i=0; i<kUserItems2.size(); i++)
                         {
@@ -228,8 +222,6 @@ public class Profile extends AppCompatActivity {
                     }
                 });
 
-//                create other buttons
-//                clear all button
                 mBuilder.setNeutralButton("Clear", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -242,7 +234,7 @@ public class Profile extends AppCompatActivity {
                         }
                     }
                 });
-//                Dimiss button
+
                 mBuilder.setNegativeButton("Dimiss", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

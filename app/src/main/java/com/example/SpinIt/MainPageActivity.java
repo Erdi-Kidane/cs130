@@ -25,23 +25,7 @@ public class MainPageActivity extends AppCompatActivity {
                 startActivity(registerIntent);
             }
         });
-        mGroupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                Intent registerIntent = new Intent(MainPageActivity.this, MainActivity.class);
-                startActivity(registerIntent);
-            }
-        });
-        mGroupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                Intent registerIntent = new Intent(MainPageActivity.this, MainActivity.class);
-                startActivity(registerIntent);
-            }
-        });
-        mPrefenceButton.setOnClickListener(new View.OnClickListener() {
+        mPrefenceButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view)
             {
@@ -49,6 +33,30 @@ public class MainPageActivity extends AppCompatActivity {
                 startActivity(registerIntent);
             }
         });
+        mGroupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                Intent registerIntent = new Intent(MainPageActivity.this, MainActivity.class);
+                startActivity(registerIntent);
+            }
+        });
+        mGroupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                Intent registerIntent = new Intent(MainPageActivity.this, MainActivity.class);
+                startActivity(registerIntent);
+            }
+        });
+//        mPrefenceButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view)
+//            {
+//                Intent registerIntent = new Intent(MainPageActivity.this, Profile.class);
+//                startActivity(registerIntent);
+//            }
+//        });
     }
 
 
