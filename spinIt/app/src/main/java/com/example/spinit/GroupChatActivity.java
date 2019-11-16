@@ -25,6 +25,15 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 
+/**
+ * Activity for loading layout resources
+ *
+ * This activity is used to read the chat from the same group in the database and display the message  and  store the new message to database
+ *
+ * @author yansong huang
+ * @version 2019.1105
+ * @since 1.0
+ */
 public class GroupChatActivity extends AppCompatActivity {
 
     private Toolbar mToolbar;

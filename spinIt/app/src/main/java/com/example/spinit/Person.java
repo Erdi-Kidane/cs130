@@ -1,9 +1,10 @@
 package com.example.spinit;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Set;
 
-public class Person {
+public class Person implements Serializable {
     private ArrayList<String> listOfStatus;
     private Set<String> listOfFriends;
     private String username;

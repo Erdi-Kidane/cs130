@@ -30,13 +30,19 @@ import java.util.Set;
 
 /**
  * A simple {@link Fragment} subclass.
+ *
+ * This Fragment is used to display the new group after the user create new one
+ *
+ * @author yansong huang
+ * @version 2019.1105
+ * @since 1.0
  */
 public class GroupsFragment extends Fragment {
     private View groupFragmentView;
     private ListView list_view;
     private ArrayAdapter<String> arrayAdapter;
     private ArrayList<String> list_of_groups = new ArrayList<>();
-    private Button btn;
+    //private Button btn;
     private DatabaseReference GroupRef;
 
     public GroupsFragment() {
@@ -50,7 +56,7 @@ public class GroupsFragment extends Fragment {
         // Inflate the layout for this fragment
         groupFragmentView = inflater.inflate(R.layout.fragment_groups, container, false);
         GroupRef = FirebaseDatabase.getInstance().getReference().child("Groups");
-        btn = (Button)groupFragmentView.findViewById(R.id.main_page_toolbar);
+        //btn = (Button)groupFragmentView.findViewById(R.id.main_page_toolbar);
         IntializeFields();
         RetrieveAndDisplayGroups();
         list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
