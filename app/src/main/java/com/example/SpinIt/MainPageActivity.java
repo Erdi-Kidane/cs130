@@ -45,7 +45,7 @@ public class MainPageActivity extends AppCompatActivity {
             @Override
             public void onClick(View view)
             {
-                Intent registerIntent = new Intent(MainPageActivity.this, MainActivity.class);
+                Intent registerIntent = new Intent(MainPageActivity.this, Profile.class);
                 startActivity(registerIntent);
             }
         });
