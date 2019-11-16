@@ -62,16 +62,6 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
             imageRoulette.startAnimation(rotateAnimation);
 
 
-           /* int ran = new Random().nextInt(360) + 3600;
-            RotateAnimation rotateAnimation = new RotateAnimation((float)90, (float)
-                    180,1,0.5f,1,0.5f);
-            this.lngDegrees = (this.lngDegrees + ((long)ran)) % 360;
-            rotateAnimation.setDuration((long)ran);
-            rotateAnimation.setFillAfter(true);
-            rotateAnimation.setInterpolator((new DecelerateInterpolator()));
-            rotateAnimation.setAnimationListener(this);
-            imageRoulette.setAnimation(rotateAnimation);
-            imageRoulette.startAnimation(rotateAnimation);*/
 
         }
 

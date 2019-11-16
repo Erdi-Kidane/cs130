@@ -59,7 +59,7 @@
                 android:layout_marginTop="14dp"
                 android:layout_marginLeft="29dp"
                 android:layout_marginRight="29dp"
-                android:text="Perfence"
+                android:text="Preference"
                 android:textAllCaps="false"
                 android:textSize="24sp"
                 android:textColor="@android:color/background_light"
