@@ -1,0 +1,2 @@
+#Ignore .idea folder as that contains config files for local settings of android studio
+.idea
