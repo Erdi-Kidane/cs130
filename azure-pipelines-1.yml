@@ -18,6 +18,4 @@ steps:
     publishJUnitResults: false
     testResultsFiles: '**/TEST-*.xml'
     tasks: 'assembleDebug'
-- script: |
-    echo hello world!
-  displayName: "doing an echo"
+    displayName: "Building File"
