@@ -1,5 +1,14 @@
-#Ignore .idea folder as that contains config files for local settings of android studio
-.idea/
-
-#ignore .gradle folder all flies here are for local settings
-.gradle/
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx

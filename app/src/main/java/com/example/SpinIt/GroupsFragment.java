@@ -115,4 +115,5 @@ public class GroupsFragment extends Fragment {
         list_view.setAdapter(arrayAdapter);
     }
 
+
 }

@@ -1,6 +1,7 @@
 package com.example.SpinIt;
+import java.io.Serializable;
 
-public class Person {
+public class Person implements Serializable {
 
     public String title;
     public String startTime;
@@ -19,5 +20,9 @@ public class Person {
     public void setDay (String s){
         this.day = s;
     }
+    public String getDay (){return this.day;}
+    public String getTitle () {return this.title;}
+    public String getStartTime (){return this.startTime;    }
+    public String getEndTime (){return this.endTime;}
 
 }
