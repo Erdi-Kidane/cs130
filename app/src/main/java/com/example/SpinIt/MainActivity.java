@@ -27,8 +27,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
+<<<<<<< HEAD
 import android.util.Log;
 
+=======
+>>>>>>> origin/master
 
 
 public class MainActivity extends AppCompatActivity {
@@ -39,8 +42,11 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseUser currentuser;
     private FirebaseAuth mAuth;
     private DatabaseReference RootRef;
+<<<<<<< HEAD
     private Person newp;
     private String testValue;
+=======
+>>>>>>> origin/master
     @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +68,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+<<<<<<< HEAD
         GetClass();
+=======
+>>>>>>> origin/master
         if (currentuser == null){
             SendUserToLoginActivity();
         }
@@ -101,12 +110,21 @@ public class MainActivity extends AppCompatActivity {
         startActivity(loginIntent);
         finish();
     }
+<<<<<<< HEAD
     private void SendUserToMainPageActivity(){
         Intent settingsIntent = new Intent(MainActivity.this, MainPageActivity.class);
         settingsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(settingsIntent);
         finish();
     }
+=======
+    /*private void SendUserToSettingsActivity(){
+        Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
+        settingsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(settingsIntent);
+        finish();
+    }*/
+>>>>>>> origin/master
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -186,14 +204,18 @@ public class MainActivity extends AppCompatActivity {
         {
            RequestNewGroup();
         }
+<<<<<<< HEAD
         if (item.getItemId() == R.id.option1)
         {
             SendUserToMainPageActivity();
         }
+=======
+>>>>>>> origin/master
 
 
         return true;
     }
+<<<<<<< HEAD
 
     //hihi
     private void Put(Person p){
@@ -248,4 +270,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
     //hihi
+=======
+>>>>>>> origin/master
 }

@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,8 +30,12 @@ public class LoginActivity extends AppCompatActivity {
     private DatabaseReference UsersRef;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        Log.d("tag", "i m at the fvery beginning");
 
         mAuth = FirebaseAuth.getInstance();
         //currentuser =mAuth.getCurrentUser();
@@ -57,6 +62,9 @@ public class LoginActivity extends AppCompatActivity {
     private void AllowUserToLogin()
     {
         String email = UserEmail.getText().toString();
+
+
+
         String password = UserPassword.getText().toString();
 
         if (TextUtils.isEmpty(email))
@@ -130,6 +138,7 @@ public class LoginActivity extends AppCompatActivity {
     }
     private void SendUserToRegisterActivity()
     {
+
         Intent registerIntent = new Intent(LoginActivity.this, RegisterActivity.class);
         startActivity(registerIntent);
     }

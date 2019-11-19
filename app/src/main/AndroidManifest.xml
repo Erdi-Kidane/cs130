@@ -11,13 +11,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.example.SpinIt.GetAndPut"></activity>
-        <activity android:name="com.example.SpinIt.MainPageActivity" />
-        <activity android:name="com.example.SpinIt.GroupChatActivity" />
-        <activity android:name=".SettingsActivity" />
-        <activity android:name="com.example.SpinIt.RegisterActivity" />
-        <activity android:name="com.example.SpinIt.LoginActivity" />
-        <activity android:name="com.example.SpinIt.MainActivity">
+        <activity
+            android:name=".Spinner"
+            android:label="@string/title_activity_spinner"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".MainPageActivity" />
+        <activity android:name=".GroupChatActivity" />
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

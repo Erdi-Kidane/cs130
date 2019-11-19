@@ -21,7 +21,12 @@ public class MainPageActivity extends AppCompatActivity {
             @Override
             public void onClick(View view)
             {
+<<<<<<< HEAD
 
+=======
+                Intent registerIntent = new Intent(MainPageActivity.this, Spinner.class);
+                startActivity(registerIntent);
+>>>>>>> origin/master
             }
         });
         mGroupButton.setOnClickListener(new View.OnClickListener() {
