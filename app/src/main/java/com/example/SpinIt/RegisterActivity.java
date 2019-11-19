@@ -7,7 +7,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,9 +18,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 
 import java.util.HashMap;
 
@@ -57,11 +53,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void CreateNewAccount()
     {
-
         String email = UserEmail.getText().toString();
-
-        Log.d("tag", "email address: " + email);
-
         String password = UserPassword.getText().toString();
         final String setUserName = userName.getText().toString();
 
@@ -130,30 +122,6 @@ public class RegisterActivity extends AppCompatActivity {
                         {
                             if (task.isSuccessful())
                             {
-<<<<<<< HEAD:app/src/main/java/com/example/SpinIt/RegisterActivity.java
-=======
-                                String title = "foo";
-                                String startTime = "bar";
-                                String endTime = "1";
-                                String day = "2";
-                                Person p = new Person(title,startTime,endTime,day);
-                                Put(p);
-                                //Person p2 = new Person(title,startTime,endTime,"3");
-                                //Put(p);
-
-                                Log.d("tag", "before get() .................... ");
-                                Log.d("tag", "make sure what is p " + p);
-                                //Get();
-
-                                Log.d("tag", "After get() .................");
-                                Person p2 = new Person("a","b","c","d");
-                                //p2.title = "0";
-                                //p2.startTime = "0";
-                                //p2.endTime = "9";
-                                //p2.day = "0";
-
-                                Put(p2);
->>>>>>> origin/master:app/src/main/java/com/example/SpinIt/RegisterActivity.java
 
                                 SendUserToMainActivity();
                                 Toast.makeText(RegisterActivity.this, "Account Created Successfully...", Toast.LENGTH_SHORT).show();
@@ -186,33 +154,7 @@ public class RegisterActivity extends AppCompatActivity {
         finish();
     }
     // Copy to you guys code
-<<<<<<< HEAD:app/src/main/java/com/example/SpinIt/RegisterActivity.java
 
-=======
-    private void Put(Person p){
-        DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
-        String mcurrentUserID = mAuth.getCurrentUser().getUid();
-        mRootRef.child("Users").child(mcurrentUserID).child("Person").setValue(p);
-    }
-    private void Get(){
-
-        String rcurrentUserID = mAuth.getCurrentUser().getUid();
-        DatabaseReference mReadreference = FirebaseDatabase.getInstance().getReference().child("Users").child(rcurrentUserID).child("Person");
-
-        mReadreference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                newp = dataSnapshot.getValue(Person.class);
-                Log.d("tag", "i m in Get(), the newp value is: " + newp);
-                //useValue(newp);
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-
-    }
->>>>>>> origin/master:app/src/main/java/com/example/SpinIt/RegisterActivity.java
    // private void useValue(Person yourValue) {
 
      //   Log.d(TAG, "countryNameCode: " + yourValue);
