@@ -15,12 +15,12 @@
             android:name=".Spinner"
             android:label="@string/title_activity_spinner"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-<<<<<<< HEAD
+
         <activity
             android:name=".Profile"/>
-=======
+
         <activity android:name=".GetAndPut" />
->>>>>>> origin
+
         <activity android:name=".MainPageActivity" />
         <activity android:name=".GroupChatActivity" />
         <activity android:name=".SettingsActivity" />
