@@ -62,16 +62,6 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
             imageRoulette.startAnimation(rotateAnimation);
 
 
-           /* int ran = new Random().nextInt(360) + 3600;
-            RotateAnimation rotateAnimation = new RotateAnimation((float)90, (float)
-                    180,1,0.5f,1,0.5f);
-            this.lngDegrees = (this.lngDegrees + ((long)ran)) % 360;
-            rotateAnimation.setDuration((long)ran);
-            rotateAnimation.setFillAfter(true);
-            rotateAnimation.setInterpolator((new DecelerateInterpolator()));
-            rotateAnimation.setAnimationListener(this);
-            imageRoulette.setAnimation(rotateAnimation);
-            imageRoulette.startAnimation(rotateAnimation);*/
 
         }
 
@@ -109,9 +99,9 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
                 return 1;
             if(degree >= 136 && degree <= 180)
                 return 7;
-            if(degree >= 181 && degree <= 255)
+            if(degree >= 181 && degree <= 225)
                 return 2;
-            if(degree >=256 && degree <= 270)
+            if(degree >=226 && degree <= 270)
                 return 8;
             if(degree >= 271 && degree <= 315)
                 return 4;

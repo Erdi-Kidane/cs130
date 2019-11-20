@@ -1,11 +1,11 @@
 package com.example.SpinIt;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainPageActivity extends AppCompatActivity {
     private Button mSpinButton, mGroupButton, mPrefenceButton;
@@ -23,6 +23,7 @@ public class MainPageActivity extends AppCompatActivity {
             {
                 Intent registerIntent = new Intent(MainPageActivity.this, Spinner.class);
                 startActivity(registerIntent);
+
             }
         });
         mPrefenceButton.setOnClickListener(new View.OnClickListener(){
