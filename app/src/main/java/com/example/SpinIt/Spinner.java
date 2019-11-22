@@ -1,21 +1,19 @@
 package com.example.SpinIt;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
-import android.preference.PreferenceManager;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Random;
 
@@ -24,9 +22,12 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
     int intNumber = 1;
     long lngDegrees = 0;
     ImageView selected,imageRoulette;
+    LinearLayout linearFoodPlace1 , linearFoodPlace2, linearFoodPlace3;
     private double savedDegree;
+    private String[] spinnerChoices = {"Bplate", "In and out", "What a burger", "Subway", "Something really really long", "six", "seven", "eight"};
 
     Button b_start, b_increase, b_decrease;
+    TextView first, second, third, fourth, fifth, sixth, seventh, eight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +40,33 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
         b_increase = (Button)findViewById(R.id.addStuffBTN);
         selected = (ImageView)findViewById(R.id.imageSelected);
         imageRoulette = (ImageView)findViewById(R.id.roulette);
+        first = (TextView)findViewById(R.id.firstLine);
+        second = (TextView)findViewById(R.id.secondLine);
+        third = (TextView)findViewById(R.id.thirdLine);
+        fourth = (TextView)findViewById(R.id.fourthLine);
+        fifth = (TextView)findViewById(R.id.fifthLine);
+        sixth = (TextView)findViewById(R.id.sixthLine);
+        seventh = (TextView)findViewById(R.id.seventhLine);
+        eight = (TextView)findViewById(R.id.eighthLine);
+        linearFoodPlace3 = (LinearLayout) findViewById(R.id.foodPlaceImage3);
+        linearFoodPlace2 = (LinearLayout) findViewById(R.id.foodPlaceImage2);
+        linearFoodPlace1 = (LinearLayout) findViewById(R.id.foodPlaceImage1);
+       // Drawable d = Drawable.createFromPath()
+      //linearFoodPlace.setBackgroundResource(R.drawable.foodplace1);
+      //   imageRoulette.setImageDrawable(getResources().getDrawable(R.drawable.spin3));
         setImageRoulette(this.intNumber);
 
+/*
+*     View LinearLayout1 = findViewById(R.id.Layout1);
+    ImageView image1 = new ImageView(getApplicationContext());
+    String uri = "@drawable/myresource.png"; // Here you can set the name of
+                                                // the image dynamically
+    int imageResource = getResources().getIdentifier(uri, null,
+            getPackageName());
+    Drawable res = getResources().getDrawable(imageResource);
+    image1.setImageDrawable(res);
+    ((ViewGroup) LinearLayout1).addView(image1);
+* */
 
 
 
@@ -125,7 +151,8 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
         this.blnButtonRotation = true;
         b_start.setVisibility(View.VISIBLE);
         int castDegreeToInt = (int)savedDegree;
-        String valOfSelection =  String.valueOf(outputSelection(castDegreeToInt, intNumber));
+        //String test = spinnerChoices[outputSelection(castDegreeToInt, intNumber)];
+        String valOfSelection =  String.valueOf(spinnerChoices[outputSelection(castDegreeToInt, intNumber)-1]);
         Toast toast = Toast.makeText(this, " " + valOfSelection,0);
         //toast.setGravity(49, 0, 50);
         toast.show();
@@ -177,18 +204,56 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
     }
     private void setImageRoulette(int inputNum)
     {
+        int childCount = 0;
+
         switch(inputNum)
         {
             case 1:
+                linearFoodPlace3.setVisibility(View.INVISIBLE);
+                linearFoodPlace2.setVisibility(View.INVISIBLE);
+                childCount = linearFoodPlace1.getChildCount();
                 imageRoulette.setImageDrawable(getResources().getDrawable(R.drawable.spin1));
+                linearFoodPlace1.setBackgroundResource(R.drawable.foodplace1);
+                for(int i =0; i <childCount; i++)
+                {
+                    TextView tv = (TextView)linearFoodPlace1.getChildAt(i);
+                    tv.setText(spinnerChoices[i]);
+                }
+                //first.setText(spinnerChoices[0]);
+               // second.setText(spinnerChoices[1]);
+                linearFoodPlace1.setVisibility(View.VISIBLE);
                 return;
             case 2:
+                childCount = linearFoodPlace2.getChildCount();
+                linearFoodPlace1.setVisibility(View.INVISIBLE);
+                linearFoodPlace3.setVisibility(View.INVISIBLE);
                 imageRoulette.setImageDrawable(getResources().getDrawable(R.drawable.spin2));
+                linearFoodPlace2.setBackgroundResource(R.drawable.foodplace2);
+                for(int i = 0; i <childCount; i++)
+                {
+                    TextView tv = (TextView)linearFoodPlace2.getChildAt(i);
+                    tv.setText(spinnerChoices[i]);
+                }
+                linearFoodPlace2.setVisibility(View.VISIBLE);
                 return;
             case 3:
+                linearFoodPlace1.setVisibility(View.INVISIBLE);
+                linearFoodPlace2.setVisibility(View.INVISIBLE);
+                childCount = linearFoodPlace3.getChildCount();
                 imageRoulette.setImageDrawable(getResources().getDrawable(R.drawable.spin3));
+                linearFoodPlace3.setBackgroundResource(R.drawable.foodplace3);
+                for(int i =0; i <childCount; i++)
+                {
+                    TextView tv = (TextView)linearFoodPlace3.getChildAt(i);
+                    tv.setText(spinnerChoices[i]);
+                }
+                linearFoodPlace3.setVisibility(View.VISIBLE);
                 return;
         }
+    }
+    public void setTextViews(TextView view, String text)
+    {
+
     }
 
 }
