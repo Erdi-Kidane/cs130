@@ -14,7 +14,7 @@
         <activity
             android:name=".Spinner"
             android:label="@string/title_activity_spinner"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".GetAndPut" />
         <activity android:name=".MainPageActivity" />
         <activity android:name=".GroupChatActivity" />
@@ -27,6 +27,9 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".Popup"
+            android:theme="@style/AppTheme.CustomTheme">
         </activity>
     </application>
 
