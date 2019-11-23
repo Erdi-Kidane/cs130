@@ -1,9 +1,8 @@
 package com.example.SpinIt;
 
-import android.graphics.drawable.Drawable;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.RotateAnimation;
@@ -28,7 +27,7 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
 
     Button b_start, b_increase, b_decrease;
     TextView first, second, third, fourth, fifth, sixth, seventh, eight;
-
+    TextView popup;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().addFlags(1024);
@@ -156,10 +155,15 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
         Toast toast = Toast.makeText(this, " " + valOfSelection,0);
         //toast.setGravity(49, 0, 50);
         toast.show();
+        //Popup selectedInfo = new Popup(spinnerChoices);
 
+        Intent displayPopUp= new Intent(Spinner.this, Popup.class);
+        displayPopUp.putExtra("info", spinnerChoices[outputSelection(castDegreeToInt, intNumber) -1]);
+        startActivity(displayPopUp);
         //  outputSelection(savedDegree, intNumber);
 
     }
+
     @Override
     public void onAnimationRepeat(Animation animation)
     {
@@ -251,9 +255,6 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
                 return;
         }
     }
-    public void setTextViews(TextView view, String text)
-    {
 
-    }
 
 }
