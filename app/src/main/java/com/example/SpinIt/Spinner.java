@@ -1,11 +1,13 @@
 package com.example.SpinIt;
 
+
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
@@ -28,11 +30,13 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
     LinearLayout linearFoodPlace1 , linearFoodPlace2, linearFoodPlace3;
     private double savedDegree;
     private String[] spinnerChoices = {"Bplate", "In and out", "What a burger", "Subway", "Something really really long", "six", "seven", "eight"};
+
     ObjectAnimator boxes;
     Button b_start, b_increase, b_decrease;
     TextView first, second, third, fourth, fifth, sixth, seventh, eight;
     TextView popup;
     int childCount = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().addFlags(1024);
@@ -57,10 +61,26 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
         linearFoodPlace1 = (LinearLayout) findViewById(R.id.foodPlaceImage1);
 
 
+
         // Drawable d = Drawable.createFromPath()
+
       //linearFoodPlace.setBackgroundResource(R.drawable.foodplace1);
       //   imageRoulette.setImageDrawable(getResources().getDrawable(R.drawable.spin3));
         setImageRoulette(this.intNumber);
+
+/*
+*     View LinearLayout1 = findViewById(R.id.Layout1);
+    ImageView image1 = new ImageView(getApplicationContext());
+    String uri = "@drawable/myresource.png"; // Here you can set the name of
+                                                // the image dynamically
+    int imageResource = getResources().getIdentifier(uri, null,
+            getPackageName());
+    Drawable res = getResources().getDrawable(imageResource);
+    image1.setImageDrawable(res);
+    ((ViewGroup) LinearLayout1).addView(image1);
+* */
+
+
 
 
     }
@@ -80,6 +100,7 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
             rotateAnimation.setAnimationListener(this);
             imageRoulette.setAnimation(rotateAnimation);
             imageRoulette.startAnimation(rotateAnimation);
+
 
         }
 
@@ -142,13 +163,16 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
     {
         this.blnButtonRotation = true;
         b_start.setVisibility(View.VISIBLE);
+
         final int castDegreeToInt = (int)savedDegree;
+
         //String test = spinnerChoices[outputSelection(castDegreeToInt, intNumber)];
         String valOfSelection =  String.valueOf(spinnerChoices[outputSelection(castDegreeToInt, intNumber)-1]);
         Toast toast = Toast.makeText(this, " " + valOfSelection,0);
         //toast.setGravity(49, 0, 50);
         toast.show();
         //Popup selectedInfo = new Popup(spinnerChoices);
+
         //TextView winningPlace
         winnerAnimation(intNumber, outputSelection(castDegreeToInt, intNumber)-1);
 
@@ -177,6 +201,7 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
 
 
       //  startActivity(displayPopUp);
+
         //  outputSelection(savedDegree, intNumber);
 
     }
@@ -223,6 +248,7 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
             //  b_increase.setVisibility(View.VISIBLE);
         }
     }
+
     void winnerAnimation(int inputNum, int winner)
     {
         switch(inputNum)
@@ -288,11 +314,13 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
                 linearFoodPlace1.setVisibility(View.INVISIBLE);
                 linearFoodPlace3.setVisibility(View.INVISIBLE);
                 imageRoulette.setImageDrawable(getResources().getDrawable(R.drawable.spin2));
+
                 linearFoodPlace2.setBackgroundResource(R.drawable.fp2);
                 for(int i = 0; i <childCount; i++)
                 {
                     TextView tv = (TextView)linearFoodPlace2.getChildAt(i);
                     tv.setText(i+1 +" "+ spinnerChoices[i]);
+
 
                 }
                 linearFoodPlace2.setVisibility(View.VISIBLE);
@@ -302,6 +330,7 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
                 linearFoodPlace2.setVisibility(View.INVISIBLE);
                 childCount = linearFoodPlace3.getChildCount();
                 imageRoulette.setImageDrawable(getResources().getDrawable(R.drawable.spin3));
+
                 linearFoodPlace3.setBackgroundResource(R.drawable.fp3);
                 for(int i =0; i <childCount; i++)
                 {
