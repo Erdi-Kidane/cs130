@@ -1,7 +1,11 @@
 package com.example.SpinIt;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
@@ -24,10 +28,11 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
     LinearLayout linearFoodPlace1 , linearFoodPlace2, linearFoodPlace3;
     private double savedDegree;
     private String[] spinnerChoices = {"Bplate", "In and out", "What a burger", "Subway", "Something really really long", "six", "seven", "eight"};
-
+    ObjectAnimator boxes;
     Button b_start, b_increase, b_decrease;
     TextView first, second, third, fourth, fifth, sixth, seventh, eight;
     TextView popup;
+    int childCount = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().addFlags(1024);
@@ -50,23 +55,12 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
         linearFoodPlace3 = (LinearLayout) findViewById(R.id.foodPlaceImage3);
         linearFoodPlace2 = (LinearLayout) findViewById(R.id.foodPlaceImage2);
         linearFoodPlace1 = (LinearLayout) findViewById(R.id.foodPlaceImage1);
-       // Drawable d = Drawable.createFromPath()
+
+
+        // Drawable d = Drawable.createFromPath()
       //linearFoodPlace.setBackgroundResource(R.drawable.foodplace1);
       //   imageRoulette.setImageDrawable(getResources().getDrawable(R.drawable.spin3));
         setImageRoulette(this.intNumber);
-
-/*
-*     View LinearLayout1 = findViewById(R.id.Layout1);
-    ImageView image1 = new ImageView(getApplicationContext());
-    String uri = "@drawable/myresource.png"; // Here you can set the name of
-                                                // the image dynamically
-    int imageResource = getResources().getIdentifier(uri, null,
-            getPackageName());
-    Drawable res = getResources().getDrawable(imageResource);
-    image1.setImageDrawable(res);
-    ((ViewGroup) LinearLayout1).addView(image1);
-* */
-
 
 
     }
@@ -74,6 +68,7 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
     {
         if(this.blnButtonRotation)
         {
+
             int ran = new Random().nextInt(360) + 3600;
             RotateAnimation rotateAnimation = new RotateAnimation((float)this.lngDegrees, (float)
                     (this.lngDegrees + ((long)ran)),1,0.5f,1,0.5f);
@@ -85,8 +80,6 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
             rotateAnimation.setAnimationListener(this);
             imageRoulette.setAnimation(rotateAnimation);
             imageRoulette.startAnimation(rotateAnimation);
-
-
 
         }
 
@@ -149,17 +142,41 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
     {
         this.blnButtonRotation = true;
         b_start.setVisibility(View.VISIBLE);
-        int castDegreeToInt = (int)savedDegree;
+        final int castDegreeToInt = (int)savedDegree;
         //String test = spinnerChoices[outputSelection(castDegreeToInt, intNumber)];
         String valOfSelection =  String.valueOf(spinnerChoices[outputSelection(castDegreeToInt, intNumber)-1]);
         Toast toast = Toast.makeText(this, " " + valOfSelection,0);
         //toast.setGravity(49, 0, 50);
         toast.show();
         //Popup selectedInfo = new Popup(spinnerChoices);
+        //TextView winningPlace
+        winnerAnimation(intNumber, outputSelection(castDegreeToInt, intNumber)-1);
 
-        Intent displayPopUp= new Intent(Spinner.this, Popup.class);
-        displayPopUp.putExtra("info", spinnerChoices[outputSelection(castDegreeToInt, intNumber) -1]);
-        startActivity(displayPopUp);
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//                Intent i=new Intent(SearxhJobs.this,JobsTypes.class);
+//                startActivity(i);
+//            }
+//        }, 5000);
+
+        new Handler().postDelayed(new Runnable(){
+            @Override
+            public void run(){
+                Intent displayPopUp= new Intent(Spinner.this, Popup.class);
+                displayPopUp.putExtra("info", spinnerChoices[outputSelection(castDegreeToInt, intNumber) -1]);
+                startActivity(displayPopUp);
+            }
+        }, 1000);
+
+       // boxes.end();
+
+     //   Intent displayPopUp= new Intent(Spinner.this, Popup.class);
+      // displayPopUp.putExtra("info", spinnerChoices[outputSelection(castDegreeToInt, intNumber) -1]);
+
+
+      //  startActivity(displayPopUp);
         //  outputSelection(savedDegree, intNumber);
 
     }
@@ -206,9 +223,46 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
             //  b_increase.setVisibility(View.VISIBLE);
         }
     }
+    void winnerAnimation(int inputNum, int winner)
+    {
+        switch(inputNum)
+        {
+            case 1:
+                popup = (TextView)linearFoodPlace1.getChildAt(winner);
+                boxes = ObjectAnimator.ofInt(popup, "backgroundColor", Color.BLUE, Color.GREEN, Color.RED, Color.WHITE);
+                boxes.setDuration(360);
+                first.setVisibility(View.VISIBLE);
+                boxes.setEvaluator(new ArgbEvaluator());
+                boxes.setRepeatMode(Animation.REVERSE);
+                //boxes.setRepeatCount(Animation.INFINITE);
+                boxes.start();
+                return;
+            case 2:
+                popup = (TextView)linearFoodPlace2.getChildAt(winner);
+                boxes = ObjectAnimator.ofInt(popup, "backgroundColor", Color.BLUE, Color.GREEN, Color.RED, Color.WHITE);
+                boxes.setDuration(360);
+                first.setVisibility(View.VISIBLE);
+                boxes.setEvaluator(new ArgbEvaluator());
+                boxes.setRepeatMode(Animation.REVERSE);
+                //boxes.setRepeatCount(Animation.INFINITE);
+                boxes.start();
+                return;
+            case 3:
+                popup = (TextView)linearFoodPlace3.getChildAt(winner);
+                boxes = ObjectAnimator.ofInt(popup, "backgroundColor", Color.BLUE, Color.GREEN, Color.RED, Color.WHITE);
+                boxes.setDuration(900);
+                first.setVisibility(View.VISIBLE);
+                boxes.setEvaluator(new ArgbEvaluator());
+                boxes.setRepeatMode(Animation.REVERSE);
+                //boxes.setRepeatCount(Animation.INFINITE);
+                boxes.start();
+                return;
+        }
+    }
+
     private void setImageRoulette(int inputNum)
     {
-        int childCount = 0;
+
 
         switch(inputNum)
         {
@@ -217,12 +271,14 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
                 linearFoodPlace2.setVisibility(View.INVISIBLE);
                 childCount = linearFoodPlace1.getChildCount();
                 imageRoulette.setImageDrawable(getResources().getDrawable(R.drawable.spin1));
-                linearFoodPlace1.setBackgroundResource(R.drawable.foodplace1);
+                linearFoodPlace1.setBackgroundResource(R.drawable.fp1);
                 for(int i =0; i <childCount; i++)
                 {
                     TextView tv = (TextView)linearFoodPlace1.getChildAt(i);
-                    tv.setText(spinnerChoices[i]);
+                    tv.setText(i+1 +" "+ spinnerChoices[i]);
+
                 }
+
                 //first.setText(spinnerChoices[0]);
                // second.setText(spinnerChoices[1]);
                 linearFoodPlace1.setVisibility(View.VISIBLE);
@@ -232,11 +288,12 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
                 linearFoodPlace1.setVisibility(View.INVISIBLE);
                 linearFoodPlace3.setVisibility(View.INVISIBLE);
                 imageRoulette.setImageDrawable(getResources().getDrawable(R.drawable.spin2));
-                linearFoodPlace2.setBackgroundResource(R.drawable.foodplace2);
+                linearFoodPlace2.setBackgroundResource(R.drawable.fp2);
                 for(int i = 0; i <childCount; i++)
                 {
                     TextView tv = (TextView)linearFoodPlace2.getChildAt(i);
-                    tv.setText(spinnerChoices[i]);
+                    tv.setText(i+1 +" "+ spinnerChoices[i]);
+
                 }
                 linearFoodPlace2.setVisibility(View.VISIBLE);
                 return;
@@ -245,11 +302,12 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
                 linearFoodPlace2.setVisibility(View.INVISIBLE);
                 childCount = linearFoodPlace3.getChildCount();
                 imageRoulette.setImageDrawable(getResources().getDrawable(R.drawable.spin3));
-                linearFoodPlace3.setBackgroundResource(R.drawable.foodplace3);
+                linearFoodPlace3.setBackgroundResource(R.drawable.fp3);
                 for(int i =0; i <childCount; i++)
                 {
                     TextView tv = (TextView)linearFoodPlace3.getChildAt(i);
-                    tv.setText(spinnerChoices[i]);
+                    tv.setText(i+1 +" "+ spinnerChoices[i]);
+
                 }
                 linearFoodPlace3.setVisibility(View.VISIBLE);
                 return;
