@@ -231,8 +231,8 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
             case 1:
                 popup = (TextView)linearFoodPlace1.getChildAt(winner);
                 boxes = ObjectAnimator.ofInt(popup, "backgroundColor", Color.BLUE, Color.GREEN, Color.RED, Color.WHITE);
-                boxes.setDuration(360);
-                first.setVisibility(View.VISIBLE);
+                boxes.setDuration(900);
+               // first.setVisibility(View.VISIBLE);
                 boxes.setEvaluator(new ArgbEvaluator());
                 boxes.setRepeatMode(Animation.REVERSE);
                 //boxes.setRepeatCount(Animation.INFINITE);
@@ -241,8 +241,8 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
             case 2:
                 popup = (TextView)linearFoodPlace2.getChildAt(winner);
                 boxes = ObjectAnimator.ofInt(popup, "backgroundColor", Color.BLUE, Color.GREEN, Color.RED, Color.WHITE);
-                boxes.setDuration(360);
-                first.setVisibility(View.VISIBLE);
+                boxes.setDuration(900);
+                //first.setVisibility(View.VISIBLE);
                 boxes.setEvaluator(new ArgbEvaluator());
                 boxes.setRepeatMode(Animation.REVERSE);
                 //boxes.setRepeatCount(Animation.INFINITE);
@@ -252,7 +252,7 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
                 popup = (TextView)linearFoodPlace3.getChildAt(winner);
                 boxes = ObjectAnimator.ofInt(popup, "backgroundColor", Color.BLUE, Color.GREEN, Color.RED, Color.WHITE);
                 boxes.setDuration(900);
-                first.setVisibility(View.VISIBLE);
+                //first.setVisibility(View.VISIBLE);
                 boxes.setEvaluator(new ArgbEvaluator());
                 boxes.setRepeatMode(Animation.REVERSE);
                 //boxes.setRepeatCount(Animation.INFINITE);
