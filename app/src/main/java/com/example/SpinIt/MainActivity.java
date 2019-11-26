@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        GetClass();
+        //GetClass();
         if (currentuser == null){
             SendUserToLoginActivity();
         }
