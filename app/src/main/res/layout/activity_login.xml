@@ -62,8 +62,6 @@
                 android:layout_marginRight="27dp"
                 />
 
-
-
             <Button
                 android:id="@+id/login_button"
                 android:layout_width="match_parent"
@@ -72,13 +70,29 @@
                 android:padding="4dp"
                 android:layout_marginTop="14dp"
                 android:layout_marginLeft="29dp"
-                android:layout_marginRight="29dp"
+                android:layout_marginRight="230dp"
                 android:text="Login"
                 android:textAllCaps="false"
-                android:textSize="24sp"
-                android:textColor="@android:color/background_light"
+                android:textSize="18sp"
+                android:textColor="@android:color/background_dark"
                 android:background="@drawable/buttons"
                 />
+
+            <com.google.android.gms.common.SignInButton
+                android:id="@+id/ButtonGoogleSignIn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/login_password"
+                android:layout_marginLeft="230dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginRight="29dp"
+
+                android:padding="2dp"
+
+                android:textAllCaps="false"
+                android:textSize="24sp"
+                />
+
             <Button
                 android:id="@+id/need_new_account_link"
                 android:layout_width="match_parent"
@@ -87,17 +101,29 @@
                 android:padding="4dp"
                 android:layout_marginTop="14dp"
                 android:layout_marginLeft="29dp"
-                android:layout_marginRight="29dp"
+                android:layout_marginRight="230dp"
                 android:text="New User"
                 android:textAllCaps="false"
-                android:textSize="24sp"
-                android:textColor="@android:color/background_light"
+                android:textSize="18sp"
+                android:textColor="@android:color/background_dark"
                 android:background="@drawable/buttons"
                 />
 
-
-
-
+            <Button
+                android:id="@+id/ButtonGoogleSignOut"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/login_button"
+                android:padding="4dp"
+                android:layout_marginTop="14dp"
+                android:layout_marginLeft="230dp"
+                android:layout_marginRight="29dp"
+                android:text="Sign Out"
+                android:textAllCaps="false"
+                android:textSize="18sp"
+                android:textColor="@android:color/background_dark"
+                android:background="@drawable/buttons"
+                />
 
         </RelativeLayout>
 
