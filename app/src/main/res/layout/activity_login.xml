@@ -87,6 +87,8 @@
                 android:layout_marginTop="4dp"
                 android:layout_marginRight="29dp"
 
+                android:background="@drawable/buttons"
+
                 android:padding="2dp"
 
                 android:textAllCaps="false"
@@ -121,7 +123,9 @@
                 android:text="Sign Out"
                 android:textAllCaps="false"
                 android:textSize="18sp"
-                android:textColor="@android:color/background_dark"
+
+                android:textColor="@android:color/holo_blue_dark"
+
                 android:background="@drawable/buttons"
                 />
 

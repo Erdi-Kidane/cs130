@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        //GetClass();
+
         if (currentuser == null){
             SendUserToLoginActivity();
         }
@@ -362,27 +362,5 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-    private void GetClass()
-    {
-        String rcurrentUserID = mAuth.getCurrentUser().getUid();
-        Log.d("tag","testValue: call");
-        DatabaseReference UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
-        UsersRef.child(rcurrentUserID).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot)
-            {
-                Log.d("tag","testValue: get");
-                if (dataSnapshot.exists())
-                {
-                    newp = dataSnapshot.child("Person").getValue(Person.class);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-    //hihi
+    
 }
