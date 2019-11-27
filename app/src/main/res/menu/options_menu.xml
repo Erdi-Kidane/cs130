@@ -8,6 +8,12 @@
         >
     </item>
     <item
+        android:title="Remove Room"
+        android:id = "@+id/main_remove_group_option"
+        app:showAsAction= "never"
+        >
+    </item>
+    <item
         android:title="LogOut"
         android:id = "@+id/main_logout_option"
         app:showAsAction= "never"
@@ -20,8 +26,8 @@
         >
     </item>
     <item
-        android:title="Method"
-        android:id = "@+id/option2"
+        android:title="Add Friend"
+        android:id = "@+id/add_friend"
         app:showAsAction= "never"
         >
     </item>
