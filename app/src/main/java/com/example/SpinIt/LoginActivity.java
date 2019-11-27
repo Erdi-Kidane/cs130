@@ -47,6 +47,7 @@ public class LoginActivity extends AppCompatActivity {
     /**************************************************************/
     private SignInButton mButtonGoogle;
     private Button       mButtonGoogleSignOut;
+
     private GoogleSignInClient mGoogleSignInClient;
     /**************************************************************/
 
@@ -120,6 +121,7 @@ public class LoginActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+
         if (requestCode == RC_SIGN_IN) {
             Log.d("tag", "In onActivityResult(), see the task..." + data);
             Log.d("tag", "In onActivityResult(), see the task..." + requestCode);
@@ -133,6 +135,7 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d("tag", "In onActivityResult()..........");
 
                 GoogleSignInAccount account = task.getResult(ApiException.class);
+
 
                 Log.d("tag", "In onActivityResult(), the account" + account);
 
@@ -155,6 +158,7 @@ public class LoginActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
 
+
                         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount( LoginActivity.this );
                         if (acct != null) {
                             String personName = acct.getDisplayName();
@@ -172,6 +176,7 @@ public class LoginActivity extends AppCompatActivity {
                         //SendUserToMainActivity();
                         Log.d("tag", "signInWithCredential:success");
 
+
                     } else {
                         //failed message
                         Log.w("tag", "signInWithCredential:failure", task.getException());
@@ -179,6 +184,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
     }
+
 
     private void UpdateSettings(String setUserName)
     {
@@ -209,12 +215,6 @@ public class LoginActivity extends AppCompatActivity {
                 });
 
     }
-
-
-
-
-
-
 
 
     private void googleSignIn(){

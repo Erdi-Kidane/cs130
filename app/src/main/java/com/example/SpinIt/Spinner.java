@@ -30,6 +30,7 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
     LinearLayout linearFoodPlace1 , linearFoodPlace2, linearFoodPlace3;
     private double savedDegree;
     private String[] spinnerChoices = {"Bplate", "In and out", "What a burger", "Subway", "Something really really long", "six", "seven", "eight"};
+
     ObjectAnimator boxes;
     Button b_start, b_increase, b_decrease;
     TextView first, second, third, fourth, fifth, sixth, seventh, eight;
@@ -47,17 +48,41 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
         b_increase = (Button)findViewById(R.id.addStuffBTN);
         selected = (ImageView)findViewById(R.id.imageSelected);
         imageRoulette = (ImageView)findViewById(R.id.roulette);
+        first = (TextView)findViewById(R.id.firstLine);
+        second = (TextView)findViewById(R.id.secondLine);
+        third = (TextView)findViewById(R.id.thirdLine);
+        fourth = (TextView)findViewById(R.id.fourthLine);
+        fifth = (TextView)findViewById(R.id.fifthLine);
+        sixth = (TextView)findViewById(R.id.sixthLine);
+        seventh = (TextView)findViewById(R.id.seventhLine);
+        eight = (TextView)findViewById(R.id.eighthLine);
         linearFoodPlace3 = (LinearLayout) findViewById(R.id.foodPlaceImage3);
         linearFoodPlace2 = (LinearLayout) findViewById(R.id.foodPlaceImage2);
         linearFoodPlace1 = (LinearLayout) findViewById(R.id.foodPlaceImage1);
 
+
+
+        // Drawable d = Drawable.createFromPath()
+
+      //linearFoodPlace.setBackgroundResource(R.drawable.foodplace1);
+      //   imageRoulette.setImageDrawable(getResources().getDrawable(R.drawable.spin3));
         setImageRoulette(this.intNumber);
 
+/*
+*     View LinearLayout1 = findViewById(R.id.Layout1);
+    ImageView image1 = new ImageView(getApplicationContext());
+    String uri = "@drawable/myresource.png"; // Here you can set the name of
+                                                // the image dynamically
+    int imageResource = getResources().getIdentifier(uri, null,
+            getPackageName());
+    Drawable res = getResources().getDrawable(imageResource);
+    image1.setImageDrawable(res);
+    ((ViewGroup) LinearLayout1).addView(image1);
+* */
 
-    }
-    void fillArray(String[] inputarray)
-    {
-        this.spinnerChoices = inputarray;
+
+
+
     }
     public void onClickButtonRotation(View v)
     {
@@ -231,8 +256,8 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
             case 1:
                 popup = (TextView)linearFoodPlace1.getChildAt(winner);
                 boxes = ObjectAnimator.ofInt(popup, "backgroundColor", Color.BLUE, Color.GREEN, Color.RED, Color.WHITE);
-                boxes.setDuration(900);
-               // first.setVisibility(View.VISIBLE);
+                boxes.setDuration(360);
+                first.setVisibility(View.VISIBLE);
                 boxes.setEvaluator(new ArgbEvaluator());
                 boxes.setRepeatMode(Animation.REVERSE);
                 //boxes.setRepeatCount(Animation.INFINITE);
@@ -241,8 +266,8 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
             case 2:
                 popup = (TextView)linearFoodPlace2.getChildAt(winner);
                 boxes = ObjectAnimator.ofInt(popup, "backgroundColor", Color.BLUE, Color.GREEN, Color.RED, Color.WHITE);
-                boxes.setDuration(900);
-                //first.setVisibility(View.VISIBLE);
+                boxes.setDuration(360);
+                first.setVisibility(View.VISIBLE);
                 boxes.setEvaluator(new ArgbEvaluator());
                 boxes.setRepeatMode(Animation.REVERSE);
                 //boxes.setRepeatCount(Animation.INFINITE);
@@ -252,7 +277,7 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
                 popup = (TextView)linearFoodPlace3.getChildAt(winner);
                 boxes = ObjectAnimator.ofInt(popup, "backgroundColor", Color.BLUE, Color.GREEN, Color.RED, Color.WHITE);
                 boxes.setDuration(900);
-                //first.setVisibility(View.VISIBLE);
+                first.setVisibility(View.VISIBLE);
                 boxes.setEvaluator(new ArgbEvaluator());
                 boxes.setRepeatMode(Animation.REVERSE);
                 //boxes.setRepeatCount(Animation.INFINITE);

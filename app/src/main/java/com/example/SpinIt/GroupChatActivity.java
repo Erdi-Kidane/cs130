@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ScrollView;
@@ -37,6 +38,7 @@ public class GroupChatActivity extends AppCompatActivity {
 
     private Toolbar mToolbar;
     private ImageButton SendMessageButton;
+    private Button SpinButton;
     private EditText userMessageInput;
     private ScrollView mScrollView;
     private TextView displayTextMessages;
@@ -49,7 +51,7 @@ public class GroupChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_chat);
-
+        SpinButton = (Button) findViewById(R.id.littleSpin);
         currentGroupName = getIntent().getExtras().get("groupName").toString();
         //Toast.makeText(GroupChatActivity.this, currentGroupName, Toast.LENGTH_SHORT).show();
 
@@ -73,6 +75,15 @@ public class GroupChatActivity extends AppCompatActivity {
                 userMessageInput.setText("");
 
                 mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
+            }
+        });
+        SpinButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                Intent registerIntent = new Intent(GroupChatActivity.this, Spinner.class);
+                startActivity(registerIntent);
+
             }
         });
 
@@ -216,9 +227,22 @@ public class GroupChatActivity extends AppCompatActivity {
         }
         if (item.getItemId() == R.id.main_invite_option)
         {
-            RequestNewGroup();
-        }
 
+            Intent loginIntent = new Intent(GroupChatActivity.this,AddFriendActivity.class);
+            loginIntent.putExtra("groupName" , currentGroupName);
+            loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(loginIntent);
+            finish();
+        }
+        if (item.getItemId() == R.id.back_option)
+        {
+
+            Intent loginIntent = new Intent(GroupChatActivity.this,MainActivity.class);
+            //loginIntent.putExtra("groupName" , currentGroupName);
+            loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(loginIntent);
+            finish();
+        }
 
         return true;
     }

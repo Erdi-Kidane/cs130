@@ -73,8 +73,8 @@
                 android:layout_marginRight="230dp"
                 android:text="Login"
                 android:textAllCaps="false"
-                android:textSize="24sp"
-                android:textColor="@android:color/background_light"
+                android:textSize="18sp"
+                android:textColor="@android:color/background_dark"
                 android:background="@drawable/buttons"
                 />
 
@@ -86,7 +86,9 @@
                 android:layout_marginLeft="230dp"
                 android:layout_marginTop="4dp"
                 android:layout_marginRight="29dp"
+
                 android:background="@drawable/buttons"
+
                 android:padding="2dp"
 
                 android:textAllCaps="false"
@@ -104,8 +106,8 @@
                 android:layout_marginRight="230dp"
                 android:text="New User"
                 android:textAllCaps="false"
-                android:textSize="24sp"
-                android:textColor="@android:color/background_light"
+                android:textSize="18sp"
+                android:textColor="@android:color/background_dark"
                 android:background="@drawable/buttons"
                 />
 
@@ -121,7 +123,9 @@
                 android:text="Sign Out"
                 android:textAllCaps="false"
                 android:textSize="18sp"
+
                 android:textColor="@android:color/holo_blue_dark"
+
                 android:background="@drawable/buttons"
                 />
 
