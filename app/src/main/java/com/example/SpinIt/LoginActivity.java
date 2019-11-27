@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -30,6 +31,8 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.HashMap;
+
 public class LoginActivity extends AppCompatActivity {
     //private FirebaseUser currentuser;
     private FirebaseAuth mAuth;
@@ -44,7 +47,6 @@ public class LoginActivity extends AppCompatActivity {
     /**************************************************************/
     private SignInButton mButtonGoogle;
     private Button       mButtonGoogleSignOut;
-    //private GoogleSignInClient mGoogleUser;
     private GoogleSignInClient mGoogleSignInClient;
     /**************************************************************/
 
@@ -118,8 +120,6 @@ public class LoginActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-
         if (requestCode == RC_SIGN_IN) {
             Log.d("tag", "In onActivityResult(), see the task..." + data);
             Log.d("tag", "In onActivityResult(), see the task..." + requestCode);
@@ -133,8 +133,6 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d("tag", "In onActivityResult()..........");
 
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-
-
 
                 Log.d("tag", "In onActivityResult(), the account" + account);
 
@@ -156,11 +154,24 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
-                        SendUserToMainActivity();
-                        // Sign in success, update UI with the signed-in user's information
+
+                        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount( LoginActivity.this );
+                        if (acct != null) {
+                            String personName = acct.getDisplayName();
+                            Log.d("tag", "in google signin account........" + personName);
+                            String personGivenName = acct.getGivenName();
+                            String personFamilyName = acct.getFamilyName();
+                            String personEmail = acct.getEmail();
+                            String personId = acct.getId();
+                            Uri personPhoto = acct.getPhotoUrl();
+
+                            UpdateSettings( "Hui He" );
+                        }
+
+
+                        //SendUserToMainActivity();
                         Log.d("tag", "signInWithCredential:success");
-                        //FirebaseUser user = mAuth.getCurrentUser();
-                        //updateUI(user);
+
                     } else {
                         //failed message
                         Log.w("tag", "signInWithCredential:failure", task.getException());
@@ -168,6 +179,43 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
     }
+
+    private void UpdateSettings(String setUserName)
+    {
+        //String setUserName = userName.getText().toString();
+        String currentUserID = mAuth.getCurrentUser().getUid();
+        HashMap<String, Object> profileMap = new HashMap<>();
+        profileMap.put("uid", currentUserID);
+        profileMap.put("name", setUserName);
+
+        //profileMap.put('class',)
+        UsersRef.child(currentUserID).setValue(profileMap)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task)
+                    {
+                        if (task.isSuccessful())
+                        {
+
+                            SendUserToMainActivity();
+                            Toast.makeText(LoginActivity.this, "Account Created Successfully...", Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            String message = task.getException().toString();
+                            Toast.makeText(LoginActivity.this, "Error: " + message, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+    }
+
+
+
+
+
+
+
 
     private void googleSignIn(){
         Log.d("tag", "In googleSignIn().......");
