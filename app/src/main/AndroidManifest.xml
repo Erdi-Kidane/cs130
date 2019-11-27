@@ -14,8 +14,15 @@
         <activity
             android:name=".Spinner"
             android:label="@string/title_activity_spinner"
-            android:theme="@style/AppTheme.NoActionBar" />
+
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <activity
+            android:name=".Profile"/>
+
+
         <activity android:name=".GetAndPut" />
+
         <activity android:name=".MainPageActivity" />
         <activity android:name=".GroupChatActivity" />
         <activity android:name=".SettingsActivity" />
