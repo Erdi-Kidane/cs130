@@ -11,11 +11,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".AddFriendActivity"></activity>
+        <activity android:name=".AddFriend" />
         <activity
             android:name=".Spinner"
             android:label="@string/title_activity_spinner"
-            android:theme="@style/AppTheme.NoActionBar" />
+
+
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <activity
+            android:name=".Profile"/>
+
+
         <activity android:name=".GetAndPut" />
+
+
         <activity android:name=".MainPageActivity" />
         <activity android:name=".GroupChatActivity" />
         <activity android:name=".SettingsActivity" />
@@ -28,9 +39,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Popup"
-            android:theme="@style/AppTheme.CustomTheme">
-        </activity>
+        <activity
+            android:name=".Popup"
+            android:theme="@style/AppTheme.CustomTheme" />
     </application>
 
 </manifest>

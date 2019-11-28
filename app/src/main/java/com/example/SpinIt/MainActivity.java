@@ -19,6 +19,7 @@ import com.google.firebase.database.ValueEventListener;
 
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -62,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        GetClass();
+
         if (currentuser == null){
             SendUserToLoginActivity();
         }
@@ -127,17 +128,107 @@ public class MainActivity extends AppCompatActivity {
                     {
                         if (task.isSuccessful())
                         {
-                            Toast.makeText(MainActivity.this, groupName + " group is Created Successfully...", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, groupName + " room is Created Successfully...", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+    private void RemoveNewGroup(final String groupName)
+    {
+        String currentUserID = mAuth.getCurrentUser().getUid();
+        RootRef.child("Groups").child(groupName).removeValue()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task)
+                    {
+                        if (task.isSuccessful())
+                        {
+                            Toast.makeText(MainActivity.this, groupName + " room is removed Successfully...", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
     }
 
+    private void Addfriend()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AlertDialog);
+            builder.setTitle("Enter Friend's Name :");
 
+        final EditText groupNameField = new EditText(MainActivity.this);
+
+            groupNameField.setHint("e.g BestBuddy");
+            builder.setView(groupNameField);
+
+
+            builder.setPositiveButton("Invite", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i)
+            {
+                final String groupName = groupNameField.getText().toString();
+                if (TextUtils.isEmpty(groupName))
+                {
+                    Toast.makeText(MainActivity.this, "Please write Friend Name...", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+
+                    DatabaseReference mdatabaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
+                    mdatabaseReference.orderByChild("name").equalTo(groupName).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if(dataSnapshot.exists()){
+                                for (DataSnapshot childSnapshot: dataSnapshot.getChildren()) {
+                                    String uid = childSnapshot.getKey();
+                                    CreateFriend(uid,groupName);
+                                    break;
+                                }
+                            }
+                            else{
+                                Toast.makeText(MainActivity.this, "Please Type the correct member name...", Toast.LENGTH_SHORT).show();
+                            }
+
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) { // ToDo: Do something for errors too
+                        }
+                    });
+                    //CreateNewGroup(groupName);
+
+                }
+            }
+        });
+
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i)
+            {
+                dialogInterface.cancel();
+            }
+        });
+
+            builder.show();
+    }
+    private void CreateFriend(final String memberName,final String m)
+    {
+        String currentUserID = mAuth.getCurrentUser().getUid();
+        //UsersRef.child("Groups").child(groupName).child("Host").setValue(currentUserID);
+        RootRef.child("Users").child(currentUserID).child("Friendlist").child(m).setValue(memberName)
+                //UsersRef.child("Groups").child(groupName).child("Message").setValue("")
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task)
+                    {
+                        if (task.isSuccessful())
+                        {
+                                Toast.makeText(MainActivity.this, m + " is adding successfully...", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
     private void RequestNewGroup()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AlertDialog);
-        builder.setTitle("Enter Group Name :");
+        builder.setTitle("Enter Room Name :");
 
         final EditText groupNameField = new EditText(MainActivity.this);
         //final EditText groupNameField1 = new EditText(MainActivity.this);
@@ -172,6 +263,44 @@ public class MainActivity extends AppCompatActivity {
 
         builder.show();
     }
+    private void RemoveGroup()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AlertDialog);
+        builder.setTitle("Enter Room Name :");
+
+        final EditText groupNameField = new EditText(MainActivity.this);
+        //final EditText groupNameField1 = new EditText(MainActivity.this);
+        groupNameField.setHint("e.g UCLA");
+        builder.setView(groupNameField);
+
+
+        builder.setPositiveButton("Remove", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i)
+            {
+                String groupName = groupNameField.getText().toString();
+
+                if (TextUtils.isEmpty(groupName))
+                {
+                    Toast.makeText(MainActivity.this, "Please write Group Name...", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    RemoveNewGroup(groupName);
+                }
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i)
+            {
+                dialogInterface.cancel();
+            }
+        });
+
+        builder.show();
+    }
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         super.onOptionsItemSelected(item);
@@ -186,9 +315,17 @@ public class MainActivity extends AppCompatActivity {
         {
            RequestNewGroup();
         }
+        if (item.getItemId() == R.id.main_remove_group_option)
+        {
+            RemoveGroup();
+        }
         if (item.getItemId() == R.id.option1)
         {
             SendUserToMainPageActivity();
+        }
+        if (item.getItemId() == R.id.add_friend)
+        {
+            Addfriend();
         }
 
 
@@ -225,27 +362,5 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-    private void GetClass()
-    {
-        String rcurrentUserID = mAuth.getCurrentUser().getUid();
-        Log.d("tag","testValue: call");
-        DatabaseReference UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
-        UsersRef.child(rcurrentUserID).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot)
-            {
-                Log.d("tag","testValue: get");
-                if (dataSnapshot.exists())
-                {
-                    newp = dataSnapshot.child("Person").getValue(Person.class);
-                }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-    //hihi
 }
