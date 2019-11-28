@@ -10,6 +10,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -44,20 +45,13 @@ public class Profile extends AppCompatActivity {
 //        Toolbar toolbar = findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
 
 
 
         foodBtn = (Button) findViewById(R.id.foodTypeBtn);
         showSelectedFood = (TextView) findViewById((R.id.selectedFood));
-
+        showSelectedFood.setMovementMethod(new ScrollingMovementMethod());
         listItems = getResources().getStringArray(R.array.food_types);
         checkedItems = new boolean[listItems.length];
 
@@ -96,7 +90,7 @@ public class Profile extends AppCompatActivity {
             item = item + listItems[kUserItems.get(i)];
             if(i!=kUserItems.size()-1)  // not last item, add comma
             {
-                item = item + ", ";
+                item = item + "\n";
             }
 
         }
@@ -136,7 +130,7 @@ public class Profile extends AppCompatActivity {
                             item = item + listItems[kUserItems.get(i)];
                             if(i!=kUserItems.size()-1)  // not last item, add comma
                             {
-                                item = item + ", ";
+                                item = item + "\n";
                             }
 
                         }
@@ -176,7 +170,7 @@ public class Profile extends AppCompatActivity {
 
         dietaryBtn = (Button) findViewById(R.id.dietaryBtn);
         showSelectedDietary = (TextView) findViewById((R.id.selectedDietary));
-
+        showSelectedDietary.setMovementMethod(new ScrollingMovementMethod());
         dietaryItems = getResources().getStringArray(R.array.dietary_types);
         checkedDietaryItems = new boolean[dietaryItems.length];
 
@@ -214,7 +208,7 @@ public class Profile extends AppCompatActivity {
                             item = item + dietaryItems[kUserItems2.get(i)];
                             if(i!=kUserItems2.size()-1)  // not last item, add comma
                             {
-                                item = item + ", ";
+                                item = item + "\n";
                             }
 
                         }
