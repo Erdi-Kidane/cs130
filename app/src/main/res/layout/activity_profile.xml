@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#03A9F4"
     tools:context=".Profile">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -22,14 +23,6 @@
 
     <include layout="@layout/content_profile" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -41,20 +34,26 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="4dp"
-            android:layout_marginTop="56dp"
-            android:text="Food Type List"
+            android:layout_marginTop="60dp"
+            android:background="@drawable/buttons"
+            android:text="Food Type"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/selectedFood"
-            android:layout_width="401dp"
-            android:layout_height="179dp"
+            android:layout_width="397dp"
+            android:layout_height="220dp"
+            android:padding="10dp"
             android:layout_marginStart="7dp"
             android:layout_marginTop="7dp"
             android:layout_marginEnd="7dp"
+            android:scrollbars="vertical"
             android:text="Please choose your food type list"
+            android:textColor="#FFFFEB3B"
             android:textSize="18sp"
+            android:textStyle="bold|italic"
+            android:background="@drawable/border"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/foodTypeBtn" />
@@ -64,22 +63,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
-            android:layout_marginTop="55dp"
+            android:layout_marginTop="20dp"
             android:layout_marginRight="294dp"
-            android:text="Dietary List"
+            android:background="@drawable/buttons"
+            android:text="Dietary"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/selectedFood" />
 
         <TextView
             android:id="@+id/selectedDietary"
-            android:layout_width="396dp"
-            android:layout_height="176dp"
+            android:layout_width="397dp"
+            android:layout_height="220dp"
+            android:padding="10dp"
             android:layout_marginStart="7dp"
             android:layout_marginTop="7dp"
             android:layout_marginEnd="7dp"
             android:text="Please choose your dietary list"
+            android:textColor="#FFFFEB3B"
             android:textSize="18sp"
+            android:textStyle="bold|italic"
+            android:background="@drawable/border"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/dietaryBtn" />
