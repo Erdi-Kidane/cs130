@@ -104,6 +104,8 @@ public class RegisterActivity extends AppCompatActivity {
         Person mPerson = new Person(currentUserID);
 
         RootRef.child("Users").child(currentUserID).child("Person").setValue(mPerson);
+        RootRef.child("Users").child(currentUserID).child("name").setValue(setUserName);
+        RootRef.child("Users").child(currentUserID).child("uid").setValue(currentUserID);
         SendUserToMainActivity();
 
         /*⬆ADD A PERSON OJBECT TO FIREBASE WHEN REGISTER ⬆*/
