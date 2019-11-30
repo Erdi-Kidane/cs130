@@ -67,6 +67,20 @@
                 android:textColor="#000000"
                 android:textSize="24sp" />
 
+            <Button
+                android:id="@+id/CheckIn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/pbutton"
+                android:layout_marginLeft="29dp"
+                android:layout_marginTop="14dp"
+                android:layout_marginRight="29dp"
+                android:background="@drawable/buttons"
+                android:padding="4dp"
+                android:text="Check-In"
+                android:textAllCaps="false"
+                android:textSize="24sp" />
+
 
         </RelativeLayout>
 
