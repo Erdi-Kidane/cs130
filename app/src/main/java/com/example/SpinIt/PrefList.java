@@ -3,6 +3,7 @@ package com.example.SpinIt;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 public class PrefList implements Parcelable {
     /**************************************************/
@@ -15,7 +16,8 @@ public class PrefList implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel out, int flags) {
-        out.writeStringList(choices);
+        out.writeStringList(dietaryPref);
+        out.writeStringList(foodPref);
     }
 
     public static final Parcelable.Creator<PrefList> CREATOR = new Parcelable.Creator<PrefList>() {
@@ -29,23 +31,28 @@ public class PrefList implements Parcelable {
     };
 
     private PrefList(Parcel in) {
-        in.readStringList(choices);
+        in.readStringList(dietaryPref);
+        in.readStringList(foodPref);
     }
     /************************************************/
-    private ArrayList<String> choices = new ArrayList<>();
+    private ArrayList<String> dietaryPref = new ArrayList<>();
+    private ArrayList<String> foodPref = new ArrayList<>();
     PrefList()
     {
-        choices = new ArrayList<String>();
+        this.dietaryPref = new ArrayList<>();
+        this.foodPref = new ArrayList<>();
     }
 
-    public void createList(ArrayList<String> list)
+    public void setDietaryPref(ArrayList<String> list)
     {
-        this.choices = list;
+        this.dietaryPref = list;
     }
+    public void setFoodPref(ArrayList<String> list){this.foodPref = list;};
 
-    public ArrayList<String> getPrefList()
+    public ArrayList<String> getDietaryPref()
     {
-        return this.choices;
+        return this.dietaryPref;
     }
+    public ArrayList<String> getFoodPref() { return this.foodPref; }
 }
 

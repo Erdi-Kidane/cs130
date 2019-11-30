@@ -27,16 +27,14 @@ public class RegisterActivity extends AppCompatActivity {
     private Button CreateAccountButton;
     private EditText UserEmail, UserPassword;
     private EditText userName;
-    private String currentUserID;
     private FirebaseAuth mAuth;
     private DatabaseReference RootRef;
     private ProgressDialog loadingBar;
-    public Person newp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        //currentUserID = mAuth.getCurrentUser().getUid();
         mAuth = FirebaseAuth.getInstance();
         RootRef = FirebaseDatabase.getInstance().getReference();
 
@@ -85,18 +83,8 @@ public class RegisterActivity extends AppCompatActivity {
                         {
                             if (task.isSuccessful())
                             {
-                                //String deviceToken = FirebaseInstanceId.getInstance().getToken();
-
-                                //String currentUserID = mAuth.getCurrentUser().getUid();
-                                //RootRef.child("Users").child(currentUserID).setValue("");
                                 UpdateSettings(setUserName);
-
-                                //RootRef.child("Users").child(currentUserID).child("device_token")
-                                        //.setValue(deviceToken);
-
-
                                 loadingBar.dismiss();
-                                //mAuth.signOut();
                             }
                             else
                             {
@@ -110,66 +98,16 @@ public class RegisterActivity extends AppCompatActivity {
     }
     private void UpdateSettings(String setUserName)
     {
-        //String setUserName = userName.getText().toString();
         String currentUserID = mAuth.getCurrentUser().getUid();
-
-        //HashMap<String, Object> profileMap = new HashMap<>();
-        //profileMap.put("uid", currentUserID);
-        //profileMap.put("name", setUserName);
 
         /*⬇ADD A PERSON OJBECT TO FIREBASE WHEN REGISTER ⬇*/
         Person mPerson = new Person(currentUserID);
+
         RootRef.child("Users").child(currentUserID).child("Person").setValue(mPerson);
         SendUserToMainActivity();
 
         /*⬆ADD A PERSON OJBECT TO FIREBASE WHEN REGISTER ⬆*/
 
-        //profileMap.put('class',)
-
-        /*
-        RootRef.child("Users").child(currentUserID).setValue(profileMap)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task)
-                    {
-                        if (task.isSuccessful())
-                        {
-
-                            SendUserToMainActivity();
-                            Toast.makeText(RegisterActivity.this, "Account Created Successfully...", Toast.LENGTH_SHORT).show();
-                        }
-                        else
-                        {
-                            String message = task.getException().toString();
-                            Toast.makeText(RegisterActivity.this, "Error: " + message, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-
-         */
-
-        /*ADD THE PERSON OBJECT INTO THE FIREBAZE   BELOW  */
-        /*
-        RootRef.child("Users").child(currentUserID).child("Person").setValue(mPerson)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task)
-                    {
-                        if (task.isSuccessful())
-                        {
-                            Log.d("tag", "I am in successful adding a Person ojbect...");
-
-                            SendUserToMainActivity();
-                            Toast.makeText(RegisterActivity.this, "Account Created Successfully...", Toast.LENGTH_SHORT).show();
-                        }
-                        else
-                        {
-                            String message = task.getException().toString();
-                            Toast.makeText(RegisterActivity.this, "Error: " + message, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });*/
-        /*ADD THE PERSON OBJECT INTO THE FIREBAZE  ABOVE */
     }
 
     private void InitializeFields() {
@@ -189,11 +127,4 @@ public class RegisterActivity extends AppCompatActivity {
         startActivity(mainIntent);
         finish();
     }
-    // Copy to you guys code
-
-   // private void useValue(Person yourValue) {
-
-     //   Log.d(TAG, "countryNameCode: " + yourValue);
-
-    //}
 }

@@ -18,8 +18,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 
 public class MainPageActivity extends AppCompatActivity {
     private Button mSpinButton, mGroupButton, mPrefenceButton;
@@ -43,19 +41,13 @@ public class MainPageActivity extends AppCompatActivity {
         Log.d("tag", "before get() in MainPageActivity........");
 
         get();
-
-
         mSpinButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view)
             {
                 Intent registerIntent = new Intent(MainPageActivity.this, Spinner.class);
+                registerIntent.putExtra("Person", currentPerson);
                 startActivity(registerIntent);
-//                if(currentPerson.getDietaryList().getPrefList().isEmpty())
-//                    Log.d("tag", "The thing was not transferred");
-//                else
-//                    Log.d("tag", "The thing was transferred" + currentPerson.getDietaryList().getPrefList().get(0));
-
             }
         });
         mPrefenceButton.setOnClickListener(new View.OnClickListener(){
@@ -64,18 +56,7 @@ public class MainPageActivity extends AppCompatActivity {
             {
                 Intent registerIntent = new Intent(MainPageActivity.this, Profile.class);
                 registerIntent.putExtra("Person", currentPerson);
-
-
                 startActivity(registerIntent);
-//                if(currentPerson != null){
-//                    ArrayList<String> newListOfDietary = new ArrayList<>();
-//                    newListOfDietary.add("Lactose Intolerant");
-//                    newListOfDietary.add("Glucose Free");
-//                    PrefList newPrefList = new PrefList();
-//                    newPrefList.createList(newListOfDietary);
-//                    currentPerson.updatePrefList(newPrefList);
-//                }
-
             }
         });
         mGroupButton.setOnClickListener(new View.OnClickListener() {
@@ -86,15 +67,6 @@ public class MainPageActivity extends AppCompatActivity {
                 startActivity(registerIntent);
             }
         });
-
-//        mPrefenceButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view)
-//            {
-//                Intent registerIntent = new Intent(MainPageActivity.this, Profile.class);
-//                startActivity(registerIntent);
-//            }
-//        });
     }
 
     /*****************for testing***************************************************************/

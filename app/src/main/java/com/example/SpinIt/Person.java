@@ -9,93 +9,15 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
-import java.io.Serializable;
 import java.util.ArrayList;
 
-//public class Person implements Serializable {
-//
-//
-//    public String title;
-//    public String startTime;
-//    public String endTime;
-//    public String day;
-//
-//    //this variable test the arraylist datastructure
-//    public ArrayList<String> dietaryList;
-//
-//    //this is to test SpunPlaces
-//    private SpunPlaces spunPlaces;
-//
-//    public Person() {
-//    }
-//
-//    /*
-//    public Person(ArrayList<String> al){
-//        this.dietaryList = al;
-//    }
-//     */
-//    public Person(DataSnapshot snapshot){
-//        this.title = snapshot.child("title").getValue(String.class);
-//        this.startTime = snapshot.child("startTime").getValue(String.class);
-//        this.endTime = snapshot.child("endTime").getValue(String.class);
-//        this.day = snapshot.child("day").getValue(String.class);
-//        GenericTypeIndicator<ArrayList<String>> stringList = new GenericTypeIndicator<ArrayList<String>>(){};
-//        this.dietaryList = snapshot.child("dietaryList").getValue(stringList);
-//        //this.spunPlaces = new SpunPlaces();
-//        ArrayList<Place> tempCheck = new ArrayList<>();
-//        ArrayList<Place> tempSpun = new ArrayList<>();
-//        for(DataSnapshot temp: snapshot.child("spunPlaces").child("checkPlaces").getChildren()){
-//                double lat = temp.child("latitude").getValue(double.class);
-//                double longi = temp.child("longitude").getValue(double.class);
-//                String url = temp.child("url").getValue(String.class);
-//                Place tp = new Place(longi,lat,url);
-//                tempCheck.add(tp);
-//        }
-//        for(DataSnapshot temp: snapshot.child("spunPlaces").child("spunPlaces").getChildren()){
-//            double lat = temp.child("latitude").getValue(double.class);
-//            double longi = temp.child("longitude").getValue(double.class);
-//            String url = temp.child("url").getValue(String.class);
-//            Place tp = new Place(longi,lat,url);
-//            tempSpun.add(tp);
-//        }
-//        this.spunPlaces = new SpunPlaces(tempCheck, tempSpun);
-//    }
-//
-//
-//    public Person(String title, String startTime, String endTime, String day, ArrayList<String> al, SpunPlaces sp
-//    ) {
-//        this.title = title;
-//        this.startTime = startTime;
-//        this.endTime = endTime;
-//        this.day = day;
-//        this.dietaryList = al;
-//        this.spunPlaces = sp;
-//    }
-//
-//
-//
-//    public void setDay (String s){
-//        this.day = s;
-//    }
-//    public String getDay (){return this.day;}
-//    public String getTitle () {return this.title;}
-//    public String getStartTime (){return this.startTime;}
-//    public String getEndTime (){return this.endTime;}
-//    public ArrayList<String> getDietaryList(){return this.dietaryList;}
-//    public SpunPlaces getSpunPlaces(){return this.spunPlaces;}
-//
-//}
 
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 public class Person implements Parcelable {
     private ArrayList<String> listOfStatus = new ArrayList<>();
     //private Set<String> listOfFriends;
     private SpunPlaces spunPlaces = new SpunPlaces();
-    private PrefList dietaryList = new PrefList();
+    private PrefList prefList = new PrefList();
     private String currentUID;
 /**************************************************/
 //This is all for Parcelable stuff
@@ -108,7 +30,7 @@ public class Person implements Parcelable {
     @Override
     public void writeToParcel(Parcel out, int flags) {
         out.writeParcelable(spunPlaces, flags);
-        out.writeParcelable(dietaryList, flags);
+        out.writeParcelable(prefList, flags);
         out.writeString(currentUID);
         out.writeStringList(listOfStatus);
     }
@@ -123,7 +45,7 @@ public class Person implements Parcelable {
     };
     private Person(Parcel in) {
         this.spunPlaces = in.readParcelable(SpunPlaces.class.getClassLoader());
-        this.dietaryList = in.readParcelable(PrefList.class.getClassLoader());
+        this.prefList = in.readParcelable(PrefList.class.getClassLoader());
         this.currentUID = in.readString();
         in.readStringList(listOfStatus);
     }
@@ -131,10 +53,16 @@ public class Person implements Parcelable {
 
     Person(String currentUID){
         this.listOfStatus = new ArrayList<>();
-        this.dietaryList = new PrefList();
+        this.prefList = new PrefList();
         this.spunPlaces = new SpunPlaces();
         this.currentUID = currentUID;
 
+    }
+    Person(String currentUID, PrefList pl, SpunPlaces sp, ArrayList<String> ls){
+        this.listOfStatus = ls;
+        this.prefList = pl;
+        this.spunPlaces = sp;
+        this.currentUID = currentUID;
     }
     /**
      * This is the constructor for a person that has barely created an account and will instantiate everything as empty
@@ -151,39 +79,53 @@ public class Person implements Parcelable {
         if(snapshot.child("spunPlaces").exists()) {
             ArrayList<Place> tempCheck = new ArrayList<>();
             ArrayList<Place> tempSpun = new ArrayList<>();
-            for(DataSnapshot temp: snapshot.child("spunPlaces").child("checkPlaces").getChildren()){
-                double lat = temp.child("latitude").getValue(double.class);
-                double longi = temp.child("longitude").getValue(double.class);
-                String url = temp.child("url").getValue(String.class);
-                //EXPANSION OF PLACE
-                Place tp = new Place(longi,lat,url);
-                tempCheck.add(tp);
+            if(snapshot.child("spunPlaces").child("checkPlaces").exists()) {
+                for (DataSnapshot temp : snapshot.child("spunPlaces").child("checkPlaces").getChildren()) {
+                    double lat = temp.child("latitude").getValue(double.class);
+                    double longi = temp.child("longitude").getValue(double.class);
+                    String url = temp.child("url").getValue(String.class);
+                    //EXPANSION OF PLACE
+                    Place tp = new Place(longi, lat, url);
+                    tempCheck.add(tp);
+                }
             }
-            for(DataSnapshot temp: snapshot.child("spunPlaces").child("spunPlaces").getChildren()){
-                double lat = temp.child("latitude").getValue(double.class);
-                double longi = temp.child("longitude").getValue(double.class);
-                String url = temp.child("url").getValue(String.class);
-                //EXPANSION OF PLACE
-                Place tp = new Place(longi,lat,url);
-                tempSpun.add(tp);
+            if(snapshot.child("spunPlaces").child("spunPlaces").exists()) {
+                for (DataSnapshot temp : snapshot.child("spunPlaces").child("spunPlaces").getChildren()) {
+                    double lat = temp.child("latitude").getValue(double.class);
+                    double longi = temp.child("longitude").getValue(double.class);
+                    String url = temp.child("url").getValue(String.class);
+                    //EXPANSION OF PLACE
+                    Place tp = new Place(longi, lat, url);
+                    tempSpun.add(tp);
+                }
             }
             this.spunPlaces = new SpunPlaces(tempCheck, tempSpun);
         }
         else
             this.spunPlaces = new SpunPlaces();
 
-        if(snapshot.child("dietaryList").exists()){
+        if(snapshot.child("prefList").exists()){
             ArrayList<String> tempDiet = new ArrayList<>();
-            for(DataSnapshot temp: snapshot.child("dietaryList").child("prefList").getChildren()){
-                String tempDietS = temp.getValue(String.class);
-                tempDiet.add(tempDietS);
+            ArrayList<String> tempFood = new ArrayList<>();
+            if(snapshot.child("prefList").child("dietaryPref").exists()) {
+                for (DataSnapshot temp : snapshot.child("prefList").child("dietaryPref").getChildren()) {
+                    String tempDietS = temp.getValue(String.class);
+                    tempDiet.add(tempDietS);
+                }
+            }
+            if(snapshot.child("prefList").child("foodPref").exists()) {
+                for (DataSnapshot temp : snapshot.child("prefList").child("foodPref").getChildren()) {
+                    String tempDietS = temp.getValue(String.class);
+                    tempFood.add(tempDietS);
+                }
             }
             PrefList pl = new PrefList();
-            pl.createList(tempDiet);
-            this.dietaryList = pl;
+            pl.setDietaryPref(tempDiet);
+            pl.setFoodPref(tempFood);
+            this.prefList = pl;
         }
         else
-            this.dietaryList = new PrefList();
+            this.prefList = new PrefList();
 
         this.currentUID = snapshot.child("currentUID").getValue(String.class);
 
@@ -206,7 +148,7 @@ public class Person implements Parcelable {
 
     public boolean updatePrefList(PrefList dietaryList){
         //do a database call and then return true
-        this.dietaryList = dietaryList;
+        this.prefList = dietaryList;
         DatabaseReference RootRef = FirebaseDatabase.getInstance().getReference();
         RootRef.child("Users").child(this.currentUID).child("Person").setValue(this);
         Log.d("tag", "updatedPrefList");
@@ -254,6 +196,6 @@ public class Person implements Parcelable {
      * getter for the Dietary List
      * @return the Dietary list
      */
-    public PrefList getDietaryList(){return this.dietaryList;}
+    public PrefList getPrefList(){return this.prefList;}
     public String getCurrentUID(){return this.currentUID;}
 }
