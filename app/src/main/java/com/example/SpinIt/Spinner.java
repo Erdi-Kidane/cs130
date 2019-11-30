@@ -37,6 +37,8 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
     TextView popup;
     int childCount = 0;
 
+    private Person currentPerson;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().addFlags(1024);
@@ -59,6 +61,17 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
         linearFoodPlace3 = (LinearLayout) findViewById(R.id.foodPlaceImage3);
         linearFoodPlace2 = (LinearLayout) findViewById(R.id.foodPlaceImage2);
         linearFoodPlace1 = (LinearLayout) findViewById(R.id.foodPlaceImage1);
+
+        Intent mIntent = getIntent();
+        currentPerson = (Person) mIntent.getParcelableExtra("Person");
+        /*From here we probably want to create a spinner from the person's information*/
+        /*Create button that will let us set up the location, find places, and let out a number of places*/
+
+
+        Spin spin = new Spin(currentPerson);
+
+
+
 
 
 

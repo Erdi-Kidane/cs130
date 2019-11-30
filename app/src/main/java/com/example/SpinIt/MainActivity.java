@@ -58,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         currentuser = mAuth.getCurrentUser();
         RootRef = FirebaseDatabase.getInstance().getReference();
+
+        Intent displayPopUp = getIntent();
+        String info = displayPopUp.getStringExtra("chatInfo");
     }
 
     @Override
