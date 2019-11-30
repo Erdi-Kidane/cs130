@@ -1,16 +1,20 @@
 package com.example.SpinIt;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.database.DatabaseReference;
+
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -36,7 +40,8 @@ public class Profile extends AppCompatActivity {
     ArrayList<Integer> kUserItems2 = new ArrayList<>();
     ArrayList<String> dietaryListChosen = new ArrayList<>();
 
-
+    private Person currentPerson;
+    private DatabaseReference mRootRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,20 +50,29 @@ public class Profile extends AppCompatActivity {
 //        Toolbar toolbar = findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
 
-
-
-
-
         foodBtn = (Button) findViewById(R.id.foodTypeBtn);
         showSelectedFood = (TextView) findViewById((R.id.selectedFood));
         showSelectedFood.setMovementMethod(new ScrollingMovementMethod());
         listItems = getResources().getStringArray(R.array.food_types);
         checkedItems = new boolean[listItems.length];
 
-        //    UPDATE already added boxes
-        ArrayList<String> tempList = new ArrayList<>();
-        tempList.add("Distilleries");
-        tempList.add("Coffee and Tea");
+        Intent mIntent = getIntent();
+        currentPerson = (Person) mIntent.getParcelableExtra("Person");
+
+
+        if(!currentPerson.getDietaryList().getPrefList().isEmpty())
+            Log.d("tag", "The thing was transferred" + currentPerson.getDietaryList().getPrefList().get(0));
+        else
+            Log.d("tag", "The thing was not transferred");
+
+//        mRootRef = FirebaseDatabase.getInstance().getReference();
+//        get();
+
+        // UPDATE already added boxes
+        //ArrayList<String> tempList = pl.getPrefList();
+        ArrayList<String> tempList = currentPerson.getDietaryList().getPrefList();
+        //tempList.add("Distilleries");
+        //tempList.add("Coffee and Tea");
 
         for(String s: tempList)
         {
@@ -125,9 +139,11 @@ public class Profile extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String item = "";
+                        ArrayList<String> tempList = new ArrayList<>();
                         for(int i=0; i<kUserItems.size(); i++)
                         {
                             item = item + listItems[kUserItems.get(i)];
+                            tempList.add(listItems[kUserItems.get(i)]);
                             if(i!=kUserItems.size()-1)  // not last item, add comma
                             {
                                 item = item + "\n";
@@ -135,6 +151,9 @@ public class Profile extends AppCompatActivity {
 
                         }
                         showSelectedFood.setText(item);
+                        PrefList tempPL = new PrefList();
+                        tempPL.createList(tempList);
+                        currentPerson.updatePrefList(tempPL);
                     }
                 });
 
@@ -148,6 +167,8 @@ public class Profile extends AppCompatActivity {
                             showSelectedFood.setText("");
                             foodListChosen.clear();
                         }
+                        PrefList empty = new PrefList();
+                        currentPerson.updatePrefList(empty);
                     }
                 });
 
@@ -254,8 +275,6 @@ public class Profile extends AppCompatActivity {
     {
         return dietaryListChosen;
     }
-
-
 
 }
 

@@ -1,9 +1,47 @@
 package com.example.SpinIt;
 
-public class Place {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Place implements Parcelable{
     private double longitude;
     private double latitude;
     private String url;
+    /**************************************************/
+//This is all for Parcelable stuff
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel out, int flags) {
+        out.writeDouble(longitude);
+        out.writeDouble(latitude);
+        out.writeString(url);
+    }
+
+    public static final Parcelable.Creator<Place> CREATOR = new Parcelable.Creator<Place>() {
+        public Place createFromParcel(Parcel in) {
+            return new Place(in);
+        }
+
+        public Place[] newArray(int size) {
+            return new Place[size];
+        }
+    };
+
+    private Place(Parcel in) {
+        this.longitude = in.readDouble();
+        this.latitude = in.readDouble();
+        this.url = in.readString();
+    }
+    /************************************************/
+
+
+
+
     Place(double longitude, double latitude, String url)
     {
         this.longitude = longitude;

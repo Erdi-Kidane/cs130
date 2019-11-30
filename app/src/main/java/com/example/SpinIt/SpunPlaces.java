@@ -1,10 +1,43 @@
 package com.example.SpinIt;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 
-public class SpunPlaces {
-    private ArrayList<Place>listOfSpunPlaces;
-    private ArrayList<Place>listOfCheckPlaces;
+public class SpunPlaces implements Parcelable {
+    private ArrayList<Place>listOfSpunPlaces = new ArrayList<>();
+    private ArrayList<Place>listOfCheckPlaces = new ArrayList<>();
+
+    /**************************************************/
+//This is all for Parcelable stuff
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel out, int flags) {
+        out.writeTypedList(listOfCheckPlaces);
+        out.writeTypedList(listOfSpunPlaces);
+    }
+
+    public static final Parcelable.Creator<SpunPlaces> CREATOR = new Parcelable.Creator<SpunPlaces>() {
+        public SpunPlaces createFromParcel(Parcel in) {
+            return new SpunPlaces(in);
+        }
+
+        public SpunPlaces[] newArray(int size) {
+            return new SpunPlaces[size];
+        }
+    };
+    private SpunPlaces(Parcel in) {
+        in.readTypedList(listOfCheckPlaces,Place.CREATOR);
+        in.readTypedList(listOfSpunPlaces,Place.CREATOR);
+    }
+/************************************************/
+
 
     /**
      * This is the constructor for users that already used the app prior
@@ -19,10 +52,11 @@ public class SpunPlaces {
     /**
      * This is the constructor for users that are new and have an empty constructor
      */
-    SpunPlaces(){
-        this.listOfSpunPlaces = new ArrayList<Place>();
+    public SpunPlaces(){
         this.listOfCheckPlaces = new ArrayList<Place>();
+        this.listOfSpunPlaces = new ArrayList<Place>();
     }
+    //SpunPlaces()
 
     /**
      * <p>

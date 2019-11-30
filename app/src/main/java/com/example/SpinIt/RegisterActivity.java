@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -109,32 +111,67 @@ public class RegisterActivity extends AppCompatActivity {
     private void UpdateSettings(String setUserName)
     {
         //String setUserName = userName.getText().toString();
-            String currentUserID = mAuth.getCurrentUser().getUid();
-            HashMap<String, Object> profileMap = new HashMap<>();
-            profileMap.put("uid", currentUserID);
-            profileMap.put("name", setUserName);
+        String currentUserID = mAuth.getCurrentUser().getUid();
 
-            //profileMap.put('class',)
-            RootRef.child("Users").child(currentUserID).setValue(profileMap)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task)
+        //HashMap<String, Object> profileMap = new HashMap<>();
+        //profileMap.put("uid", currentUserID);
+        //profileMap.put("name", setUserName);
+
+        /*⬇ADD A PERSON OJBECT TO FIREBASE WHEN REGISTER ⬇*/
+        Person mPerson = new Person(currentUserID);
+        RootRef.child("Users").child(currentUserID).child("Person").setValue(mPerson);
+        SendUserToMainActivity();
+
+        /*⬆ADD A PERSON OJBECT TO FIREBASE WHEN REGISTER ⬆*/
+
+        //profileMap.put('class',)
+
+        /*
+        RootRef.child("Users").child(currentUserID).setValue(profileMap)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task)
+                    {
+                        if (task.isSuccessful())
                         {
-                            if (task.isSuccessful())
-                            {
 
-                                SendUserToMainActivity();
-                                Toast.makeText(RegisterActivity.this, "Account Created Successfully...", Toast.LENGTH_SHORT).show();
-                            }
-                            else
-                            {
-                                String message = task.getException().toString();
-                                Toast.makeText(RegisterActivity.this, "Error: " + message, Toast.LENGTH_SHORT).show();
-                            }
+                            SendUserToMainActivity();
+                            Toast.makeText(RegisterActivity.this, "Account Created Successfully...", Toast.LENGTH_SHORT).show();
                         }
-                    });
+                        else
+                        {
+                            String message = task.getException().toString();
+                            Toast.makeText(RegisterActivity.this, "Error: " + message, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
 
+         */
+
+        /*ADD THE PERSON OBJECT INTO THE FIREBAZE   BELOW  */
+        /*
+        RootRef.child("Users").child(currentUserID).child("Person").setValue(mPerson)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task)
+                    {
+                        if (task.isSuccessful())
+                        {
+                            Log.d("tag", "I am in successful adding a Person ojbect...");
+
+                            SendUserToMainActivity();
+                            Toast.makeText(RegisterActivity.this, "Account Created Successfully...", Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            String message = task.getException().toString();
+                            Toast.makeText(RegisterActivity.this, "Error: " + message, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });*/
+        /*ADD THE PERSON OBJECT INTO THE FIREBAZE  ABOVE */
     }
+
     private void InitializeFields() {
         CreateAccountButton = (Button) findViewById(R.id.register_button);
         UserEmail = (EditText) findViewById(R.id.register_email);
@@ -143,7 +180,6 @@ public class RegisterActivity extends AppCompatActivity {
 
         loadingBar = new ProgressDialog(this);
     }
-
 
 
     private void SendUserToMainActivity()
