@@ -1,16 +1,20 @@
 package com.example.SpinIt;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.database.DatabaseReference;
+
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -36,7 +40,7 @@ public class Profile extends AppCompatActivity {
     ArrayList<Integer> kUserItems2 = new ArrayList<>();
     ArrayList<String> dietaryListChosen = new ArrayList<>();
 
-
+    private Person currentPerson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,23 +49,26 @@ public class Profile extends AppCompatActivity {
 //        Toolbar toolbar = findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
 
-
-
-
-
         foodBtn = (Button) findViewById(R.id.foodTypeBtn);
         showSelectedFood = (TextView) findViewById((R.id.selectedFood));
         showSelectedFood.setMovementMethod(new ScrollingMovementMethod());
         listItems = getResources().getStringArray(R.array.food_types);
         checkedItems = new boolean[listItems.length];
 
-        //    UPDATE already added boxes
-        ArrayList<String> tempList = new ArrayList<>();
-        tempList.add("Distilleries");
-        tempList.add("Coffee and Tea");
+        Intent mIntent = getIntent();
+        currentPerson = (Person) mIntent.getParcelableExtra("Person");
+        // UPDATE already added boxes
+        ArrayList<String> tempFoodList = new ArrayList<>();
+        if(currentPerson.getPrefList() != null && currentPerson.getPrefList().getFoodPref() != null) {
+            tempFoodList = currentPerson.getPrefList().getFoodPref();
+        }
+        else {
+            tempFoodList = new ArrayList<>();
+        }
 
-        for(String s: tempList)
+        for(String s: tempFoodList)
         {
+
             for(int i=0; i<listItems.length; i++)
             {
                 if(s.equals(listItems[i]))
@@ -75,15 +82,6 @@ public class Profile extends AppCompatActivity {
             }
         }
 
-
-////        the following commented code working
-//
-//        kUserItems.add(0);
-//        checkedItems[0] = true;
-//        kUserItems.add(7);
-//        checkedItems[7] = true;
-
-
         String item = "";
         for(int i=0; i<kUserItems.size(); i++)
         {
@@ -96,12 +94,9 @@ public class Profile extends AppCompatActivity {
         }
         showSelectedFood.setText(item);
 
-
-
         foodBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 AlertDialog.Builder mBuilder = new AlertDialog.Builder(Profile.this);
                 mBuilder.setTitle("Available Food Types");
                 mBuilder.setMultiChoiceItems(listItems, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
@@ -125,9 +120,11 @@ public class Profile extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String item = "";
+                        ArrayList<String> tempList = new ArrayList<>();
                         for(int i=0; i<kUserItems.size(); i++)
                         {
                             item = item + listItems[kUserItems.get(i)];
+                            tempList.add(listItems[kUserItems.get(i)]);
                             if(i!=kUserItems.size()-1)  // not last item, add comma
                             {
                                 item = item + "\n";
@@ -135,6 +132,10 @@ public class Profile extends AppCompatActivity {
 
                         }
                         showSelectedFood.setText(item);
+                        PrefList tempPL = new PrefList();
+                        tempPL.setFoodPref(tempList);
+                        tempPL.setDietaryPref(currentPerson.getPrefList().getDietaryPref());
+                        currentPerson.updatePrefList(tempPL);
                     }
                 });
 
@@ -148,6 +149,9 @@ public class Profile extends AppCompatActivity {
                             showSelectedFood.setText("");
                             foodListChosen.clear();
                         }
+                        PrefList empty = new PrefList();
+                        empty.setDietaryPref(currentPerson.getPrefList().getDietaryPref());
+                        currentPerson.updatePrefList(empty);
                     }
                 });
 
@@ -164,10 +168,6 @@ public class Profile extends AppCompatActivity {
             }
         });
 
-
-
-
-
         dietaryBtn = (Button) findViewById(R.id.dietaryBtn);
         showSelectedDietary = (TextView) findViewById((R.id.selectedDietary));
         showSelectedDietary.setMovementMethod(new ScrollingMovementMethod());
@@ -175,8 +175,43 @@ public class Profile extends AppCompatActivity {
         checkedDietaryItems = new boolean[dietaryItems.length];
 
 
-//        TO DO:
 //        HERE WE WILL ALSO NEED TO GET THE LIST AND CHECK WHICH BOXES ARE ALREADY CHECKED
+//        UPDATE already added boxes
+//        if you are not assigning dietaryListChosen to what you get in firebase, you will
+//        also need to add the item to dietaryListChosen here.
+
+        ArrayList<String> diet_tempList = new ArrayList<>();
+        if(currentPerson.getPrefList() != null && currentPerson.getPrefList().getDietaryPref() != null) {
+            diet_tempList = currentPerson.getPrefList().getDietaryPref();
+        }
+        else {
+            diet_tempList = new ArrayList<>();
+        }
+
+        for(String s: diet_tempList)
+        {
+            for(int i=0; i<dietaryItems.length; i++)
+            {
+                if(s.equals(dietaryItems[i]))
+                {
+                    checkedDietaryItems[i] = true;
+                    kUserItems2.add(i);
+                    // dietaryListChosen.add(s);
+                    break;
+                }
+            }
+        }
+        String item2 = "";
+        for(int i=0; i<kUserItems2.size(); i++)
+        {
+            item2 = item2 + dietaryItems[kUserItems2.get(i)];
+            if(i!=kUserItems2.size()-1)  // not last item, add comma
+            {
+                item2 = item2 + "\n";
+            }
+        }
+        showSelectedDietary.setText(item2);
+
         dietaryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -203,9 +238,11 @@ public class Profile extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String item = "";
+                        ArrayList<String> tempList = new ArrayList<>();
                         for(int i=0; i<kUserItems2.size(); i++)
                         {
                             item = item + dietaryItems[kUserItems2.get(i)];
+                            tempList.add(dietaryItems[kUserItems2.get(i)]);
                             if(i!=kUserItems2.size()-1)  // not last item, add comma
                             {
                                 item = item + "\n";
@@ -213,6 +250,10 @@ public class Profile extends AppCompatActivity {
 
                         }
                         showSelectedDietary.setText(item);
+                        PrefList tempPL = new PrefList();
+                        tempPL.setDietaryPref(tempList);
+                        tempPL.setFoodPref(currentPerson.getPrefList().getFoodPref());
+                        currentPerson.updatePrefList(tempPL);
                     }
                 });
 
@@ -226,6 +267,9 @@ public class Profile extends AppCompatActivity {
                             showSelectedDietary.setText("");
                             dietaryListChosen.clear();
                         }
+                        PrefList empty = new PrefList();
+                        empty.setFoodPref(currentPerson.getPrefList().getFoodPref());
+                        currentPerson.updatePrefList(empty);
                     }
                 });
 
@@ -244,17 +288,6 @@ public class Profile extends AppCompatActivity {
 
 
     }
-
-    public ArrayList<String> getFoodList()
-    {
-        return foodListChosen;
-    }
-
-    public ArrayList<String> getDietaryList()
-    {
-        return dietaryListChosen;
-    }
-
 
 
 }
