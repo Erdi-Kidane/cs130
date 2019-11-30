@@ -56,6 +56,8 @@ public class Profile extends AppCompatActivity {
         checkedItems = new boolean[listItems.length];
 
         //    UPDATE already added boxes
+        //        if you are not assigning foodListChosen to what you get in firebase, you will
+        //        also need to add the item to foodListChosen here, because you may need the list later
         ArrayList<String> tempList = new ArrayList<>();
         tempList.add("Distilleries");
         tempList.add("Coffee and Tea");
@@ -69,6 +71,7 @@ public class Profile extends AppCompatActivity {
                     checkedItems[i] = true;
                     kUserItems.add(i);
 //                    System.out.println(i);
+//                    foodListChosen.add(s);
                     break;
                 }
 
@@ -175,8 +178,43 @@ public class Profile extends AppCompatActivity {
         checkedDietaryItems = new boolean[dietaryItems.length];
 
 
-//        TO DO:
 //        HERE WE WILL ALSO NEED TO GET THE LIST AND CHECK WHICH BOXES ARE ALREADY CHECKED
+        //    UPDATE already added boxes
+//        if you are not assigning dietaryListChosen to what you get in firebase, you will
+//        also need to add the item to dietaryListChosen here.
+        ArrayList<String> diet_tempList = new ArrayList<>();
+        diet_tempList.add("Gluten Free");
+        diet_tempList.add("Vegan");
+        diet_tempList.add("Nut Free");
+        for(String s: diet_tempList)
+        {
+            for(int i=0; i<dietaryItems.length; i++)
+            {
+                if(s.equals(dietaryItems[i]))
+                {
+                    checkedDietaryItems[i] = true;
+                    kUserItems2.add(i);
+                    // dietaryListChosen.add(s);
+                    break;
+                }
+
+            }
+        }
+
+        String item2 = "";
+        for(int i=0; i<kUserItems2.size(); i++)
+        {
+            item2 = item2 + dietaryItems[kUserItems2.get(i)];
+            if(i!=kUserItems2.size()-1)  // not last item, add comma
+            {
+                item2 = item2 + "\n";
+            }
+
+        }
+        showSelectedDietary.setText(item2);
+
+
+
         dietaryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
