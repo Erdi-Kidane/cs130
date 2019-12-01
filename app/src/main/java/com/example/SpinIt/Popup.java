@@ -27,12 +27,17 @@ public class Popup extends Activity {
         choice = (TextView)findViewById(R.id.shownPopUp);
         accepting = (Button) findViewById(R.id.yelpAccept);
         final String tempChoice = (String) choice.getText();
+        final Place winningPlace = displayPopUp.getParcelableExtra("winningPlace");
+        final Spin currentSpin = displayPopUp.getParcelableExtra("spin");
         accepting.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view)
         {
 //            Intent registerIntent = new Intent(Popup.this, GroupChatActivity.class);
 //            startActivity(registerIntent);
+            SpunPlaces sp1 = currentSpin.getPerson().getSpunPlaces();
+           sp1.addPlace(winningPlace);
+           currentSpin.getPerson().setSpunPlaces(sp1);
 
             new Handler().postDelayed(new Runnable(){
                 @Override

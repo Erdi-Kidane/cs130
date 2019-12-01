@@ -90,8 +90,8 @@ public class Spin implements Parcelable {
                 double lat = temp.child("latitude").getValue(double.class);
                 double longi = temp.child("longitude").getValue(double.class);
                 String url = temp.child("url").getValue(String.class);
-                String name = temp.child("url").getValue(String.class);
-                String location = temp.child("url").getValue(String.class);
+                String name = temp.child("name").getValue(String.class);
+                String location = temp.child("address").getValue(String.class);
                 //EXPANSION OF PLACE
                 Place tp = new Place(longi, lat, url, name, location);
                 tempPlace.add(tp);
@@ -269,7 +269,7 @@ public class Spin implements Parcelable {
             yelp = yelp + "?longitude=" + String.valueOf(this.longitude) + "&latitude=" +
                     String.valueOf(this.latitude) + "&radius" + String.valueOf(this.radius);
             System.out.println(yelp);
-            yelp = "https://api.yelp.com/v3/businesses/search?longitude=-119.194739&latitude=34.155516&radius38624";
+            yelp = "https://api.yelp.com/v3/businesses/search?longitude=-119.194739&latitude=34.155516&radius38624?categories=coffee_and_tea";
 ////******************************************
 
 
@@ -341,6 +341,7 @@ return true;
                Log.d("tag", "This is parsed data currentName: " + currentName +" currentAddress "+ currentAddress);
                Place currentPlace = new Place(currentLongitude, currentLatitude, currentUrl, currentName, currentAddress);
                currentListOfPlaces.add(currentPlace);
+
            }
            this.listOfPlaces = currentListOfPlaces;
            return true;

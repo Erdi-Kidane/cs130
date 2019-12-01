@@ -42,6 +42,7 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
     int childCount = 0;
     private Person currentPerson;
     private Spin currentSpin = null;
+    ArrayList<Place> randPlaces;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,11 +72,12 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
         linearFoodPlace2 = (LinearLayout) findViewById(R.id.foodPlaceImage2);
         linearFoodPlace1 = (LinearLayout) findViewById(R.id.foodPlaceImage1);
         currentGroupName = getIntent().getExtras().get("groupName").toString();
-
-
+//**for debugging
+b_decrease.setVisibility(View.INVISIBLE);
+b_increase.setVisibility(View.INVISIBLE);
 
         //TimeUnit.SECONDS.sleep(30);
-        ArrayList<Place> randPlaces = currentSpin.getRandomPlaces();
+        randPlaces = currentSpin.getRandomPlaces();
         spinnerChoices = new String[randPlaces.size()];
         for(int i = 0; i < randPlaces.size() ; i++){
             spinnerChoices[i] = randPlaces.get(i).getName();
@@ -84,8 +86,19 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
 
         //linearFoodPlace.setBackgroundResource(R.drawable.foodplace1);
         //   imageRoulette.setImageDrawable(getResources().getDrawable(R.drawable.spin3));
-        
-        intNumber = randPlaces.size();
+        switch(randPlaces.size())
+        {
+            case 2:
+                intNumber = 1;
+                break;
+            case 4:
+                intNumber = 2;
+                break;
+            case 8:
+                intNumber = 3;
+                break;
+        }
+        //intNumber = randPlaces.size();
         setImageRoulette(this.intNumber);
 
 /*
@@ -226,6 +239,8 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
             public void run(){
                 Intent displayPopUp= new Intent(Spinner.this, Popup.class);
                 displayPopUp.putExtra("info", spinnerChoices[outputSelection(castDegreeToInt, intNumber) -1]);
+                displayPopUp.putExtra("winningPlace", randPlaces.get(outputSelection(castDegreeToInt, intNumber)-1));
+                displayPopUp.putExtra("spin", currentSpin);
                 startActivity(displayPopUp);
             }
         }, 1000);
@@ -250,21 +265,21 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
     }
     public void buttonPlus(View v)
     {
-//        if(this.intNumber != 3)
-//        {
-//            this.intNumber++;
-//            setImageRoulette(this.intNumber);
-//            b_decrease.setVisibility(View.VISIBLE);
-///*            SharedPreferences.Editor editor = this.sharedPreferences.edit();
-//           editor.putInt("INT_NUMBER", this.intNumber);
-//            editor.commit();*/
-//
-//        }
-//        if(this.intNumber == 3)
-//        {
-//            b_increase.setVisibility(View.INVISIBLE);
-//            //  b_decrease.setVisibility(View.VISIBLE);
-//        }
+        if(this.intNumber != 3)
+        {
+            this.intNumber++;
+            setImageRoulette(this.intNumber);
+            b_decrease.setVisibility(View.VISIBLE);
+/*            SharedPreferences.Editor editor = this.sharedPreferences.edit();
+           editor.putInt("INT_NUMBER", this.intNumber);
+            editor.commit();*/
+
+        }
+        if(this.intNumber == 3)
+        {
+            b_increase.setVisibility(View.INVISIBLE);
+            //  b_decrease.setVisibility(View.VISIBLE);
+        }
         if(currentPerson != null)
             Log.d("tag", "tests for person transfer " + currentPerson.getCurrentUID());
         else

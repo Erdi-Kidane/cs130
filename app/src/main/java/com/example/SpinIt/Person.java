@@ -134,6 +134,7 @@ public class Person implements Parcelable {
 
         this.currentUID = snapshot.child("currentUID").getValue(String.class);
     }
+
     /**
      * Updating a status add a new status onto a person's status, this the updated status will appear on a person's profile
      * @param status The status to be added onto profile
@@ -157,6 +158,13 @@ public class Person implements Parcelable {
         RootRef.child("Users").child(this.currentUID).child("Person").setValue(this);
         RootRef.child("Users").child(this.currentUID).child("Spin").child("person").setValue(this);
         return true;
+    }
+    public void setSpunPlaces(SpunPlaces places)
+    {
+        this.spunPlaces = places;
+        DatabaseReference RootRef = FirebaseDatabase.getInstance().getReference();
+        RootRef.child("Users").child(this.currentUID).child("Person").setValue(this);
+        RootRef.child("Users").child(this.currentUID).child("Spin").child("person").setValue(this);
     }
 
     /**

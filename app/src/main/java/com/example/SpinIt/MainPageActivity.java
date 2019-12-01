@@ -54,7 +54,7 @@ public class MainPageActivity extends AppCompatActivity {
                 ArrayList<Place> tempPl = currentSpin.getRandomPlaces();
                 for(int i=0; i != tempPl.size(); i++)
                 {
-                    Log.d("tag", "printing templace " + tempPl.get(i).getURL());
+                    Log.d("tag", "printing templace " + tempPl.get(i).getAddress());
                 }
                 Intent registerIntent = new Intent(MainPageActivity.this, Spinner.class);
                 registerIntent.putExtra("groupName" ,"a" );

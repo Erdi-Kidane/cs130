@@ -48,7 +48,6 @@ public class Place implements Parcelable{
 
 
 
-
     Place(double longitude, double latitude, String url, String name, String address)
     {
         this.longitude = longitude;
