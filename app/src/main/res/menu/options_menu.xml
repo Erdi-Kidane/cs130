@@ -2,8 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:title="Create Room"
-        android:id = "@+id/main_create_group_option"
+        android:title="Create Public Room"
+        android:id = "@+id/main_create_public_group_option"
+        app:showAsAction= "never"
+        >
+    </item>
+    <item
+        android:title="Create Private Room"
+        android:id = "@+id/main_create_private_group_option"
         app:showAsAction= "never"
         >
     </item>

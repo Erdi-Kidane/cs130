@@ -39,7 +39,8 @@ public class PGroupsFragment extends Fragment {
     private ArrayList<String> list_of_groups = new ArrayList<>();
     private FirebaseAuth mAuth;
     private DatabaseReference GroupRef,RootRef;
-    private String currentUserID;
+    private String currentUserID,currentUserName;
+
 
     private Person person;
 
@@ -57,6 +58,7 @@ public class PGroupsFragment extends Fragment {
         RootRef=FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
         currentUserID = mAuth.getCurrentUser().getUid();
+        GetUserInfo();
         IntializeFields();
         RetrieveAndDisplayGroups();
         list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -67,7 +69,7 @@ public class PGroupsFragment extends Fragment {
 
                 String currentUserID = mAuth.getCurrentUser().getUid();
                 //RootRef.child("Groups").child(currentGroupName).child("Host").setValue(currentUserID);
-                RootRef.child("Groups").child(currentGroupName).child("Member").child(currentUserID).setValue("")
+                RootRef.child("Groups").child(currentGroupName).child("Member").child(currentUserID).setValue(currentUserName)
                 //RootRef.child("Groups").child(currentGroupName).child("Message").setValue("")
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
@@ -136,6 +138,26 @@ public class PGroupsFragment extends Fragment {
 
         this.person = p;
     }
+    private void GetUserInfo()
+    {
+        String currentUserID = mAuth.getCurrentUser().getUid();
+        //Log.d("tag","test999 value3: "+ currentUserID);
+        RootRef.child("Users").child(currentUserID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                if (dataSnapshot.exists())
+                {
+                    currentUserName = dataSnapshot.child("name").getValue().toString();
 
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
 
 }
