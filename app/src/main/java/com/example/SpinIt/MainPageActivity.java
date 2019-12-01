@@ -22,6 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 public class MainPageActivity extends AppCompatActivity {
     private Button mSpinButton, mGroupButton, mPrefenceButton;
     private Person currentPerson;
+    private Spin currentSpin;
     /*****************for testing************************/
     private DatabaseReference mRootRef;
     /***************************************************/
@@ -34,19 +35,22 @@ public class MainPageActivity extends AppCompatActivity {
         mGroupButton = (Button) findViewById(R.id.groupButton);
         mPrefenceButton = (Button) findViewById(R.id.pbutton);
 
+
         /*****************for testing************************/
         mRootRef = FirebaseDatabase.getInstance().getReference();
         /***************************************************/
 
         Log.d("tag", "before get() in MainPageActivity........");
 
-        get();
+        getPerson();
+        getSpin();
         mSpinButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view)
             {
                 Intent registerIntent = new Intent(MainPageActivity.this, Spinner.class);
-                registerIntent.putExtra("Person", currentPerson);
+                registerIntent.putExtra("groupName" ,"a" );
+                registerIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(registerIntent);
             }
         });
@@ -56,6 +60,7 @@ public class MainPageActivity extends AppCompatActivity {
             {
                 Intent registerIntent = new Intent(MainPageActivity.this, Profile.class);
                 registerIntent.putExtra("Person", currentPerson);
+                registerIntent.putExtra("Spin", currentSpin);
                 startActivity(registerIntent);
             }
         });
@@ -64,13 +69,15 @@ public class MainPageActivity extends AppCompatActivity {
             public void onClick(View view)
             {
                 Intent registerIntent = new Intent(MainPageActivity.this, MainActivity.class);
+                registerIntent.putExtra("Person", currentPerson);
+                registerIntent.putExtra("Spin", currentSpin);
                 startActivity(registerIntent);
             }
         });
     }
 
     /*****************for testing***************************************************************/
-    private void get(){
+    private void getPerson(){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         final String currentUID = user.getUid();
         Log.d("tag", "Now in Get(), after current ID: " + currentUID );
@@ -87,6 +94,32 @@ public class MainPageActivity extends AppCompatActivity {
                     Log.d("tag", "In get(), Person SUCCESSFULLY GET: " + currentPerson.getCurrentUID());
                 }
                 Log.d("tag", "In get(), after get the arrList ");
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("tag", "loadPost:onCancelled", databaseError.toException());
+
+            }
+        };
+        mPersonRef.addValueEventListener(personListener);
+    }
+
+    private void getSpin(){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        final String currentUID = user.getUid();
+        Log.d("tag", "Now in Get(), after current ID: " + currentUID );
+
+        DatabaseReference mPersonRef;
+        mPersonRef = mRootRef.child("Users").child(currentUID).child("Spin");
+        ValueEventListener personListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                if (dataSnapshot.getValue() != null){
+                    currentSpin = new Spin(dataSnapshot);
+
+                }
             }
 
             @Override

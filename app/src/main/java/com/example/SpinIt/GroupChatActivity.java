@@ -47,6 +47,8 @@ public class GroupChatActivity extends AppCompatActivity {
     private DatabaseReference UsersRef, GroupNameRef, GroupMessageKeyRef, myRef;
 
     private String currentGroupName, currentUserID, currentUserName, currentDate, currentTime;
+
+    private Person currentPerson;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +64,8 @@ public class GroupChatActivity extends AppCompatActivity {
         myRef = FirebaseDatabase.getInstance().getReference();
         GroupNameRef = FirebaseDatabase.getInstance().getReference().child("Groups").child(currentGroupName).child("Message");
 
+        Intent getPerson = getIntent();
+        currentPerson = getPerson.getParcelableExtra("Person");
 
 
         InitializeFields();
@@ -82,6 +86,9 @@ public class GroupChatActivity extends AppCompatActivity {
             public void onClick(View view)
             {
                 Intent registerIntent = new Intent(GroupChatActivity.this, Spinner.class);
+                registerIntent.putExtra("groupName" , currentGroupName);
+                registerIntent.putExtra("Person", currentPerson);
+                registerIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(registerIntent);
 
             }
@@ -243,6 +250,12 @@ public class GroupChatActivity extends AppCompatActivity {
             startActivity(loginIntent);
             finish();
         }
+        if (item.getItemId() == R.id.make_public)
+        {
+            //String currentUserID = mAuth.getCurrentUser().getUid();
+            MakePublic();
+        }
+
 
         return true;
     }
@@ -270,6 +283,23 @@ public class GroupChatActivity extends AppCompatActivity {
                 });
     }
 
+    private void MakePublic()
+    {
+        //String currentUserID = mAuth.getCurrentUser().getUid();
+        //UsersRef.child("Groups").child(groupName).child("Host").setValue(currentUserID);
+        myRef.child("Groups").child(currentGroupName).child("Public").setValue("1")
+                //UsersRef.child("Groups").child(groupName).child("Message").setValue("")
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task)
+                    {
+                        if (task.isSuccessful())
+                        {
+                            Toast.makeText(GroupChatActivity.this, " group is Opening to public Successfully...", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
 
     private void RequestNewGroup()
     {

@@ -19,4 +19,10 @@
         app:showAsAction= "never"
         >
     </item>
+    <item
+        android:title="Open to public"
+        android:id = "@+id/make_public"
+        app:showAsAction= "never"
+        >
+    </item>
 </menu>

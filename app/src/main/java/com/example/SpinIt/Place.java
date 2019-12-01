@@ -7,6 +7,9 @@ public class Place implements Parcelable{
     private double longitude;
     private double latitude;
     private String url;
+    private String name;
+    private String address;
+
     /**************************************************/
 //This is all for Parcelable stuff
 
@@ -20,6 +23,8 @@ public class Place implements Parcelable{
         out.writeDouble(longitude);
         out.writeDouble(latitude);
         out.writeString(url);
+        out.writeString(name);
+        out.writeString(address);
     }
 
     public static final Parcelable.Creator<Place> CREATOR = new Parcelable.Creator<Place>() {
@@ -36,17 +41,21 @@ public class Place implements Parcelable{
         this.longitude = in.readDouble();
         this.latitude = in.readDouble();
         this.url = in.readString();
+        this.name = in.readString();
+        this.address = in.readString();
     }
     /************************************************/
 
 
 
 
-    Place(double longitude, double latitude, String url)
+    Place(double longitude, double latitude, String url, String name, String address)
     {
         this.longitude = longitude;
         this.latitude = latitude;
         this.url = url;
+        this.name = name;
+        this.address = address;
     }
 
     /**
