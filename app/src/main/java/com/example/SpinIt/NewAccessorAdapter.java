@@ -14,25 +14,45 @@ public class NewAccessorAdapter extends FragmentPagerAdapter {
     @NonNull
     @Override
     public Fragment getItem(int position) {
+        switch (position)
+        {
+            case 0:
+                FriendsFragment friendsFragment = new FriendsFragment();
+                return friendsFragment;
 
+            case 1:
+                RFriendsFragment rfriendsFragment = new RFriendsFragment();
+                return rfriendsFragment;
 
-        FriendsFragment friendsFragment = new FriendsFragment();
-        return friendsFragment;
+            default:
+                return null;
+        }
+
 
 
     }
 
     @Override
     public int getCount() {
-        return 1;
+        return 2;
     }
 
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
+        switch (position)
+        {
+            case 0:
+                return "friends";
+
+            case 1:
+
+                return "people in the room";
+            default:
+                return null;
+        }
 
 
-        return "friends";
     }
 
 

@@ -33,7 +33,7 @@ import java.util.Set;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FriendsFragment extends Fragment {
+public class RFriendsFragment extends Fragment {
     private View groupFragmentView;
     private ListView list_view;
     private ArrayAdapter<String> arrayAdapter;
@@ -41,7 +41,7 @@ public class FriendsFragment extends Fragment {
     private FirebaseAuth mAuth;
     private DatabaseReference GroupRef,myRef;
     private String currentUserID,currentGroupName;
-    public FriendsFragment() {
+    public RFriendsFragment() {
         // Required empty public constructor
     }
 
@@ -101,7 +101,8 @@ public class FriendsFragment extends Fragment {
         Log.d("tag","test value3: "+ currentGroupName);
         String currentUserID = mAuth.getCurrentUser().getUid();
         //UsersRef.child("Groups").child(groupName).child("Host").setValue(currentUserID);
-        myRef.child("Groups").child(currentGroupName).child("Member").child(memberName).setValue(c)
+        myRef.child("Groups").child(currentGroupName).child("Member").child(memberName).removeValue()
+                //myRef.child("Groups").child(currentGroupName).child("Member").child(memberName).setValue("")
                 //UsersRef.child("Groups").child(groupName).child("Message").setValue("")
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -112,20 +113,17 @@ public class FriendsFragment extends Fragment {
                 });
     }
     private void RetrieveAndDisplayGroups() {
-        myRef.addValueEventListener(new ValueEventListener() {
+        myRef.child("Groups").child(currentGroupName).child("Member").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
                 Set<String> set = new HashSet<>();
 
-                for (DataSnapshot ds : dataSnapshot.child("Users").child(currentUserID).child("Friendlist").getChildren()){
-                    //Log.d("tag","test ds: "+ ds);
-                    if (dataSnapshot.child("Groups").child(currentGroupName).child("Member").hasChild(ds.getValue().toString())){
 
-                    }
-                    else{
-                        set.add(ds.getKey());
-                    }
+
+
+                for (DataSnapshot ds : dataSnapshot.getChildren()){
+                    set.add(ds.getValue().toString());
 
 
                 }

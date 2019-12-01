@@ -40,7 +40,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button LoginButton;
     private EditText UserEmail, UserPassword;
     private Button NeedNewAccountLink;
-    private DatabaseReference UsersRef;
+    private DatabaseReference UsersRef,RootRef;
 
     // "ButtonGoogleSignIn" in layout
     //for google signin
@@ -63,6 +63,7 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         //currentuser =mAuth.getCurrentUser();
         UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
+        RootRef = FirebaseDatabase.getInstance().getReference();
         InitializeFields();
 
         /**************************************************************/
@@ -169,7 +170,7 @@ public class LoginActivity extends AppCompatActivity {
                             String personId = acct.getId();
                             Uri personPhoto = acct.getPhotoUrl();
 
-                            UpdateSettings( "Hui He" );
+                            UpdateSettings( personGivenName);
                         }
 
 
@@ -213,6 +214,11 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }
                 });
+        Person mPerson = new Person(currentUserID);
+        Spin tempS = new Spin(mPerson, currentUserID);
+
+        RootRef.child("Users").child(currentUserID).child("Spin").setValue(tempS);
+        RootRef.child("Users").child(currentUserID).child("Person").setValue(setUserName);
 
     }
 
