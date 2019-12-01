@@ -18,6 +18,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+
 
 public class MainPageActivity extends AppCompatActivity {
     private Button mSpinButton, mGroupButton, mPrefenceButton;
@@ -48,8 +50,16 @@ public class MainPageActivity extends AppCompatActivity {
             @Override
             public void onClick(View view)
             {
+
+                ArrayList<Place> tempPl = currentSpin.getRandomPlaces();
+                for(int i=0; i != tempPl.size(); i++)
+                {
+                    Log.d("tag", "printing templace " + tempPl.get(i).getURL());
+                }
                 Intent registerIntent = new Intent(MainPageActivity.this, Spinner.class);
                 registerIntent.putExtra("groupName" ,"a" );
+                registerIntent.putExtra("Person", currentPerson);
+                registerIntent.putExtra("Spin", currentSpin);
                 registerIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(registerIntent);
             }
@@ -118,6 +128,7 @@ public class MainPageActivity extends AppCompatActivity {
 
                 if (dataSnapshot.getValue() != null){
                     currentSpin = new Spin(dataSnapshot);
+                    Log.d("tag", "in ondatachange " + currentSpin.getPerson().getCurrentUID());
 
                 }
             }

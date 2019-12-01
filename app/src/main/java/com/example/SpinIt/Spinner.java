@@ -21,7 +21,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public class Spinner extends AppCompatActivity implements Animation.AnimationListener {
     boolean blnButtonRotation = true;
@@ -31,7 +33,7 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
     LinearLayout linearFoodPlace1 , linearFoodPlace2, linearFoodPlace3;
     private double savedDegree;
     private String currentGroupName;
-    private String[] spinnerChoices = {"Bplate", "In and out", "What a burger", "Subway", "Something really really long", "six", "seven", "eight"};
+    private String[] spinnerChoices;
 
     ObjectAnimator boxes;
     Button b_start, b_increase, b_decrease,btn;
@@ -39,9 +41,14 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
     TextView popup;
     int childCount = 0;
     private Person currentPerson;
+    private Spin currentSpin = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Intent mIntent = getIntent();
+        currentPerson = (Person) mIntent.getParcelableExtra("Person");
+        currentSpin = (Spin)mIntent.getParcelableExtra("Spin");
+
         getWindow().addFlags(1024);
         requestWindowFeature(1);
         super.onCreate(savedInstanceState);
@@ -65,14 +72,20 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
         linearFoodPlace1 = (LinearLayout) findViewById(R.id.foodPlaceImage1);
         currentGroupName = getIntent().getExtras().get("groupName").toString();
 
-        Intent mIntent = getIntent();
-        currentPerson = (Person) mIntent.getParcelableExtra("Person");
 
 
+        //TimeUnit.SECONDS.sleep(30);
+        ArrayList<Place> randPlaces = currentSpin.getRandomPlaces();
+        spinnerChoices = new String[randPlaces.size()];
+        for(int i = 0; i < randPlaces.size() ; i++){
+            spinnerChoices[i] = randPlaces.get(i).getName();
+        }
         // Drawable d = Drawable.createFromPath()
 
         //linearFoodPlace.setBackgroundResource(R.drawable.foodplace1);
         //   imageRoulette.setImageDrawable(getResources().getDrawable(R.drawable.spin3));
+        
+        intNumber = randPlaces.size();
         setImageRoulette(this.intNumber);
 
 /*

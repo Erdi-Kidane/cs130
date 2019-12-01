@@ -39,13 +39,14 @@
 <!--    android:inputType="text"-->
 
 <!--    />-->
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <LinearLayout
             android:id="@+id/layoutInputAddress"
-            android:layout_width="250dp"
-            android:layout_height="250dp"
+            android:layout_width="200dp"
+            android:layout_height="70dp"
             android:orientation="vertical"
             android:padding="10dp"
             android:background="#ffffff"
+            android:layout_marginTop="15dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -53,24 +54,40 @@
             >
 
 
-            <TextView
-                android:id="@+id/userAddressTV"
+            <EditText
+                android:id="@+id/editTextDialogUserInput"
+
+                android:inputType="number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#000000"
 
-                android:textAppearance="?android:attr/textAppearanceLarge"
-
-                />
-
-<!--            <EditText-->
-<!--                android:id="@+id/editTextDialogUserInput"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content" >-->
+                android:hint = "Max dist (miles)"
 
 
-<!--                <requestFocus />-->
-<!--            </EditText>-->
+
+
+                >
+
+
+                <requestFocus />
+            </EditText>
+
+            <Button
+                android:id="@+id/doneBTN"
+                android:layout_width="50dp"
+                android:layout_height="20dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+
+                android:layout_marginStart="130dp"
+                android:layout_marginTop="-15dp"
+                android:layout_marginEnd="7dp"
+
+                android:background="@drawable/buttons"
+                android:text="Done"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
         </LinearLayout>
 
         <Button

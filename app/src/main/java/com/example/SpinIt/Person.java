@@ -18,8 +18,7 @@ public class Person implements Parcelable {
     //private Set<String> listOfFriends;
     private SpunPlaces spunPlaces = new SpunPlaces();
     private PrefList prefList = new PrefList();
-    private String currentUID;
-    private Spin currentSpin;
+    private String currentUID = new String();
 /**************************************************/
 //This is all for Parcelable stuff
 
@@ -51,7 +50,9 @@ public class Person implements Parcelable {
         in.readStringList(listOfStatus);
     }
 /************************************************/
+    Person(){
 
+    }
     Person(String currentUID){
         this.listOfStatus = new ArrayList<>();
         this.prefList = new PrefList();
@@ -154,7 +155,7 @@ public class Person implements Parcelable {
         this.prefList = dietaryList;
         DatabaseReference RootRef = FirebaseDatabase.getInstance().getReference();
         RootRef.child("Users").child(this.currentUID).child("Person").setValue(this);
-        RootRef.child("Users").child(this.currentUID).child("Spin").child("Person").setValue(this);
+        RootRef.child("Users").child(this.currentUID).child("Spin").child("person").setValue(this);
         return true;
     }
 

@@ -2,8 +2,12 @@ package com.example.SpinIt;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.os.StrictMode;
+import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 
 import org.json.JSONArray;
@@ -25,13 +29,13 @@ public class Spin implements Parcelable {
     private double longitude;
     private double latitude;
     private int radius;
-    private Person person;
+    private Person person = new Person();
     private String location;
     private ArrayList<Person> groupOfPeople = new ArrayList<Person>();
     private String currentUID;
+
     /**************************************************/
 //This is all for Parcelable stuff
-
     @Override
     public int describeContents() {
         return 0;
@@ -39,15 +43,16 @@ public class Spin implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel out, int flags) {
+        out.writeParcelable(person, flags);
         out.writeTypedList(listOfPlaces);
         out.writeTypedList(groupOfPeople);
-        out.writeParcelable(person, flags);
         out.writeDouble(longitude);
         out.writeDouble(latitude);
         out.writeInt(radius);
         out.writeString(location);
         out.writeString(currentUID);
     }
+
     public static final Parcelable.Creator<Spin> CREATOR = new Parcelable.Creator<Spin>() {
         public Spin createFromParcel(Parcel in) {
             return new Spin(in);
@@ -57,54 +62,62 @@ public class Spin implements Parcelable {
             return new Spin[size];
         }
     };
+
     private Spin(Parcel in) {
-        in.readTypedList(listOfPlaces,Place.CREATOR);
-        in.readTypedList(groupOfPeople,Person.CREATOR);
         person = in.readParcelable(Person.class.getClassLoader());
+        in.readTypedList(listOfPlaces, Place.CREATOR);
+        in.readTypedList(groupOfPeople, Person.CREATOR);
         longitude = in.readDouble();
         latitude = in.readDouble();
         radius = in.readInt();
         location = in.readString();
         currentUID = in.readString();
     }
-/************************************************/
-Spin(DataSnapshot snapshot){
-    if(snapshot.child("latitude").exists())
-        latitude = snapshot.child("latitude").getValue(double.class);
-    if(snapshot.child("longitude").exists())
-        longitude = snapshot.child("longitude").getValue(double.class);
-    if(snapshot.child("radius").exists())
-        radius = snapshot.child("radius").getValue(int.class);
-    if(snapshot.child("location").exists())
-        location = snapshot.child("location").getValue(String.class);
-    if(snapshot.child("listOfPlaces").exists()){
-        ArrayList<Place> tempPlace = new ArrayList<>();
-        for (DataSnapshot temp : snapshot.child("listOfPlaces").getChildren()) {
-            double lat = temp.child("latitude").getValue(double.class);
-            double longi = temp.child("longitude").getValue(double.class);
-            String url = temp.child("url").getValue(String.class);
-            String name = temp.child("url").getValue(String.class);
-            String location = temp.child("url").getValue(String.class);
-            //EXPANSION OF PLACE
-            Place tp = new Place(longi, lat, url, name, location);
-            tempPlace.add(tp);
-        }
-    }
-    if(snapshot.child("person").exists()){
-        person = new Person(snapshot.child("Person"));
-    }
-    currentUID = snapshot.child("currentUID").getValue(String.class);
 
-}
+    /************************************************/
+    Spin(DataSnapshot snapshot) {
+        if (snapshot.child("latitude").exists())
+            latitude = snapshot.child("latitude").getValue(double.class);
+        if (snapshot.child("longitude").exists())
+            longitude = snapshot.child("longitude").getValue(double.class);
+        if (snapshot.child("radius").exists())
+            radius = snapshot.child("radius").getValue(int.class);
+        if (snapshot.child("location").exists())
+            location = snapshot.child("location").getValue(String.class);
+        if (snapshot.child("listOfPlaces").exists()) {
+            ArrayList<Place> tempPlace = new ArrayList<>();
+            for (DataSnapshot temp : snapshot.child("listOfPlaces").getChildren()) {
+                double lat = temp.child("latitude").getValue(double.class);
+                double longi = temp.child("longitude").getValue(double.class);
+                String url = temp.child("url").getValue(String.class);
+                String name = temp.child("url").getValue(String.class);
+                String location = temp.child("url").getValue(String.class);
+                //EXPANSION OF PLACE
+                Place tp = new Place(longi, lat, url, name, location);
+                tempPlace.add(tp);
+            }
+            listOfPlaces = tempPlace;
+        }
+        if (snapshot.child("person").exists()) {
+            person = new Person(snapshot.child("person"));
+        }
+        currentUID = snapshot.child("currentUID").getValue(String.class);
+
+    }
+
+    public Spin() {
+
+    }
 
     /**
      * <p>
-     *     This is the constructor for a single spinner instance, this will instantiate a blank spinner
-     *     where the user needs to instantiate a longitude, latitude, and a radius before beginning
+     * This is the constructor for a single spinner instance, this will instantiate a blank spinner
+     * where the user needs to instantiate a longitude, latitude, and a radius before beginning
      * </p>
+     *
      * @param person This person is the one that owns the spinner, and will get the places spun into their own list
      */
-    public Spin(Person person, String currentUID){
+    public Spin(Person person, String currentUID) {
         this.person = person;
         //invalid longitude and latitude for temp value
         this.longitude = 999;
@@ -115,16 +128,18 @@ Spin(DataSnapshot snapshot){
         this.groupOfPeople = null;
         //this.setSpinBehavior("group");
         this.currentUID = currentUID;
+
     }
 
     /**
      * <p>
-     *     This is the constructor for a group spinner instance, this will instantiate a blank room spinner
-     *     where the main user needs to instantiate a longitude, latitude, and a radius before beginning
+     * This is the constructor for a group spinner instance, this will instantiate a blank room spinner
+     * where the main user needs to instantiate a longitude, latitude, and a radius before beginning
      * </p>
+     *
      * @param groupOfPeople This group of people will be a class that will contain an amount of people that when spun will all get the places spun into their own list
      */
-    public Spin(ArrayList<Person> groupOfPeople){
+    public Spin(ArrayList<Person> groupOfPeople) {
         this.person = null;
         //invalid longitude and latitude for temp value
         this.longitude = 999;
@@ -132,24 +147,26 @@ Spin(DataSnapshot snapshot){
         this.radius = 0;
         this.listOfPlaces = new ArrayList<Place>();
         this.groupOfPeople = groupOfPeople;
-        //this.setSpinBehavior("room");
-        //this.currentUID = currentUID;
+//        this.setSpinBehavior("room");
+        this.currentUID = currentUID;
     }
 
     /**
      * Set the location of where the center of the yelp api call is (latitude, longitude)
-     * @param latitude latitude of the center of the api call
+     *
+     * @param latitude  latitude of the center of the api call
      * @param longitude longitude of the center of the api call
      * @return True if the location was able to be set sucessfully, false otherwise
      */
     public boolean setLocation(double latitude, double longitude) {
         //Set the longitude and latitude
-        if(abs(latitude) < 90 && abs(longitude) < 180) {
+        if (abs(latitude) < 90 && abs(longitude) < 180) {
             this.longitude = longitude;
             this.latitude = latitude;
+            //DatabaseReference RootRef = FirebaseDatabase.getInstance().getReference();
+            //RootRef.child("Users").child(this.currentUID).child("Spin").setValue(this);
             return true;
-        }
-        else{
+        } else {
             System.out.println("Longitude/Latitude is out of range");
             return false;
         }
@@ -158,10 +175,17 @@ Spin(DataSnapshot snapshot){
 
     /**
      * This will set the radius of how far we are willing to travel from the set (latitude, longitude)
+     *
      * @param radius The max is 40000 meters
      */
-    public void setRadius(int radius){
+    public void setRadius(int radius) {
+        if (radius >= 24) {
+            radius = 24;
+        }
+        radius *= 1609.34;
         this.radius = radius;
+//        DatabaseReference RootRef = FirebaseDatabase.getInstance().getReference();
+//        RootRef.child("Users").child(this.currentUID).child("Spin").setValue(this);
         //Max is 40000 meters
     }
 
@@ -197,18 +221,26 @@ Spin(DataSnapshot snapshot){
 
     /**
      * <p>
-     *     This is the Yelp API call, where all of the data members come into play,
-     *     the location (latitude, longitude) is going to the center of the yelp API,
-     *     the radius is how far from the location willing to travel,
-     *     the foodPref is the types of food willing to eat,
-     *     and the person will have their own dietary needs.
-     *
-     *     This will then take the result and put it into our parsing function.
+     * This is the Yelp API call, where all of the data members come into play,
+     * the location (latitude, longitude) is going to the center of the yelp API,
+     * the radius is how far from the location willing to travel,
+     * the foodPref is the types of food willing to eat,
+     * and the person will have their own dietary needs.
+     * <p>
+     * This will then take the result and put it into our parsing function.
      * </p>
+     *
      * @return True if the API succeeded, False if it failed due to failure parsing the JSON returned from Yelp's API OR if there was a timeout on the GET request
      */
-    public boolean setPlaces(){
-        if(this.latitude == 999 && this.longitude == 999){
+    public boolean setPlaces() {
+        //**************
+        int SDK_INT = android.os.Build.VERSION.SDK_INT;
+        if (SDK_INT > 8)
+             {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                    .permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        if (this.latitude == 999 && this.longitude == 999) {
             System.out.println("Please set Latitude and Longitude");
             return false;
         }
@@ -219,18 +251,27 @@ Spin(DataSnapshot snapshot){
         String line;
         StringBuffer responseContent = new StringBuffer();
         String API_KEY = "5fY2dEN5tT1qdS-5X25kkGcDRp71bv1AG2WURiYMaZxN9t0N51sMcZ8HEPP9SvIXkDHHrzGXj0ka5W1n9FUEfjzi2_so8QEWF7pKFF4LV4vj0w09cWyYJ2JAMBHJXXYx";
-        try{
+        try {
             String yelp = "https://api.yelp.com/v3/businesses/search";
-            yelp = yelp + "?longitude=" + String.valueOf(this.longitude)+ "&latitude=" +
+            yelp = yelp + "?longitude=" + String.valueOf(this.longitude) + "&latitude=" +
                     String.valueOf(this.latitude) + "&radius" + String.valueOf(this.radius);
 
-            ArrayList<String> foodList = person.getPrefList().getFoodPref();
-            for(int i = 0; i <  foodList.size(); i++)
-                yelp = yelp + "?categories=" + person.getPrefList().getFoodPref().get(i);
+//            ArrayList<String> foodList = person.getPrefList().getFoodPref();
+//            for(int i = 0; i <  foodList.size(); i++)
+//                yelp = yelp + "?categories=" + person.getPrefList().getFoodPref().get(i);
+//
+//            ArrayList<String> dietaryList = person.getPrefList().getDietaryPref();
+//            for(int i = 0; i < dietaryList.size(); i++)
+//                yelp = yelp + "?categories=" + dietaryList.get(i);
+//            Log.d("tag", "this is my yelp string " + yelp);
+//*************************************
+            yelp = "https://api.yelp.com/v3/businesses/search";
+            yelp = yelp + "?longitude=" + String.valueOf(this.longitude) + "&latitude=" +
+                    String.valueOf(this.latitude) + "&radius" + String.valueOf(this.radius);
+            System.out.println(yelp);
+            yelp = "https://api.yelp.com/v3/businesses/search?longitude=-119.194739&latitude=34.155516&radius38624";
+////******************************************
 
-            ArrayList<String> dietaryList = person.getPrefList().getDietaryPref();
-            for(int i = 0; i < dietaryList.size(); i++)
-                yelp = yelp + "?categories=" + dietaryList.get(i);
 
             URL url = new URL(yelp);
             con = (HttpURLConnection) url.openConnection();
@@ -243,35 +284,34 @@ Spin(DataSnapshot snapshot){
 
             int status = con.getResponseCode();
 
-            if(status > 299){
+            if (status > 299) {
                 reader = new BufferedReader(new InputStreamReader(con.getErrorStream()));
-                while((line=reader.readLine()) != null){
+                while ((line = reader.readLine()) != null) {
                     responseContent.append(line);
                 }
                 reader.close();
-            }
-            else{
+            } else {
                 reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                while((line = reader.readLine()) != null){
+                while ((line = reader.readLine()) != null) {
                     responseContent.append(line);
                 }
                 reader.close();
             }
             checker = parse(responseContent.toString());
-        }
-        catch(MalformedURLException e){
+        } catch (MalformedURLException e) {
             e.printStackTrace();
-        }
-        catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
-        }
-        finally{
-            if(con != null)
+        } finally {
+            if (con != null)
                 con.disconnect();
+            DatabaseReference RootRef = FirebaseDatabase.getInstance().getReference();
+            RootRef.child("Users").child(this.currentUID).child("Spin").setValue(this);
         }
         return checker;
     }
-
+return true;
+}
     /**
      * <p>
      *     This will parse the response from yelp's api and for each restaurant, a new place will be populated into a new array, then once all of them have been recorded, it will replace the Spinner's list of places
@@ -294,11 +334,11 @@ Spin(DataSnapshot snapshot){
                String currentName = currentBusiness.getString("name");
 
                JSONObject currentLocation = currentBusiness.getJSONObject("location");
-               String currentAddress = currentLocation.getString("address1") +
-                       currentLocation.getString("city") +
-                       currentLocation.getString("country") +
+               String currentAddress = currentLocation.getString("address1") + ", " +
+                       currentLocation.getString("city") + ", " +
+                       currentLocation.getString("state") + ", " +
                        currentLocation.getString("zip_code");
-
+               Log.d("tag", "This is parsed data currentName: " + currentName +" currentAddress "+ currentAddress);
                Place currentPlace = new Place(currentLongitude, currentLatitude, currentUrl, currentName, currentAddress);
                currentListOfPlaces.add(currentPlace);
            }
@@ -309,6 +349,58 @@ Spin(DataSnapshot snapshot){
            System.out.println("Failed at Parsing Json");
        }
        return false;
+    }
+    public ArrayList<Place> getRandomPlaces() {
+        Log.d("tag", "this is list of places.size " + listOfPlaces.size());
+        ArrayList<Place> tempPlaceList = new ArrayList<>();
+        int bound;
+        if (this.listOfPlaces.size() >= 8)
+        {
+            //get 8 random ones
+            bound = 8;
+        }
+        else if(this.listOfPlaces.size() < 8 && this.listOfPlaces.size() >= 4) {
+            //get 4 random ones
+            bound = 4;
+        }
+        else if(this.listOfPlaces.size() < 4 && this.listOfPlaces.size() >= 2){
+            //get 2 random ones
+            bound = 2;
+        }
+        else{
+            bound = 0;
+        }
+        boolean flag = false;
+        ArrayList<Integer> Index = new ArrayList<>();
+        for(int i = 0; i < bound; i++){
+            while(true){
+                int currentNumber = new Random().nextInt(listOfPlaces.size());
+                for(int j = 0; j < Index.size(); j++)
+                {
+                    if (currentNumber == Index.get(j)) {
+                        flag = true;
+                        break;
+                    }
+
+                }
+                if(flag)
+                {
+                    flag = false;
+                    continue;
+
+                }
+                else{
+                Index.add(currentNumber);
+                Log.d("tag", "this is the current number " + currentNumber);
+                break;
+                }
+            }
+
+        }
+        for(int i = 0; i < bound; i++){
+            tempPlaceList.add(listOfPlaces.get(Index.get(i)));
+        }
+        return tempPlaceList;
     }
     /**
      * getter for the list of spinnable places
@@ -345,6 +437,10 @@ Spin(DataSnapshot snapshot){
      * @return List of people in the room
      */
     public ArrayList<Person> getGroupOfPeople(){return this.groupOfPeople;}
+    public String getCurrentUID()
+    {
+        return this.currentUID;
+    }
 }
 
 ///**

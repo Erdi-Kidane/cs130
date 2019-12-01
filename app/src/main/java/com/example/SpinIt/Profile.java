@@ -38,7 +38,7 @@ import java.util.ArrayList;
 
 public class Profile extends AppCompatActivity {
 
-    Button foodBtn;
+    Button foodBtn, doneBTN;
     TextView showSelectedFood;
     String[] listItems;
     boolean[] checkedItems;
@@ -58,7 +58,7 @@ public class Profile extends AppCompatActivity {
     boolean[] checkedDietaryItems;
     ArrayList<Integer> kUserItems2 = new ArrayList<>();
     ArrayList<String> dietaryListChosen = new ArrayList<>();
-
+    String radius;
     private Person currentPerson;
     private Spin currentSpin = null;
     @Override
@@ -68,10 +68,11 @@ public class Profile extends AppCompatActivity {
 //        Toolbar toolbar = findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
         //**************
+        doneBTN = (Button)findViewById(R.id.doneBTN);
         linearLocation = (LinearLayout) findViewById(R.id.layoutInputAddress);
-        addressMessage = (TextView)findViewById(R.id.userAddressTV);
+      //  addressMessage = (TextView)findViewById(R.id.userAddressTV);
         linearLocation.setVisibility(View.INVISIBLE);
-       // result = (EditText)findViewById(R.id.editTextDialogUserInput);
+        result = (EditText)findViewById(R.id.editTextDialogUserInput);
         locationBTN = (Button)findViewById(R.id.locationBTN);
         ActivityCompat.requestPermissions(this,new String[]
                 {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
@@ -87,16 +88,10 @@ public class Profile extends AppCompatActivity {
         Intent mIntent = getIntent();
         currentPerson = (Person) mIntent.getParcelableExtra("Person");
         currentSpin = (Spin)mIntent.getParcelableExtra("Spin");
-
-        if(currentSpin != null)
-        {
-            Log.d("tag", "In get(), after get the arrList " + currentSpin.getLatitude());
-        }
-        if(currentSpin.getPerson() != null)
-        {
-            Log.d("tag", "In get(), after get the arrList " + currentSpin.getPerson().getCurrentUID());
-        }
-
+        if(currentSpin.getPerson() == null)
+            Log.d("tag", "CurrentSpin'sPerson NOT FOUND!!!");
+        else
+            Log.d("tag", "CurrentSpins person uid "+ currentSpin.getPerson().getCurrentUID());
         // UPDATE already added boxes
         ArrayList<String> tempFoodList = new ArrayList<>();
         if(currentPerson.getPrefList() != null && currentPerson.getPrefList().getFoodPref() != null) {
@@ -326,12 +321,27 @@ public class Profile extends AppCompatActivity {
             }
         });
 
-        locationBTN.setOnClickListener(new View.OnClickListener(){
+
+        locationBTN.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 linearLocation.setVisibility(View.VISIBLE);
                 //addressMessage.bringToFront();
                 linearLocation.bringToFront();
+
+                radius = result.getText().toString();
+                //
+                Log.d("tag", "raidus value: " + result.getText());
+            }
+        });
+        doneBTN.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                radius = result.getText().toString();
+                int convertedVal = Integer.parseInt(radius);
+                currentSpin.setRadius(convertedVal);
+                linearLocation.setVisibility(View.INVISIBLE);
+                Log.d("tag", "radius value in done BUTTON: " + radius);
                 locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
                 if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
                 {
@@ -365,27 +375,28 @@ public class Profile extends AppCompatActivity {
             {
                 double lat = LocationGps.getLatitude();
                 double longi = LocationGps.getLongitude();
-                latitude = String.valueOf(lat);
-                longitude = String.valueOf(longi);
-                addressMessage.setText("Your lat = "+ latitude + "and your long = " + longitude);
+//                latitude = String.valueOf(lat);
+//                longitude = String.valueOf(longi);
+//                addressMessage.setText("Your lat = "+ latitude + "and your long = " + longitude);
+                currentSpin.setLocation(lat, longi);
+                currentSpin.setPlaces();
+                Log.d("tag", "printing out size of places: "+ currentSpin.getListOfPlaces().size());
             }
             else if(LocationNetwork != null)
             {
                 double lat = LocationNetwork.getLatitude();
                 double longi = LocationNetwork.getLongitude();
-
-                latitude=String.valueOf(lat);
-                longitude=String.valueOf(longi);
-                addressMessage.setText("Your lat = "+ latitude + "and your long = " + longitude);
+                currentSpin.setLocation(lat, longi);
+                currentSpin.setPlaces();
+                Log.d("tag", "printing out size of places: "+ currentSpin.getListOfPlaces().size());
             }
             else if(LocationPassive != null)
             {
                 double lat = LocationPassive.getLatitude();
                 double longi = LocationPassive.getLongitude();
-
-                latitude=String.valueOf(lat);
-                longitude=String.valueOf(longi);
-                addressMessage.setText("Your lat = "+ latitude + "and your long = " + longitude);
+                currentSpin.setLocation(lat, longi);
+                currentSpin.setPlaces();
+                Log.d("tag", "printing out size of places: "+ currentSpin.getListOfPlaces().size());
 
             }
             else
