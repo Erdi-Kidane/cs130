@@ -41,7 +41,7 @@ public class Profile extends AppCompatActivity {
     ArrayList<String> dietaryListChosen = new ArrayList<>();
 
     private Person currentPerson;
-
+    private Spin currentSpin = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +57,17 @@ public class Profile extends AppCompatActivity {
 
         Intent mIntent = getIntent();
         currentPerson = (Person) mIntent.getParcelableExtra("Person");
+        currentSpin = (Spin)mIntent.getParcelableExtra("Spin");
+
+        if(currentSpin != null)
+        {
+            Log.d("tag", "In get(), after get the arrList " + currentSpin.getLatitude());
+        }
+        if(currentSpin.getPerson() != null)
+        {
+            Log.d("tag", "In get(), after get the arrList " + currentSpin.getPerson().getCurrentUID());
+        }
+
         // UPDATE already added boxes
         ArrayList<String> tempFoodList = new ArrayList<>();
         if(currentPerson.getPrefList() != null && currentPerson.getPrefList().getFoodPref() != null) {

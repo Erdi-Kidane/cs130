@@ -19,6 +19,7 @@ public class Person implements Parcelable {
     private SpunPlaces spunPlaces = new SpunPlaces();
     private PrefList prefList = new PrefList();
     private String currentUID;
+    private Spin currentSpin;
 /**************************************************/
 //This is all for Parcelable stuff
 
@@ -56,7 +57,6 @@ public class Person implements Parcelable {
         this.prefList = new PrefList();
         this.spunPlaces = new SpunPlaces();
         this.currentUID = currentUID;
-
     }
     Person(String currentUID, PrefList pl, SpunPlaces sp, ArrayList<String> ls){
         this.listOfStatus = ls;
@@ -84,8 +84,10 @@ public class Person implements Parcelable {
                     double lat = temp.child("latitude").getValue(double.class);
                     double longi = temp.child("longitude").getValue(double.class);
                     String url = temp.child("url").getValue(String.class);
+                    String name = temp.child("url").getValue(String.class);
+                    String location = temp.child("url").getValue(String.class);
                     //EXPANSION OF PLACE
-                    Place tp = new Place(longi, lat, url);
+                    Place tp = new Place(longi, lat, url, name, location);
                     tempCheck.add(tp);
                 }
             }
@@ -94,8 +96,10 @@ public class Person implements Parcelable {
                     double lat = temp.child("latitude").getValue(double.class);
                     double longi = temp.child("longitude").getValue(double.class);
                     String url = temp.child("url").getValue(String.class);
+                    String name = temp.child("url").getValue(String.class);
+                    String location = temp.child("url").getValue(String.class);
                     //EXPANSION OF PLACE
-                    Place tp = new Place(longi, lat, url);
+                    Place tp = new Place(longi, lat, url, name, location);
                     tempSpun.add(tp);
                 }
             }
@@ -128,7 +132,6 @@ public class Person implements Parcelable {
             this.prefList = new PrefList();
 
         this.currentUID = snapshot.child("currentUID").getValue(String.class);
-
     }
     /**
      * Updating a status add a new status onto a person's status, this the updated status will appear on a person's profile
@@ -151,32 +154,10 @@ public class Person implements Parcelable {
         this.prefList = dietaryList;
         DatabaseReference RootRef = FirebaseDatabase.getInstance().getReference();
         RootRef.child("Users").child(this.currentUID).child("Person").setValue(this);
-        Log.d("tag", "updatedPrefList");
+        RootRef.child("Users").child(this.currentUID).child("Spin").child("Person").setValue(this);
         return true;
     }
-    /**
-     * Adding a friend onto your friend's list, via email
-     * @param username the username of the friend you want to add
-     * @return True if successful, false otherwise
-     */
-//    public boolean addFriend(String username){
-//        boolean checker = true;
-//        //Do a database check to see if the username is a valid
-//        //one and set the checker to true if it exists
-//
-//        if(!checker) {
-//            System.out.println("User Cannot be found, no friend added");
-//            return false;
-//        }
-//        checker = this.listOfFriends.add(username);
-//        if(!checker) {
-//            System.out.println("User already is a friend");
-//            return false;
-//        }
-//        //****A database call will be needed at the end of this function****
-//        return true;
-//    }
-//
+
     /**
      * getter for the list of statuses
      * @return list of statuses
