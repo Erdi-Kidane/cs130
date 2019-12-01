@@ -28,7 +28,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
-import android.util.Log;
+
 
 
 
@@ -37,11 +37,9 @@ public class AddFriendActivity extends AppCompatActivity {
     private ViewPager myViewPager;
     private TabLayout myTabLayout;
     private NewAccessorAdapter myTabsAccessorAdapter;
-    private FirebaseUser currentuser;
     private FirebaseAuth mAuth;
     private DatabaseReference RootRef;
-    private Person newp;
-    private String testValue,currentGroupName;
+    private String currentGroupName;
     @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,10 +51,9 @@ public class AddFriendActivity extends AppCompatActivity {
         myViewPager.setAdapter(myTabsAccessorAdapter);
         myTabLayout =(TabLayout)findViewById(R.id.main_tabs);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle("AddFriend");
+        getSupportActionBar().setTitle("Friends");
         myTabLayout.setupWithViewPager(myViewPager);
         mAuth = FirebaseAuth.getInstance();
-        currentuser = mAuth.getCurrentUser();
         RootRef = FirebaseDatabase.getInstance().getReference();
         currentGroupName = getIntent().getExtras().get("groupName").toString();
     }
@@ -86,6 +83,11 @@ public class AddFriendActivity extends AppCompatActivity {
             startActivity(loginIntent);
             finish();
         }
+        if (item.getItemId() == R.id.add)
+        {
+
+            Addfriend();
+        }
 
 
         return true;
@@ -98,6 +100,81 @@ public class AddFriendActivity extends AppCompatActivity {
         finish();
     }
 
+    private void Addfriend()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(AddFriendActivity.this, R.style.AlertDialog);
+        builder.setTitle("Enter Friend's Name :");
+
+        final EditText groupNameField = new EditText(AddFriendActivity.this);
+
+        groupNameField.setHint("e.g BestBuddy");
+        builder.setView(groupNameField);
 
 
+        builder.setPositiveButton("Invite", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i)
+            {
+                final String groupName = groupNameField.getText().toString();
+                if (TextUtils.isEmpty(groupName))
+                {
+                    Toast.makeText(AddFriendActivity.this, "Please write Friend Name...", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+
+                    DatabaseReference mdatabaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
+                    mdatabaseReference.orderByChild("name").equalTo(groupName).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if(dataSnapshot.exists()){
+                                for (DataSnapshot childSnapshot: dataSnapshot.getChildren()) {
+                                    String uid = childSnapshot.getKey();
+                                    CreateFriend(uid,groupName);
+                                    break;
+                                }
+                            }
+                            else{
+                                Toast.makeText(AddFriendActivity.this, "Please Type the correct member name...", Toast.LENGTH_SHORT).show();
+                            }
+
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) { // ToDo: Do something for errors too
+                        }
+                    });
+                    //CreateNewGroup(groupName);
+
+                }
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i)
+            {
+                dialogInterface.cancel();
+            }
+        });
+
+        builder.show();
+    }
+
+    private void CreateFriend(final String memberName,final String m)
+    {
+        String currentUserID = mAuth.getCurrentUser().getUid();
+        //UsersRef.child("Groups").child(groupName).child("Host").setValue(currentUserID);
+        RootRef.child("Users").child(currentUserID).child("Friendlist").child(m).setValue(memberName)
+                //UsersRef.child("Groups").child(groupName).child("Message").setValue("")
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task)
+                    {
+                        if (task.isSuccessful())
+                        {
+                            Toast.makeText(AddFriendActivity.this, m + " is adding successfully...", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
 }

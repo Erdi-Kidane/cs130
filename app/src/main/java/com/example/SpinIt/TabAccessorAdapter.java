@@ -46,11 +46,11 @@ public class TabAccessorAdapter extends FragmentPagerAdapter {
         switch (position)
         {
             case 0:
-                return "public groups";
+                return "public rooms";
 
             case 1:
 
-                return "private groups";
+                return "private rooms";
 
 
             default:
