@@ -41,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private DatabaseReference RootRef;
     private Person currentPerson = null;
+    private Person newp;
+    private String testValue;
+    private String currentUserName;
     @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         currentuser = mAuth.getCurrentUser();
         RootRef = FirebaseDatabase.getInstance().getReference();
+
     }
 
     @Override
@@ -72,7 +76,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void VerifyUserExistance() {
+
         String currentUserID = mAuth.getCurrentUser().getUid();
+        GetUserInfo();
 
         RootRef.child("Users").child(currentUserID).addValueEventListener(new ValueEventListener() {
             @Override
@@ -93,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
     }
 
     private void SendUserToLoginActivity(){
@@ -224,7 +231,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
-    private void RequestNewGroup()
+    private void RequestPrivateNewGroup()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AlertDialog);
         builder.setTitle("Enter Room Name :");
@@ -239,7 +246,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i)
             {
-                String groupName = groupNameField.getText().toString();
+                final String groupName = groupNameField.getText().toString();
 
                 if (TextUtils.isEmpty(groupName))
                 {
@@ -247,7 +254,20 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    CreateNewGroup(groupName);
+                    String currentUserID = mAuth.getCurrentUser().getUid();
+                    RootRef.child("Groups").child(groupName).child("Host").setValue(currentUserID);
+                    RootRef.child("Groups").child(groupName).child("Member").child(currentUserID).setValue(currentUserName);
+                    RootRef.child("Groups").child(groupName).child("Message").setValue("")
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task)
+                                {
+                                    if (task.isSuccessful())
+                                    {
+                                        Toast.makeText(MainActivity.this, groupName + " room is Created Successfully...", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
                 }
             }
         });
@@ -262,6 +282,61 @@ public class MainActivity extends AppCompatActivity {
 
         builder.show();
     }
+    private void RequestPublicNewGroup()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AlertDialog);
+        builder.setTitle("Enter Room Name :");
+
+        final EditText groupNameField = new EditText(MainActivity.this);
+        //final EditText groupNameField1 = new EditText(MainActivity.this);
+        groupNameField.setHint("e.g UCLA");
+        builder.setView(groupNameField);
+
+
+        builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i)
+            {
+                final String groupName = groupNameField.getText().toString();
+
+                if (TextUtils.isEmpty(groupName))
+                {
+                    Toast.makeText(MainActivity.this, "Please write Group Name...", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    String currentUserID = mAuth.getCurrentUser().getUid();
+                    RootRef.child("Groups").child(groupName).child("Host").setValue(currentUserID);
+                    Log.d("tag","test999 value3: "+ currentUserName);
+                    RootRef.child("Groups").child(groupName).child("Member").child(currentUserID).setValue(currentUserName);
+                    RootRef.child("Groups").child(groupName).child("Message").setValue("");
+                    RootRef.child("Groups").child(groupName).child("Public").setValue("1")
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task)
+                                {
+                                    if (task.isSuccessful())
+                                    {
+                                        Toast.makeText(MainActivity.this, groupName + " room is Created Successfully...", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                }
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i)
+            {
+                dialogInterface.cancel();
+            }
+        });
+
+        builder.show();
+    }
+
+
     private void RemoveGroup()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AlertDialog);
@@ -310,9 +385,13 @@ public class MainActivity extends AppCompatActivity {
             mAuth.signOut();
             SendUserToLoginActivity();
         }
-        if (item.getItemId() == R.id.main_create_group_option)
+        if (item.getItemId() == R.id.main_create_public_group_option)
         {
-           RequestNewGroup();
+            RequestPublicNewGroup();
+        }
+        if (item.getItemId() == R.id.main_create_private_group_option)
+        {
+            RequestPrivateNewGroup();
         }
         if (item.getItemId() == R.id.main_remove_group_option)
         {
@@ -329,5 +408,57 @@ public class MainActivity extends AppCompatActivity {
 
 
         return true;
+    }
+
+    //hihi
+    private void Put(Person p){
+
+        DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
+        String mcurrentUserID = mAuth.getCurrentUser().getUid();
+        mRootRef.child("Users").child(mcurrentUserID).child("Person").setValue(p);
+
+    }
+    private void Get(){
+
+        String rcurrentUserID = mAuth.getCurrentUser().getUid();
+
+        DatabaseReference mReadreference = FirebaseDatabase.getInstance().getReference().child("Users").child(rcurrentUserID).child("Person");
+
+
+        mReadreference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                newp = dataSnapshot.getValue(Person.class);
+                /*
+                 *
+                 *
+                 * */
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
+    }
+    private void GetUserInfo()
+    {
+        String currentUserID = mAuth.getCurrentUser().getUid();
+        //Log.d("tag","test999 value3: "+ currentUserID);
+        RootRef.child("Users").child(currentUserID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                if (dataSnapshot.exists())
+                {
+                    currentUserName = dataSnapshot.child("name").getValue().toString();
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }
