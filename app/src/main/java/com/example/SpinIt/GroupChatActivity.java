@@ -255,9 +255,33 @@ public class GroupChatActivity extends AppCompatActivity {
             //String currentUserID = mAuth.getCurrentUser().getUid();
             MakePublic();
         }
+        if (item.getItemId() == R.id.quit)
+        {
+            //String currentUserID = mAuth.getCurrentUser().getUid();
+            DeleteUser();
+            Intent loginIntent = new Intent(GroupChatActivity.this,MainActivity.class);
+            //loginIntent.putExtra("groupName" , currentGroupName);
+            loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(loginIntent);
+            finish();
+        }
 
 
         return true;
+    }
+    private void DeleteUser(){
+        String currentUserID = mAuth.getCurrentUser().getUid();
+        myRef.child("Groups").child(currentGroupName).child("Member").child(currentUserID).removeValue()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task)
+                    {
+                        if (task.isSuccessful())
+                        {
+                            Toast.makeText(GroupChatActivity.this, "You are removed from group Successfully...", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
     private void SendUserToLoginActivity(){
         Intent loginIntent = new Intent(GroupChatActivity.this,LoginActivity.class);

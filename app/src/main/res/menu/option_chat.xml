@@ -25,4 +25,10 @@
         app:showAsAction= "never"
         >
     </item>
+    <item
+        android:title="Quit from Group"
+        android:id = "@+id/quit"
+        app:showAsAction= "never"
+        >
+    </item>
 </menu>

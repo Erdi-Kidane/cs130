@@ -87,7 +87,7 @@ public class GroupsFragment extends Fragment {
                 for (DataSnapshot ds : dataSnapshot.getChildren()){
 
 
-                    if(ds.child("Member").hasChild(currentUserID)|| ds.hasChild("Public"))
+                    if(ds.child("Member").hasChild(currentUserID)&& !ds.hasChild("Public"))
                             set.add(ds.getKey());
 
 
