@@ -40,8 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseUser currentuser;
     private FirebaseAuth mAuth;
     private DatabaseReference RootRef;
-    private Person newp;
-    private String testValue;
+    private Person currentPerson = null;
     @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,9 +57,6 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         currentuser = mAuth.getCurrentUser();
         RootRef = FirebaseDatabase.getInstance().getReference();
-
-        Intent displayPopUp = getIntent();
-        String info = displayPopUp.getStringExtra("chatInfo");
     }
 
     @Override
@@ -334,36 +330,4 @@ public class MainActivity extends AppCompatActivity {
 
         return true;
     }
-
-    //hihi
-    private void Put(Person p){
-
-        DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
-        String mcurrentUserID = mAuth.getCurrentUser().getUid();
-        mRootRef.child("Users").child(mcurrentUserID).child("Person").setValue(p);
-
-    }
-    private void Get(){
-
-        String rcurrentUserID = mAuth.getCurrentUser().getUid();
-
-        DatabaseReference mReadreference = FirebaseDatabase.getInstance().getReference().child("Users").child(rcurrentUserID).child("Person");
-
-
-        mReadreference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                newp = dataSnapshot.getValue(Person.class);
-                /*
-                *
-                *
-                * */
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-
-    }
-
 }

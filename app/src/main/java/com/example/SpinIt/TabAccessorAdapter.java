@@ -1,5 +1,7 @@
 package com.example.SpinIt;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -15,25 +17,46 @@ public class TabAccessorAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
 
+        switch (position)
+        {
+            case 0:
+                PGroupsFragment pgroupsFragment = new PGroupsFragment();
+//                pgroupsFragment.setPerson(currentPerson);
+                return pgroupsFragment;
 
-        GroupsFragment groupsFragment = new GroupsFragment();
-        return groupsFragment;
+            case 1:
+                GroupsFragment groupsFragment = new GroupsFragment();
+//                groupsFragment.setPerson(currentPerson);
+                return groupsFragment;
 
+            default:
+                return null;
+        }
 
     }
 
     @Override
     public int getCount() {
-        return 1;
+        return 2;
     }
 
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
+        switch (position)
+        {
+            case 0:
+                return "public groups";
+
+            case 1:
+
+                return "private groups";
 
 
-        return "groups";
+            default:
+                return null;
+        }
+
+
     }
-
-
 }

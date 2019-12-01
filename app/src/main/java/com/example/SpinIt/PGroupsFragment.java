@@ -4,16 +4,19 @@ package com.example.SpinIt;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -29,17 +32,18 @@ import java.util.Set;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GroupsFragment extends Fragment {
+public class PGroupsFragment extends Fragment {
     private View groupFragmentView;
     private ListView list_view;
     private ArrayAdapter<String> arrayAdapter;
     private ArrayList<String> list_of_groups = new ArrayList<>();
     private FirebaseAuth mAuth;
-    private DatabaseReference GroupRef;
+    private DatabaseReference GroupRef,RootRef;
     private String currentUserID;
 
+    private Person person;
 
-    public GroupsFragment() {
+    public PGroupsFragment() {
         // Required empty public constructor
     }
 
@@ -50,6 +54,7 @@ public class GroupsFragment extends Fragment {
         // Inflate the layout for this fragment
         groupFragmentView = inflater.inflate(R.layout.fragment_groups, container, false);
         GroupRef = FirebaseDatabase.getInstance().getReference().child("Groups");
+        RootRef=FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
         currentUserID = mAuth.getCurrentUser().getUid();
         IntializeFields();
@@ -60,13 +65,28 @@ public class GroupsFragment extends Fragment {
             {
                 String currentGroupName = adapterView.getItemAtPosition(position).toString();
 
+                String currentUserID = mAuth.getCurrentUser().getUid();
+                //RootRef.child("Groups").child(currentGroupName).child("Host").setValue(currentUserID);
+                RootRef.child("Groups").child(currentGroupName).child("Member").child(currentUserID).setValue("")
+                //RootRef.child("Groups").child(currentGroupName).child("Message").setValue("")
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task)
+                            {
+                                if (task.isSuccessful())
+                                {
+                                    Toast.makeText(getActivity(), "Joining room is Successfully...", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+
                 Intent groupChatIntent = new Intent(getContext(), GroupChatActivity.class);
                 groupChatIntent.putExtra("groupName" , currentGroupName);
                 startActivity(groupChatIntent);
             }
         });
         return groupFragmentView;
-}
+    }
 
     private void RetrieveAndDisplayGroups() {
         GroupRef.addValueEventListener(new ValueEventListener() {
@@ -87,13 +107,8 @@ public class GroupsFragment extends Fragment {
                 for (DataSnapshot ds : dataSnapshot.getChildren()){
 
 
-                    if(ds.child("Member").hasChild(currentUserID)|| ds.hasChild("Public"))
-                            set.add(ds.getKey());
-
-
-
-
-
+                    if( ds.hasChild("Public"))
+                        set.add(ds.getKey());
 
                 }
 
@@ -116,5 +131,11 @@ public class GroupsFragment extends Fragment {
         arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, list_of_groups);
         list_view.setAdapter(arrayAdapter);
     }
+
+    public void setPerson(Person p){
+
+        this.person = p;
+    }
+
 
 }

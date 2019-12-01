@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
@@ -29,14 +30,14 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
     ImageView selected,imageRoulette;
     LinearLayout linearFoodPlace1 , linearFoodPlace2, linearFoodPlace3;
     private double savedDegree;
+    private String currentGroupName;
     private String[] spinnerChoices = {"Bplate", "In and out", "What a burger", "Subway", "Something really really long", "six", "seven", "eight"};
 
     ObjectAnimator boxes;
-    Button b_start, b_increase, b_decrease;
+    Button b_start, b_increase, b_decrease,btn;
     TextView first, second, third, fourth, fifth, sixth, seventh, eight;
     TextView popup;
     int childCount = 0;
-
     private Person currentPerson;
 
     @Override
@@ -48,6 +49,7 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
         b_start = (Button)findViewById(R.id.spinItBTN);
         b_decrease = (Button)findViewById(R.id.subtractBTN);
         b_increase = (Button)findViewById(R.id.addStuffBTN);
+        btn = (Button)findViewById(R.id.back_btn);
         selected = (ImageView)findViewById(R.id.imageSelected);
         imageRoulette = (ImageView)findViewById(R.id.roulette);
         first = (TextView)findViewById(R.id.firstLine);
@@ -61,24 +63,16 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
         linearFoodPlace3 = (LinearLayout) findViewById(R.id.foodPlaceImage3);
         linearFoodPlace2 = (LinearLayout) findViewById(R.id.foodPlaceImage2);
         linearFoodPlace1 = (LinearLayout) findViewById(R.id.foodPlaceImage1);
+        currentGroupName = getIntent().getExtras().get("groupName").toString();
 
         Intent mIntent = getIntent();
         currentPerson = (Person) mIntent.getParcelableExtra("Person");
-        /*From here we probably want to create a spinner from the person's information*/
-        /*Create button that will let us set up the location, find places, and let out a number of places*/
-
-
-        Spin spin = new Spin(currentPerson);
-
-
-
-
 
 
         // Drawable d = Drawable.createFromPath()
 
-      //linearFoodPlace.setBackgroundResource(R.drawable.foodplace1);
-      //   imageRoulette.setImageDrawable(getResources().getDrawable(R.drawable.spin3));
+        //linearFoodPlace.setBackgroundResource(R.drawable.foodplace1);
+        //   imageRoulette.setImageDrawable(getResources().getDrawable(R.drawable.spin3));
         setImageRoulette(this.intNumber);
 
 /*
@@ -95,6 +89,23 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
 
 
 
+
+    }
+
+    public void onClickButtonBack(View v)
+    {
+        Log.d("tag", "Before IF: the value of currentGroupName: " + currentGroupName);
+        if (currentGroupName.equals("a")){
+            Intent newIntent = new Intent(Spinner.this, MainPageActivity.class);
+            //newIntent.putExtra("groupName" , currentGroupName);
+            startActivity(newIntent);
+            finish();
+        }else{
+            Intent newIntent = new Intent(Spinner.this, GroupChatActivity.class);
+            newIntent.putExtra("groupName" , currentGroupName);
+            startActivity(newIntent);
+            finish();
+        }
 
     }
     public void onClickButtonRotation(View v)
@@ -170,7 +181,6 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
         b_start.setVisibility(View.VISIBLE);
 
     }
-
     @Override
     public void onAnimationEnd(Animation animation)
     {
@@ -207,13 +217,13 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
             }
         }, 1000);
 
-       // boxes.end();
+        // boxes.end();
 
-     //   Intent displayPopUp= new Intent(Spinner.this, Popup.class);
-      // displayPopUp.putExtra("info", spinnerChoices[outputSelection(castDegreeToInt, intNumber) -1]);
+        //   Intent displayPopUp= new Intent(Spinner.this, Popup.class);
+        // displayPopUp.putExtra("info", spinnerChoices[outputSelection(castDegreeToInt, intNumber) -1]);
 
 
-      //  startActivity(displayPopUp);
+        //  startActivity(displayPopUp);
 
         //  outputSelection(savedDegree, intNumber);
 
@@ -227,21 +237,25 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
     }
     public void buttonPlus(View v)
     {
-        if(this.intNumber != 3)
-        {
-            this.intNumber++;
-            setImageRoulette(this.intNumber);
-            b_decrease.setVisibility(View.VISIBLE);
-/*            SharedPreferences.Editor editor = this.sharedPreferences.edit();
-           editor.putInt("INT_NUMBER", this.intNumber);
-            editor.commit();*/
-
-        }
-        if(this.intNumber == 3)
-        {
-            b_increase.setVisibility(View.INVISIBLE);
-            //  b_decrease.setVisibility(View.VISIBLE);
-        }
+//        if(this.intNumber != 3)
+//        {
+//            this.intNumber++;
+//            setImageRoulette(this.intNumber);
+//            b_decrease.setVisibility(View.VISIBLE);
+///*            SharedPreferences.Editor editor = this.sharedPreferences.edit();
+//           editor.putInt("INT_NUMBER", this.intNumber);
+//            editor.commit();*/
+//
+//        }
+//        if(this.intNumber == 3)
+//        {
+//            b_increase.setVisibility(View.INVISIBLE);
+//            //  b_decrease.setVisibility(View.VISIBLE);
+//        }
+        if(currentPerson != null)
+            Log.d("tag", "tests for person transfer " + currentPerson.getCurrentUID());
+        else
+            Log.d("tag", "failed transfer");
     }
 
     public void buttonMinus(View v)
@@ -319,7 +333,7 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
                 }
 
                 //first.setText(spinnerChoices[0]);
-               // second.setText(spinnerChoices[1]);
+                // second.setText(spinnerChoices[1]);
                 linearFoodPlace1.setVisibility(View.VISIBLE);
                 return;
             case 2:
