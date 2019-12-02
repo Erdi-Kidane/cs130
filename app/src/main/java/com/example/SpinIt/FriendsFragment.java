@@ -60,7 +60,7 @@ public class FriendsFragment extends Fragment {
             {
                 final String cName = adapterView.getItemAtPosition(position).toString();
                 DatabaseReference mdatabaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
-                mdatabaseReference.equalTo(cName).addListenerForSingleValueEvent(new ValueEventListener() {
+                mdatabaseReference.orderByChild("name").equalTo(cName).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if(dataSnapshot.exists()){

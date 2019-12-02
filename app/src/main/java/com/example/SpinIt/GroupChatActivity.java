@@ -44,7 +44,7 @@ public class GroupChatActivity extends AppCompatActivity {
     private TextView TextMessage;
 
     private FirebaseAuth mAuth;
-    private DatabaseReference UsersRef, GnRf, GmRF, myRef;
+    private DatabaseReference UsersRef, GnRf, GmRF, myRef,newGnRf;
 
     private String currentGroupName, currentUserID, currentUserName, currentDate, currentTime;
 
@@ -60,6 +60,7 @@ public class GroupChatActivity extends AppCompatActivity {
         UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         myRef = FirebaseDatabase.getInstance().getReference();
         GnRf = FirebaseDatabase.getInstance().getReference().child("Groups").child(currentGroupName).child("Message");
+        newGnRf = FirebaseDatabase.getInstance().getReference().child("Groups").child(currentGroupName).child("Member");
         Intent getPerson = getIntent();
         currentPerson = getPerson.getParcelableExtra("Person");
         mToolbar = (Toolbar) findViewById(R.id.group_chat_bar_layout);
@@ -84,11 +85,34 @@ public class GroupChatActivity extends AppCompatActivity {
 
             }
         });
+
+        newGnRf.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                if (dataSnapshot.hasChild(currentUserID))
+                {
+
+                }
+                else{
+                    Intent loginIntent = new Intent(GroupChatActivity.this,MainActivity.class);
+                    loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(loginIntent);
+                    finish();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         MessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view)
             {
-                SaveMessageInfoToDatabase();
+                Indatabase();
                 uMinput.setText("");
                 mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
             }
@@ -147,7 +171,7 @@ public class GroupChatActivity extends AppCompatActivity {
 
     }
 
-    private void SaveMessageInfoToDatabase()
+    private void Indatabase()
     {
         String message = uMinput.getText().toString();
         String messagekEY = GnRf.push().getKey();
@@ -159,7 +183,7 @@ public class GroupChatActivity extends AppCompatActivity {
         else
         {
             HashMap<String, Object> groupMessageKey = new HashMap<>();
-                GnRf.updateChildren(groupMessageKey);
+            GnRf.updateChildren(groupMessageKey);
             GmRF = GnRf.child(messagekEY);
             HashMap<String, Object> messageInfoMap = new HashMap<>();
             messageInfoMap.put("name", currentUserName);
