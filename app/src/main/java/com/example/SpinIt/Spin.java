@@ -1,5 +1,7 @@
 package com.example.SpinIt;
 
+import android.content.Intent;
+import android.os.Handler;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.StrictMode;
@@ -33,6 +35,7 @@ public class Spin implements Parcelable {
     private String location;
     private ArrayList<Person> groupOfPeople = new ArrayList<Person>();
     private String currentUID;
+    private Boolean yelpCheck = true;
 
     /**************************************************/
 //This is all for Parcelable stuff
@@ -251,53 +254,67 @@ public class Spin implements Parcelable {
         String line;
         StringBuffer responseContent = new StringBuffer();
         String API_KEY = "5fY2dEN5tT1qdS-5X25kkGcDRp71bv1AG2WURiYMaZxN9t0N51sMcZ8HEPP9SvIXkDHHrzGXj0ka5W1n9FUEfjzi2_so8QEWF7pKFF4LV4vj0w09cWyYJ2JAMBHJXXYx";
-        try {
-            String yelp = "https://api.yelp.com/v3/businesses/search";
-            yelp = yelp + "?longitude=" + String.valueOf(this.longitude) + "&latitude=" +
-                    String.valueOf(this.latitude) + "&radius" + String.valueOf(this.radius);
 
-//            ArrayList<String> foodList = person.getPrefList().getFoodPref();
-//            for(int i = 0; i <  foodList.size(); i++)
-//                yelp = yelp + "?categories=" + person.getPrefList().getFoodPref().get(i);
+        ArrayList<String> foodList = person.getPrefList().getFoodPref();
+        this.listOfPlaces = new ArrayList<>();
+        try{
+            for(int i = 0; i <  foodList.size(); ) {
+                yelpCheck = true;
+                String yelp = "https://api.yelp.com/v3/businesses/search";
+                yelp = yelp + "?longitude=" + String.valueOf(this.longitude) + "&latitude=" +
+                        String.valueOf(this.latitude) + "&radius" + String.valueOf(this.radius);
+
+                String currentWord = person.getPrefList().getFoodPref().get(i);
+                String tempWord = "";
+                for (int j = 0; j < currentWord.length(); j++){
+                    if(currentWord.charAt(j) != ' ')
+                        tempWord += currentWord.charAt(j);
+                    else
+                        tempWord += "_";
+                }
+                tempWord = tempWord.toLowerCase();
+                yelp = yelp + "&term=" + tempWord;
+                Log.d("tag", "this is the yelp string " + yelp);
+
+//                new Handler().postDelayed(new Runnable(){
+//                    @Override
+//                    public void run(){
 //
+//                    }
+//                }, 1000);
+                URL url = new URL(yelp);
+                con = (HttpURLConnection) url.openConnection();
+
+                //Set up for the getRequest
+                con.setRequestMethod("GET");
+                con.setRequestProperty("Authorization", "bearer " + API_KEY);
+                con.setConnectTimeout(10000);
+                con.setReadTimeout(10000);
+
+                int status = con.getResponseCode();
+
+                if (status > 299) {
+                    reader = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+                    while ((line = reader.readLine()) != null) {
+                        responseContent.append(line);
+                    }
+                    reader.close();
+                } else {
+                    reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                    while ((line = reader.readLine()) != null) {
+                        responseContent.append(line);
+                    }
+                    reader.close();
+                }
+                checker = parse(responseContent.toString());
+                if(yelpCheck)
+                    i++;
+            }
 //            ArrayList<String> dietaryList = person.getPrefList().getDietaryPref();
 //            for(int i = 0; i < dietaryList.size(); i++)
-//                yelp = yelp + "?categories=" + dietaryList.get(i);
-//            Log.d("tag", "this is my yelp string " + yelp);
-//*************************************
-            yelp = "https://api.yelp.com/v3/businesses/search";
-            yelp = yelp + "?longitude=" + String.valueOf(this.longitude) + "&latitude=" +
-                    String.valueOf(this.latitude) + "&radius" + String.valueOf(this.radius);
-            System.out.println(yelp);
-            yelp = "https://api.yelp.com/v3/businesses/search?longitude=-119.194739&latitude=34.155516&radius38624?categories=coffee_and_tea";
-////******************************************
+//                yelp = yelp + "&categories=" + dietaryList.get(i);
+//            yelp = "https://api.yelp.com/v3/businesses/search?longitude=-119.194739&latitude=34.155516&radius38624?categories=coffee_and_tea";
 
-
-            URL url = new URL(yelp);
-            con = (HttpURLConnection) url.openConnection();
-
-            //Set up for the getRequest
-            con.setRequestMethod("GET");
-            con.setRequestProperty("Authorization", "bearer " + API_KEY);
-            con.setConnectTimeout(10000);
-            con.setReadTimeout(10000);
-
-            int status = con.getResponseCode();
-
-            if (status > 299) {
-                reader = new BufferedReader(new InputStreamReader(con.getErrorStream()));
-                while ((line = reader.readLine()) != null) {
-                    responseContent.append(line);
-                }
-                reader.close();
-            } else {
-                reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                while ((line = reader.readLine()) != null) {
-                    responseContent.append(line);
-                }
-                reader.close();
-            }
-            checker = parse(responseContent.toString());
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -307,6 +324,7 @@ public class Spin implements Parcelable {
                 con.disconnect();
             DatabaseReference RootRef = FirebaseDatabase.getInstance().getReference();
             RootRef.child("Users").child(this.currentUID).child("Spin").setValue(this);
+
         }
         return checker;
     }
@@ -324,6 +342,7 @@ return true;
            ArrayList<Place> currentListOfPlaces = new ArrayList<Place>();
            JSONObject yelp = new JSONObject(responseBody);
            JSONArray businesses = yelp.getJSONArray("businesses");
+
            for (int i = 0; i < businesses.length(); i++) {
                JSONObject currentBusiness = businesses.getJSONObject(i);
                String currentUrl = currentBusiness.getString("url");
@@ -338,12 +357,23 @@ return true;
                        currentLocation.getString("city") + ", " +
                        currentLocation.getString("state") + ", " +
                        currentLocation.getString("zip_code");
-               Log.d("tag", "This is parsed data currentName: " + currentName +" currentAddress "+ currentAddress);
                Place currentPlace = new Place(currentLongitude, currentLatitude, currentUrl, currentName, currentAddress);
-               currentListOfPlaces.add(currentPlace);
-
+               Log.d("tag", "this is the list " + currentPlace.getName());
+               boolean flag = true;
+               for(int j = 0; j < listOfPlaces.size(); j++)
+               {
+                   if(listOfPlaces.get(j).getName().equals(currentPlace.getName()))
+                       flag = false;
+               }
+               if(flag)
+                   currentListOfPlaces.add(currentPlace);
            }
-           this.listOfPlaces = currentListOfPlaces;
+           if(currentListOfPlaces.isEmpty())
+               yelpCheck = false;
+           else
+               for(int j = 0; j < currentListOfPlaces.size(); j++) {
+                   this.listOfPlaces.add(currentListOfPlaces.get(j));
+               }
            return true;
        }catch (JSONException e) {
            //some exception handler code.

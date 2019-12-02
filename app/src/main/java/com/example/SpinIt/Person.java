@@ -85,8 +85,8 @@ public class Person implements Parcelable {
                     double lat = temp.child("latitude").getValue(double.class);
                     double longi = temp.child("longitude").getValue(double.class);
                     String url = temp.child("url").getValue(String.class);
-                    String name = temp.child("url").getValue(String.class);
-                    String location = temp.child("url").getValue(String.class);
+                    String name = temp.child("name").getValue(String.class);
+                    String location = temp.child("address").getValue(String.class);
                     //EXPANSION OF PLACE
                     Place tp = new Place(longi, lat, url, name, location);
                     tempCheck.add(tp);
@@ -97,8 +97,8 @@ public class Person implements Parcelable {
                     double lat = temp.child("latitude").getValue(double.class);
                     double longi = temp.child("longitude").getValue(double.class);
                     String url = temp.child("url").getValue(String.class);
-                    String name = temp.child("url").getValue(String.class);
-                    String location = temp.child("url").getValue(String.class);
+                    String name = temp.child("name").getValue(String.class);
+                    String location = temp.child("address").getValue(String.class);
                     //EXPANSION OF PLACE
                     Place tp = new Place(longi, lat, url, name, location);
                     tempSpun.add(tp);

@@ -50,18 +50,19 @@ public class MainPageActivity extends AppCompatActivity {
             @Override
             public void onClick(View view)
             {
-
-                ArrayList<Place> tempPl = currentSpin.getRandomPlaces();
-                for(int i=0; i != tempPl.size(); i++)
-                {
-                    Log.d("tag", "printing templace " + tempPl.get(i).getAddress());
+                if(currentSpin.getListOfPlaces() != null && !currentSpin.getListOfPlaces().isEmpty()) {
+                    ArrayList<Place> tempPl = currentSpin.getRandomPlaces();
+                    Intent registerIntent = new Intent(MainPageActivity.this, Spinner.class);
+                    registerIntent.putExtra("groupName", "a");
+                    registerIntent.putExtra("Person", currentPerson);
+                    registerIntent.putExtra("Spin", currentSpin);
+                    registerIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(registerIntent);
                 }
-                Intent registerIntent = new Intent(MainPageActivity.this, Spinner.class);
-                registerIntent.putExtra("groupName" ,"a" );
-                registerIntent.putExtra("Person", currentPerson);
-                registerIntent.putExtra("Spin", currentSpin);
-                registerIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(registerIntent);
+                else{
+                    //insert toast
+                    Log.d("tag", "The location + food preferences need to be set in preference");
+                }
             }
         });
         mPrefenceButton.setOnClickListener(new View.OnClickListener(){

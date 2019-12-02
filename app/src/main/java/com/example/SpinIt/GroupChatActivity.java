@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -49,6 +51,8 @@ public class GroupChatActivity extends AppCompatActivity {
     private String currentGroupName, currentUserID, currentUserName, currentDate, currentTime;
 
     private Person currentPerson;
+    private Spin currentSpin;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,16 +61,14 @@ public class GroupChatActivity extends AppCompatActivity {
         currentGroupName = getIntent().getExtras().get("groupName").toString();
         //Toast.makeText(GroupChatActivity.this, currentGroupName, Toast.LENGTH_SHORT).show();
 
-
         mAuth = FirebaseAuth.getInstance();
         currentUserID = mAuth.getCurrentUser().getUid();
         UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         myRef = FirebaseDatabase.getInstance().getReference();
         GroupNameRef = FirebaseDatabase.getInstance().getReference().child("Groups").child(currentGroupName).child("Message");
 
-        Intent getPerson = getIntent();
-        currentPerson = getPerson.getParcelableExtra("Person");
-
+        getPerson();
+        getSpin();
 
         InitializeFields();
         GetUserInfo();
@@ -88,6 +90,7 @@ public class GroupChatActivity extends AppCompatActivity {
                 Intent registerIntent = new Intent(GroupChatActivity.this, Spinner.class);
                 registerIntent.putExtra("groupName" , currentGroupName);
                 registerIntent.putExtra("Person", currentPerson);
+                registerIntent.putExtra("Spin", currentSpin);
                 registerIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(registerIntent);
 
@@ -360,5 +363,60 @@ public class GroupChatActivity extends AppCompatActivity {
 
         builder.show();
     }
+    /*****************for testing***************************************************************/
+    private void getPerson(){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        final String currentUID = user.getUid();
+        Log.d("tag", "Now in Get(), after current ID: " + currentUID );
 
+        DatabaseReference mPersonRef;
+        mPersonRef = myRef.child("Users").child(currentUID).child("Person");
+        ValueEventListener personListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                if (dataSnapshot.getValue() != null){
+                    currentPerson = new Person(dataSnapshot);
+
+                    Log.d("tag", "In get(), Person SUCCESSFULLY GET: " + currentPerson.getCurrentUID());
+                }
+                Log.d("tag", "In get(), after get the arrList ");
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("tag", "loadPost:onCancelled", databaseError.toException());
+
+            }
+        };
+        mPersonRef.addValueEventListener(personListener);
+    }
+
+    private void getSpin(){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        final String currentUID = user.getUid();
+        Log.d("tag", "Now in Get(), after current ID: " + currentUID );
+
+        DatabaseReference mPersonRef;
+        mPersonRef = myRef.child("Users").child(currentUID).child("Spin");
+        ValueEventListener personListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                if (dataSnapshot.getValue() != null){
+                    currentSpin = new Spin(dataSnapshot);
+                    Log.d("tag", "in ondatachange " + currentSpin.getPerson().getCurrentUID());
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("tag", "loadPost:onCancelled", databaseError.toException());
+
+            }
+        };
+        mPersonRef.addValueEventListener(personListener);
+    }
+    /*****************for testing****************************************************************/
 }

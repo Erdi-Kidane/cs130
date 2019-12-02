@@ -88,10 +88,8 @@ public class Profile extends AppCompatActivity {
         Intent mIntent = getIntent();
         currentPerson = (Person) mIntent.getParcelableExtra("Person");
         currentSpin = (Spin)mIntent.getParcelableExtra("Spin");
-        if(currentSpin.getPerson() == null)
-            Log.d("tag", "CurrentSpin'sPerson NOT FOUND!!!");
-        else
-            Log.d("tag", "CurrentSpins person uid "+ currentSpin.getPerson().getCurrentUID());
+
+        Log.d("tag", "CurrentSpins person prefList "+ currentSpin.getPerson().getPrefList().getFoodPref().size());
         // UPDATE already added boxes
         ArrayList<String> tempFoodList = new ArrayList<>();
         if(currentPerson.getPrefList() != null && currentPerson.getPrefList().getFoodPref() != null) {
@@ -169,7 +167,8 @@ public class Profile extends AppCompatActivity {
                         showSelectedFood.setText(item);
                         PrefList tempPL = new PrefList();
                         tempPL.setFoodPref(tempList);
-                        tempPL.setDietaryPref(currentPerson.getPrefList().getDietaryPref());
+                        tempPL.setDietaryPref(currentSpin.getPerson().getPrefList().getDietaryPref());
+                        currentSpin.getPerson().updatePrefList(tempPL);
                         currentPerson.updatePrefList(tempPL);
                     }
                 });
@@ -185,7 +184,8 @@ public class Profile extends AppCompatActivity {
                             foodListChosen.clear();
                         }
                         PrefList empty = new PrefList();
-                        empty.setDietaryPref(currentPerson.getPrefList().getDietaryPref());
+                        empty.setDietaryPref(currentSpin.getPerson().getPrefList().getDietaryPref());
+                        currentSpin.getPerson().updatePrefList(empty);
                         currentPerson.updatePrefList(empty);
                     }
                 });
@@ -287,7 +287,8 @@ public class Profile extends AppCompatActivity {
                         showSelectedDietary.setText(item);
                         PrefList tempPL = new PrefList();
                         tempPL.setDietaryPref(tempList);
-                        tempPL.setFoodPref(currentPerson.getPrefList().getFoodPref());
+                        tempPL.setFoodPref(currentSpin.getPerson().getPrefList().getFoodPref());
+                        currentSpin.getPerson().updatePrefList(tempPL);
                         currentPerson.updatePrefList(tempPL);
                     }
                 });
@@ -303,7 +304,8 @@ public class Profile extends AppCompatActivity {
                             dietaryListChosen.clear();
                         }
                         PrefList empty = new PrefList();
-                        empty.setFoodPref(currentPerson.getPrefList().getFoodPref());
+                        empty.setFoodPref(currentSpin.getPerson().getPrefList().getFoodPref());
+                        currentSpin.getPerson().updatePrefList(empty);
                         currentPerson.updatePrefList(empty);
                     }
                 });
