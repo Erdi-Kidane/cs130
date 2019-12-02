@@ -1,6 +1,5 @@
 package com.example.SpinIt;
 
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,12 +20,10 @@ public class TabAccessorAdapter extends FragmentPagerAdapter {
         {
             case 0:
                 PGroupsFragment pgroupsFragment = new PGroupsFragment();
-//                pgroupsFragment.setPerson(currentPerson);
                 return pgroupsFragment;
 
             case 1:
                 GroupsFragment groupsFragment = new GroupsFragment();
-//                groupsFragment.setPerson(currentPerson);
                 return groupsFragment;
 
             default:

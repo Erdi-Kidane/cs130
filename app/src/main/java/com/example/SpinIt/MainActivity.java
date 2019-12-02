@@ -5,7 +5,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
@@ -16,10 +15,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -41,8 +37,6 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private DatabaseReference RootRef;
     private Person currentPerson = null;
-    private Person newp;
-    private String testValue;
     private String currentUserName;
     @SuppressLint("WrongViewCast")
     @Override
@@ -66,31 +60,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        //GetUserInfo();
-
-        if (currentuser == null){
-            SendUserToLoginActivity();
-        }
-        else{
-            VerifyUserExistance();
-            GetUserInfo();
-        }
-    }
-
-    private void VerifyUserExistance() {
         String currentUserID = mAuth.getCurrentUser().getUid();
-
         RootRef.child("Users").child(currentUserID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
-                if ((dataSnapshot.child("name").exists()))
+                if (dataSnapshot.exists())
                 {
-                    Toast.makeText(MainActivity.this, "Welcome Back", Toast.LENGTH_SHORT).show();
-                }
-                else
-                {
-                    //SendUserToSettingsActivity();
+                    currentUserName = dataSnapshot.child("name").getValue().toString();
+
                 }
             }
 
@@ -101,20 +79,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-
-    private void SendUserToLoginActivity(){
-        Intent loginIntent = new Intent(MainActivity.this,LoginActivity.class);
-        loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(loginIntent);
-        finish();
-    }
-    private void SendUserToMainPageActivity(){
-        Intent settingsIntent = new Intent(MainActivity.this, MainPageActivity.class);
-        settingsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(settingsIntent);
-        finish();
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -122,26 +86,8 @@ public class MainActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    private void CreateNewGroup(final String groupName)
-    {
-        String currentUserID = mAuth.getCurrentUser().getUid();
-        RootRef.child("Groups").child(groupName).child("Host").setValue(currentUserID);
-        RootRef.child("Groups").child(groupName).child("Member").child(currentUserID).setValue("");
-        RootRef.child("Groups").child(groupName).child("Message").setValue("")
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task)
-                    {
-                        if (task.isSuccessful())
-                        {
-                            Toast.makeText(MainActivity.this, groupName + " room is Created Successfully...", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-    }
     private void RemoveNewGroup(final String groupName)
     {
-        String currentUserID = mAuth.getCurrentUser().getUid();
         RootRef.child("Groups").child(groupName).removeValue()
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -149,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
                     {
                         if (task.isSuccessful())
                         {
-                            Toast.makeText(MainActivity.this, groupName + " room is removed Successfully...", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, groupName + " is removed Successfully...", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -158,26 +104,21 @@ public class MainActivity extends AppCompatActivity {
     private void Addfriend()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AlertDialog);
-            builder.setTitle("Enter Friend's Name :");
-
+        builder.setTitle("Enter Friend's Name :");
         final EditText groupNameField = new EditText(MainActivity.this);
-
             groupNameField.setHint("e.g BestBuddy");
             builder.setView(groupNameField);
-
-
-            builder.setPositiveButton("Invite", new DialogInterface.OnClickListener() {
+            builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i)
             {
                 final String groupName = groupNameField.getText().toString();
                 if (TextUtils.isEmpty(groupName))
                 {
-                    Toast.makeText(MainActivity.this, "Please write Friend Name...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Please input correct Name...", Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
-
                     DatabaseReference mdatabaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
                     mdatabaseReference.orderByChild("name").equalTo(groupName).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -190,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             }
                             else{
-                                Toast.makeText(MainActivity.this, "Please Type the correct member name...", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this, "Name not in the system!...", Toast.LENGTH_SHORT).show();
                             }
 
                         }
@@ -198,8 +139,6 @@ public class MainActivity extends AppCompatActivity {
                         public void onCancelled(@NonNull DatabaseError databaseError) { // ToDo: Do something for errors too
                         }
                     });
-                    //CreateNewGroup(groupName);
-
                 }
             }
         });
@@ -217,9 +156,7 @@ public class MainActivity extends AppCompatActivity {
     private void CreateFriend(final String memberName,final String m)
     {
         String currentUserID = mAuth.getCurrentUser().getUid();
-        //UsersRef.child("Groups").child(groupName).child("Host").setValue(currentUserID);
         RootRef.child("Users").child(currentUserID).child("Friendlist").child(m).setValue(memberName)
-                //UsersRef.child("Groups").child(groupName).child("Message").setValue("")
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task)
@@ -235,22 +172,17 @@ public class MainActivity extends AppCompatActivity {
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AlertDialog);
         builder.setTitle("Enter Room Name :");
-
         final EditText groupNameField = new EditText(MainActivity.this);
-        //final EditText groupNameField1 = new EditText(MainActivity.this);
         groupNameField.setHint("e.g UCLA");
         builder.setView(groupNameField);
-
-
         builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i)
             {
                 final String groupName = groupNameField.getText().toString();
-
                 if (TextUtils.isEmpty(groupName))
                 {
-                    Toast.makeText(MainActivity.this, "Please write Group Name...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Please write Room Name...", Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
@@ -264,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
                                 {
                                     if (task.isSuccessful())
                                     {
-                                        Toast.makeText(MainActivity.this, groupName + " room is Created Successfully...", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(MainActivity.this, groupName + " is Created Successfully...", Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             });
@@ -286,13 +218,9 @@ public class MainActivity extends AppCompatActivity {
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AlertDialog);
         builder.setTitle("Enter Room Name :");
-
         final EditText groupNameField = new EditText(MainActivity.this);
-        //final EditText groupNameField1 = new EditText(MainActivity.this);
         groupNameField.setHint("e.g UCLA");
         builder.setView(groupNameField);
-
-
         builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i)
@@ -301,13 +229,12 @@ public class MainActivity extends AppCompatActivity {
 
                 if (TextUtils.isEmpty(groupName))
                 {
-                    Toast.makeText(MainActivity.this, "Please write Group Name...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Please write Room Name...", Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
                     String currentUserID = mAuth.getCurrentUser().getUid();
                     RootRef.child("Groups").child(groupName).child("Host").setValue(currentUserID);
-                    Log.d("tag","test999 value3: "+ currentUserName);
                     RootRef.child("Groups").child(groupName).child("Member").child(currentUserID).setValue(currentUserName);
                     RootRef.child("Groups").child(groupName).child("Message").setValue("");
                     RootRef.child("Groups").child(groupName).child("Public").setValue("1")
@@ -317,7 +244,7 @@ public class MainActivity extends AppCompatActivity {
                                 {
                                     if (task.isSuccessful())
                                     {
-                                        Toast.makeText(MainActivity.this, groupName + " room is Created Successfully...", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(MainActivity.this, groupName + " is Created Successfully...", Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             });
@@ -341,22 +268,17 @@ public class MainActivity extends AppCompatActivity {
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AlertDialog);
         builder.setTitle("Enter Room Name :");
-
         final EditText groupNameField = new EditText(MainActivity.this);
-        //final EditText groupNameField1 = new EditText(MainActivity.this);
         groupNameField.setHint("e.g UCLA");
         builder.setView(groupNameField);
-
-
         builder.setPositiveButton("Remove", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i)
             {
                 String groupName = groupNameField.getText().toString();
-
                 if (TextUtils.isEmpty(groupName))
                 {
-                    Toast.makeText(MainActivity.this, "Please write Group Name...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, " not exist in system!!!", Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
@@ -364,7 +286,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i)
@@ -372,7 +293,6 @@ public class MainActivity extends AppCompatActivity {
                 dialogInterface.cancel();
             }
         });
-
         builder.show();
     }
     @Override
@@ -381,9 +301,11 @@ public class MainActivity extends AppCompatActivity {
 
         if (item.getItemId() == R.id.main_logout_option)
         {
-            //updateUserStatus("offline");
             mAuth.signOut();
-            SendUserToLoginActivity();
+            Intent loginIntent = new Intent(MainActivity.this,LoginActivity.class);
+            loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(loginIntent);
+            finish();
         }
         if (item.getItemId() == R.id.main_create_public_group_option)
         {
@@ -399,66 +321,15 @@ public class MainActivity extends AppCompatActivity {
         }
         if (item.getItemId() == R.id.option1)
         {
-            SendUserToMainPageActivity();
+            Intent settingsIntent = new Intent(MainActivity.this, MainPageActivity.class);
+            settingsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(settingsIntent);
+            finish();
         }
         if (item.getItemId() == R.id.add_friend)
         {
             Addfriend();
         }
-
-
         return true;
-    }
-
-    //hihi
-    private void Put(Person p){
-
-        DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
-        String mcurrentUserID = mAuth.getCurrentUser().getUid();
-        mRootRef.child("Users").child(mcurrentUserID).child("Person").setValue(p);
-
-    }
-    private void Get(){
-
-        String rcurrentUserID = mAuth.getCurrentUser().getUid();
-
-        DatabaseReference mReadreference = FirebaseDatabase.getInstance().getReference().child("Users").child(rcurrentUserID).child("Person");
-
-
-        mReadreference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                newp = dataSnapshot.getValue(Person.class);
-                /*
-                 *
-                 *
-                 * */
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-
-    }
-    private void GetUserInfo()
-    {
-        String currentUserID = mAuth.getCurrentUser().getUid();
-        //Log.d("tag","test999 value3: "+ currentUserID);
-        RootRef.child("Users").child(currentUserID).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot)
-            {
-                if (dataSnapshot.exists())
-                {
-                    currentUserName = dataSnapshot.child("name").getValue().toString();
-
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
     }
 }
