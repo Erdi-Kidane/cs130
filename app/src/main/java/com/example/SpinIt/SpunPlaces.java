@@ -11,7 +11,6 @@ public class SpunPlaces implements Parcelable {
 
     /**************************************************/
 //This is all for Parcelable stuff
-
     @Override
     public int describeContents() {
         return 0;
@@ -32,13 +31,16 @@ public class SpunPlaces implements Parcelable {
             return new SpunPlaces[size];
         }
     };
+
+    /**
+     * This is the constructor that is needed for Parceable objects
+     * @param in
+     */
     private SpunPlaces(Parcel in) {
         in.readTypedList(listOfCheckPlaces,Place.CREATOR);
         in.readTypedList(listOfSpunPlaces,Place.CREATOR);
     }
 /************************************************/
-
-
     /**
      * This is the constructor for users that already used the app prior
      * @param listOfCheckPlaces This is the list that a person has already spun AND Checked out
@@ -48,7 +50,6 @@ public class SpunPlaces implements Parcelable {
         this.listOfCheckPlaces = listOfCheckPlaces;
         this.listOfSpunPlaces = listOfSpunPlaces;
     }
-
     /**
      * This is the constructor for users that are new and have an empty constructor
      */
@@ -56,8 +57,6 @@ public class SpunPlaces implements Parcelable {
         this.listOfCheckPlaces = new ArrayList<Place>();
         this.listOfSpunPlaces = new ArrayList<Place>();
     }
-    //SpunPlaces()
-
     /**
      * <p>
      *    This is used if the user has spun a place and for some reason would
@@ -89,7 +88,6 @@ public class SpunPlaces implements Parcelable {
         //****A database call will be needed at the end of this function****
         return true;
     }
-
     /**
      * This is used if the user has spun a place and would like to check into the place
      * @param currentPlace This is the place that wants to be checked in, this place must be in the spun places
@@ -114,7 +112,6 @@ public class SpunPlaces implements Parcelable {
         //****A database call will be needed at the end of this function****
         return true;
     }
-
     /**
      * The spin function will call this function and add said place into the Spun list
      * @param currentPlace This is the place that was spun and will be added to the Spun list
@@ -132,7 +129,6 @@ public class SpunPlaces implements Parcelable {
         //****A database call will be needed at the end of this function****
         return true;
     }
-
     /**
      * getter for the spun places list
      * @return spun places list
