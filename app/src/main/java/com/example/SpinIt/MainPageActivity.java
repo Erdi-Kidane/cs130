@@ -53,7 +53,7 @@ public class MainPageActivity extends AppCompatActivity {
                 if(currentSpin.getListOfPlaces() != null && !currentSpin.getListOfPlaces().isEmpty()) {
                     ArrayList<Place> tempPl = currentSpin.getRandomPlaces();
                     Intent registerIntent = new Intent(MainPageActivity.this, Spinner.class);
-                    registerIntent.putExtra("groupName", "a");
+                    registerIntent.putExtra("groupName", "thisisaforbiddenchatnamedontuseitplease");
                     registerIntent.putExtra("Person", currentPerson);
                     registerIntent.putExtra("Spin", currentSpin);
                     registerIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

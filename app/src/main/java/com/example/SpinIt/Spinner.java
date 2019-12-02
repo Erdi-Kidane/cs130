@@ -121,7 +121,7 @@ b_increase.setVisibility(View.INVISIBLE);
     public void onClickButtonBack(View v)
     {
         Log.d("tag", "Before IF: the value of currentGroupName: " + currentGroupName);
-        if (currentGroupName.equals("a")){
+        if (currentGroupName.equals("thisisaforbiddenchatnamedontuseitplease")){
             Intent newIntent = new Intent(Spinner.this, MainPageActivity.class);
             //newIntent.putExtra("groupName" , currentGroupName);
             startActivity(newIntent);
@@ -180,9 +180,9 @@ b_increase.setVisibility(View.INVISIBLE);
         }
         else if(wheelType == 3)
         {
-            if(degree >= 0 && degree <= 45)
+            if(degree >= 0 && degree <= 44)
                 return 6;
-            if(degree >= 46 && degree <= 90)
+            if(degree >= 45 && degree <= 90)
                 return 5;
             if(degree >= 91 && degree <= 135)
                 return 1;
@@ -192,9 +192,9 @@ b_increase.setVisibility(View.INVISIBLE);
                 return 2;
             if(degree >=226 && degree <= 270)
                 return 8;
-            if(degree >= 271 && degree <= 315)
+            if(degree >= 271 && degree <= 316)
                 return 4;
-            if(degree >= 316 && degree <= 360)
+            if(degree >= 317 && degree <= 360)
                 return 3;
         }
         return 0;
@@ -241,6 +241,7 @@ b_increase.setVisibility(View.INVISIBLE);
                 displayPopUp.putExtra("info", spinnerChoices[outputSelection(castDegreeToInt, intNumber) -1]);
                 displayPopUp.putExtra("winningPlace", randPlaces.get(outputSelection(castDegreeToInt, intNumber)-1));
                 displayPopUp.putExtra("spin", currentSpin);
+                displayPopUp.putExtra("currentGroup", currentGroupName);
                 startActivity(displayPopUp);
             }
         }, 1000);

@@ -49,7 +49,7 @@ public class GroupChatActivity extends AppCompatActivity {
     private DatabaseReference UsersRef, GroupNameRef, GroupMessageKeyRef, myRef;
 
     private String currentGroupName, currentUserID, currentUserName, currentDate, currentTime;
-
+    private Place winningPlace = null;
     private Person currentPerson;
     private Spin currentSpin;
 
@@ -66,12 +66,14 @@ public class GroupChatActivity extends AppCompatActivity {
         UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         myRef = FirebaseDatabase.getInstance().getReference();
         GroupNameRef = FirebaseDatabase.getInstance().getReference().child("Groups").child(currentGroupName).child("Message");
+        winningPlace = getIntent().getParcelableExtra("winningPlace");
 
         getPerson();
         getSpin();
 
         InitializeFields();
         GetUserInfo();
+
         SendMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view)
@@ -96,7 +98,12 @@ public class GroupChatActivity extends AppCompatActivity {
 
             }
         });
-
+        if(winningPlace != null){
+            //populate
+            userMessageInput.setText("We spun this place:" + winningPlace.getName());
+            SaveMessageInfoToDatabase();
+            userMessageInput.setText("");
+        }
     }
 
     @Override
