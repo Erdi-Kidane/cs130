@@ -20,13 +20,13 @@
         >
     </item>
     <item
-        android:title="LogOut"
+        android:title="Log Out"
         android:id = "@+id/main_logout_option"
         app:showAsAction= "never"
         >
     </item>
     <item
-        android:title="BacktoMain"
+        android:title="Main"
         android:id = "@+id/option1"
         app:showAsAction= "never"
         >

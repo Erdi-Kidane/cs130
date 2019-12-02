@@ -77,7 +77,7 @@ public class PGroupsFragment extends Fragment {
                             {
                                 if (task.isSuccessful())
                                 {
-                                    Toast.makeText(getActivity(), "Joining room is Successfully...", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(), "Successfully joined room...", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
