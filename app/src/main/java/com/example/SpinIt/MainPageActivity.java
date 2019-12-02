@@ -22,12 +22,15 @@ import java.util.ArrayList;
 
 
 public class MainPageActivity extends AppCompatActivity {
-    private Button mSpinButton, mGroupButton, mPrefenceButton;
+    private Button mSpinButton, mGroupButton, mPrefenceButton, logout;
     private Person currentPerson;
     private Spin currentSpin;
     /*****************for testing************************/
     private DatabaseReference mRootRef;
     /***************************************************/
+    private FirebaseAuth mAuth;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +39,8 @@ public class MainPageActivity extends AppCompatActivity {
         mSpinButton = (Button) findViewById(R.id.spinButton);
         mGroupButton = (Button) findViewById(R.id.groupButton);
         mPrefenceButton = (Button) findViewById(R.id.pbutton);
-
+        logout = (Button)findViewById(R.id.logoutBTN);
+        mAuth = FirebaseAuth.getInstance();
 
         /*****************for testing************************/
         mRootRef = FirebaseDatabase.getInstance().getReference();
@@ -101,6 +105,22 @@ public class MainPageActivity extends AppCompatActivity {
                 }
             }
         });
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    //updateUserStatus("offline");
+                    mAuth.signOut();
+                    SendUserToLoginActivity();
+
+            }
+        });
+    }
+
+    private void SendUserToLoginActivity(){
+        Intent loginIntent = new Intent(MainPageActivity.this,LoginActivity.class);
+        loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(loginIntent);
+        finish();
     }
 
     /*****************for testing***************************************************************/

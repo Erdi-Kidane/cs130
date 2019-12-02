@@ -107,7 +107,7 @@ public class FriendsFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<Void> task)
                     {
-                        Toast.makeText(getActivity(), c + " People is added Successfully...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), c + " Friend successfully added...", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

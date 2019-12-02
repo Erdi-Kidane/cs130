@@ -68,7 +68,7 @@
                 android:textSize="24sp" />
 
             <Button
-                android:id="@+id/CheckIn"
+                android:id="@+id/logoutBTN"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/pbutton"
@@ -77,7 +77,7 @@
                 android:layout_marginRight="29dp"
                 android:background="@drawable/buttons"
                 android:padding="4dp"
-                android:text="Check-In"
+                android:text="Logout"
                 android:textAllCaps="false"
                 android:textSize="24sp" />
 
