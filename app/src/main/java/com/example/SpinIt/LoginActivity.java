@@ -58,7 +58,7 @@ public class LoginActivity extends AppCompatActivity {
         NeedNewAccountLink = (Button) findViewById(R.id.need_new_account_link);
         loadingBar = new ProgressDialog(this);
         mButtonGoogle  = (SignInButton) findViewById(R.id.ButtonGoogleSignIn);
-        mButtonGoogleSignOut = findViewById(R.id.ButtonGoogleSignOut);
+        //mButtonGoogleSignOut = findViewById(R.id.ButtonGoogleSignOut);
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -71,13 +71,13 @@ public class LoginActivity extends AppCompatActivity {
                 googleSignIn();
             }
         });
-        mButtonGoogleSignOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                googleSignOut();
-            }
-        });
+//        mButtonGoogleSignOut.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view)
+//            {
+//                googleSignOut();
+//            }
+//        });
         NeedNewAccountLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view)

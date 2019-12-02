@@ -12,74 +12,138 @@
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:background="#03A9F4">
+        android:background="@color/white">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
 
-            <Button
+            <ImageView
+                android:id="@+id/register_image"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="-3dp"
+                android:layout_marginTop="-4dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/cat" />
+
+            <ImageButton
                 android:id="@+id/spinButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/login_password"
-                android:layout_marginLeft="29dp"
-                android:layout_marginTop="214dp"
-                android:layout_marginRight="29dp"
-                android:background="@drawable/buttons"
-                android:padding="4dp"
-                android:text="Spin"
-                android:textAllCaps="false"
-                android:textColor="#000000"
-                android:textSize="24sp" />
-
-            <Button
+                android:layout_width="128dp"
+                android:layout_height="61dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="117dp"
+                android:layout_marginLeft="140dp"
+                android:layout_marginTop="410dp"
+                android:layout_marginEnd="124dp"
+                android:layout_marginRight="140dp"
+                android:background="@drawable/spinl"
+                android:cropToPadding="false"
+                android:paddingLeft="10dp"
+                android:scaleType="fitXY"></ImageButton>
+            <ImageButton
                 android:id="@+id/groupButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="128dp"
+                android:layout_height="61dp"
                 android:layout_below="@+id/spinButton"
-                android:layout_marginLeft="29dp"
-                android:layout_marginTop="14dp"
-                android:layout_marginRight="29dp"
-                android:background="@drawable/buttons"
-                android:padding="4dp"
-                android:text="Group"
-                android:textAllCaps="false"
-                android:textColor="#000000"
-                android:textSize="24sp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="117dp"
+                android:layout_marginLeft="140dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="124dp"
+                android:layout_marginRight="140dp"
+                android:background="@drawable/group"
+                android:cropToPadding="false"
+                android:paddingLeft="10dp"
+                android:scaleType="fitXY"></ImageButton>
 
-                />
-            <!--android:textColor="@android:color/background_light" -->
-            <Button
+            <ImageButton
                 android:id="@+id/pbutton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="169dp"
+                android:layout_height="63dp"
                 android:layout_below="@+id/groupButton"
-                android:layout_marginLeft="29dp"
-                android:layout_marginTop="14dp"
-                android:layout_marginRight="29dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="97dp"
+                android:layout_marginLeft="140dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="97dp"
+                android:layout_marginRight="140dp"
+                android:background="@drawable/perferenece"
+                android:cropToPadding="false"
+                android:paddingLeft="10dp"
+                android:scaleType="fitXY"></ImageButton>
 
-                android:background="@drawable/buttons"
-                android:padding="4dp"
-                android:text="Preference"
-                android:textAllCaps="false"
-                android:textColor="#000000"
-                android:textSize="24sp" />
-
-            <Button
+            <ImageButton
                 android:id="@+id/CheckIn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="128dp"
+                android:layout_height="61dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="117dp"
+                android:layout_marginLeft="140dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="124dp"
+                android:layout_marginRight="140dp"
                 android:layout_below="@+id/pbutton"
-                android:layout_marginLeft="29dp"
-                android:layout_marginTop="14dp"
-                android:layout_marginRight="29dp"
-                android:background="@drawable/buttons"
-                android:padding="4dp"
-                android:text="Check-In"
-                android:textAllCaps="false"
-                android:textSize="24sp" />
+                android:background="@drawable/checkin"
+                android:cropToPadding="false"
+                android:paddingLeft="10dp"
+                android:scaleType="fitXY"></ImageButton>
+
+            <!--            <Button-->
+<!--                android:id="@+id/spinButton"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_below="@+id/login_password"-->
+<!--                android:layout_marginLeft="29dp"-->
+<!--                android:layout_marginTop="214dp"-->
+<!--                android:layout_marginRight="29dp"-->
+<!--                android:background="@drawable/buttons"-->
+<!--                android:padding="4dp"-->
+<!--                android:text="Spin"-->
+<!--                android:textAllCaps="false"-->
+<!--                android:textColor="#000000"-->
+<!--                android:textSize="24sp" />-->
+
+<!--            <Button-->
+<!--                android:id="@+id/groupButton"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_below="@+id/spinButton"-->
+<!--                android:layout_marginLeft="29dp"-->
+<!--                android:layout_marginTop="14dp"-->
+<!--                android:layout_marginRight="29dp"-->
+<!--                android:background="@drawable/buttons"-->
+<!--                android:padding="4dp"-->
+<!--                android:text="Group"-->
+<!--                android:textAllCaps="false"-->
+<!--                android:textColor="#000000"-->
+<!--                android:textSize="24sp"-->
+
+<!--                />-->
+<!--          -->
+<!--            <Button-->
+<!--                android:id="@+id/pbutton"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_below="@+id/groupButton"-->
+<!--                android:layout_marginLeft="29dp"-->
+<!--                android:layout_marginTop="14dp"-->
+<!--                android:layout_marginRight="29dp"-->
+
+<!--                android:background="@drawable/buttons"-->
+<!--                android:padding="4dp"-->
+<!--                android:text="Preference"-->
+<!--                android:textAllCaps="false"-->
+<!--                android:textColor="#000000"-->
+<!--                android:textSize="24sp" />-->
+
 
 
         </RelativeLayout>
