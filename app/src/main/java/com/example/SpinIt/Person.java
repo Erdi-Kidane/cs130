@@ -1,32 +1,24 @@
 package com.example.SpinIt;
 
-
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import java.util.ArrayList;
 
-
-
 public class Person implements Parcelable {
     private ArrayList<String> listOfStatus = new ArrayList<>();
-    //private Set<String> listOfFriends;
     private SpunPlaces spunPlaces = new SpunPlaces();
     private PrefList prefList = new PrefList();
     private String currentUID = new String();
 /**************************************************/
 //This is all for Parcelable stuff
-
     @Override
     public int describeContents() {
         return 0;
     }
-
     @Override
     public void writeToParcel(Parcel out, int flags) {
         out.writeParcelable(spunPlaces, flags);
@@ -50,9 +42,12 @@ public class Person implements Parcelable {
         in.readStringList(listOfStatus);
     }
 /************************************************/
-    Person(){
+    Person(){}
 
-    }
+    /**
+     * This constructor is used when a person is first created and pushed into a database
+     * @param currentUID
+     */
     Person(String currentUID){
         this.listOfStatus = new ArrayList<>();
         this.prefList = new PrefList();
@@ -65,9 +60,10 @@ public class Person implements Parcelable {
         this.spunPlaces = sp;
         this.currentUID = currentUID;
     }
+
     /**
-     * This is the constructor for a person that has barely created an account and will instantiate everything as empty
-     * @param username this is that person's username
+     * This constructor is used when we want to pull a user from the database
+     * @param snapshot this snapshot is an instance of the firebase database that will grab the person through parsing it like a JSON
      */
     Person(DataSnapshot snapshot){
         //this.listOfFriends = new HashSet<String>();
@@ -151,6 +147,11 @@ public class Person implements Parcelable {
         return true;
     }
 
+    /**
+     * This is a setter for the preference list that ever user has, this also does an update to the database
+     * @param dietaryList the new list that wants to be updated to
+     * @return
+     */
     public boolean updatePrefList(PrefList dietaryList){
         //do a database call and then return true
         this.prefList = dietaryList;
@@ -159,33 +160,35 @@ public class Person implements Parcelable {
         RootRef.child("Users").child(this.currentUID).child("Spin").child("person").setValue(this);
         return true;
     }
-    public void setSpunPlaces(SpunPlaces places)
-    {
+
+    /**
+     * This will set the places that a user has spun and checked out
+     * @param places
+     */
+    public void setSpunPlaces(SpunPlaces places) {
         this.spunPlaces = places;
         DatabaseReference RootRef = FirebaseDatabase.getInstance().getReference();
         RootRef.child("Users").child(this.currentUID).child("Person").setValue(this);
         RootRef.child("Users").child(this.currentUID).child("Spin").child("person").setValue(this);
     }
-
     /**
      * getter for the list of statuses
      * @return list of statuses
      */
     public ArrayList<String> getListOfStatus(){return this.listOfStatus;}
     /**
-     * getter for the list of friends
-     * @return list of friends
-     */
-//    public Set<String> getListOfFriends(){return this.listOfFriends;}
-    /**
      * getter for the SpunPlaces data structure, which contains both a spun place list and a check place list
      * @return SpunPlaces data structure
      */
     public SpunPlaces getSpunPlaces(){return this.spunPlaces;}
     /**
-     * getter for the Dietary List
-     * @return the Dietary list
+     * getter for the Dietary/Preference List
+     * @return the Dietary/Preference list
      */
     public PrefList getPrefList(){return this.prefList;}
+    /**
+     * getter for the person's UID
+     * @return the person's UID
+     */
     public String getCurrentUID(){return this.currentUID;}
 }

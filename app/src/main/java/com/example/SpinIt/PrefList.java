@@ -37,22 +37,37 @@ public class PrefList implements Parcelable {
     /************************************************/
     private ArrayList<String> dietaryPref = new ArrayList<>();
     private ArrayList<String> foodPref = new ArrayList<>();
+    /**
+     * This is the constructor for a PrefList
+     */
     PrefList()
     {
         this.dietaryPref = new ArrayList<>();
         this.foodPref = new ArrayList<>();
     }
-
+    /**
+     * This is the setter function for the dietary preference
+     */
     public void setDietaryPref(ArrayList<String> list)
     {
         this.dietaryPref = list;
     }
+    /**
+     * This is the setter function for the food preference
+     */
     public void setFoodPref(ArrayList<String> list){this.foodPref = list;};
-
+    /**
+     * This is the getter function for the dietary preference
+     * @return
+     */
     public ArrayList<String> getDietaryPref()
     {
         return this.dietaryPref;
     }
+    /**
+     * This is the getter function for the food preference
+     * @return
+     */
     public ArrayList<String> getFoodPref() { return this.foodPref; }
 }
 

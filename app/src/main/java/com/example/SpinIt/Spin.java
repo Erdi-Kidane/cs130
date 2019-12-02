@@ -43,7 +43,7 @@ public class Spin implements Parcelable {
     private int counter = 0;
 
     /**************************************************/
-//This is all for Parcelable stuff
+    //This is all for Parcelable stuff
     @Override
     public int describeContents() {
         return 0;
@@ -83,7 +83,7 @@ public class Spin implements Parcelable {
     }
 
     /************************************************/
-    Spin(DataSnapshot snapshot) {
+    public Spin(DataSnapshot snapshot) {
         if (snapshot.child("latitude").exists())
             latitude = snapshot.child("latitude").getValue(double.class);
         if (snapshot.child("longitude").exists())
@@ -112,10 +112,7 @@ public class Spin implements Parcelable {
         currentUID = snapshot.child("currentUID").getValue(String.class);
 
     }
-
-    public Spin() {
-
-    }
+    public Spin() {}
 
     /**
      * <p>
@@ -134,9 +131,7 @@ public class Spin implements Parcelable {
         this.radius = 0;
         this.listOfPlaces = new ArrayList<Place>();
         this.groupOfPeople = null;
-        //this.setSpinBehavior("group");
         this.currentUID = currentUID;
-
     }
 
     /**
@@ -155,7 +150,6 @@ public class Spin implements Parcelable {
         this.radius = 0;
         this.listOfPlaces = new ArrayList<Place>();
         this.groupOfPeople = groupOfPeople;
-//        this.setSpinBehavior("room");
         this.currentUID = currentUID;
     }
 
@@ -171,14 +165,11 @@ public class Spin implements Parcelable {
         if (abs(latitude) < 90 && abs(longitude) < 180) {
             this.longitude = longitude;
             this.latitude = latitude;
-            //DatabaseReference RootRef = FirebaseDatabase.getInstance().getReference();
-            //RootRef.child("Users").child(this.currentUID).child("Spin").setValue(this);
             return true;
         } else {
             System.out.println("Longitude/Latitude is out of range");
             return false;
         }
-
     }
 
     /**
@@ -192,41 +183,7 @@ public class Spin implements Parcelable {
         }
         radius *= 1609.34;
         this.radius = radius;
-//        DatabaseReference RootRef = FirebaseDatabase.getInstance().getReference();
-//        RootRef.child("Users").child(this.currentUID).child("Spin").setValue(this);
-        //Max is 40000 meters
     }
-
-//    /**
-//     * This will ensure this has the correct spin behavior for either the single person or the room works
-//     * @param roomOrSingle "room" if you want the room implementation, "single" if you want the single implementation
-//     * @return True if the change of behavior works, False otherwise
-//     */
-//    public boolean setSpinBehavior(String roomOrSingle){
-//        boolean checker;
-//        if(roomOrSingle.equals("room")){
-//            this.spinBehavior = new RoomSpinBehavior();
-//            checker = true;
-//        }
-//        else if (roomOrSingle.equals("single")){
-//            this.spinBehavior = new SingleSpinBehavior();
-//            checker = true;
-//        }
-//        else{
-//            System.out.println("not a proper spin behavior");
-//            checker = false;
-//        }
-//        return checker;
-//    }
-
-//    /**
-//     * This will just do the spinFunc() based off the spin's behavior
-//     * @return True if the spinBehavior's function executed successfully, false otherwise
-//     */
-//    public boolean spinFunc(){
-//        return spinBehavior.spinFunc(this);
-//    }
-
     /**
      * <p>
      * This is the Yelp API call, where all of the data members come into play,
@@ -387,6 +344,11 @@ public class Spin implements Parcelable {
                 }
             }}, 1000);
     }
+
+    /**
+     * This will randomly pick the list of places after we have gotten through the yelp API call and give us either 8, 4, or 2 places based on how big our yelp response was
+     * @return an array list of 8, 4, or 2 places for the spinner
+     */
     public ArrayList<Place> getRandomPlaces() {
         Log.d("tag", "this is list of places.size " + listOfPlaces.size());
         ArrayList<Place> tempPlaceList = new ArrayList<>();
@@ -459,11 +421,7 @@ public class Spin implements Parcelable {
      * @return the current radius
      */
     public int getRadius(){return this.radius;}
-//    /**
-//     * getter for the current spin behavior
-//     * @return the current spin behavior
-//     */
-//    public SpinBehavior getSpinBehavior(){return this.spinBehavior;}
+
     /**
      * getter for the Person that owns the instance of the spinner
      * @return the instance of the spinner
@@ -480,55 +438,3 @@ public class Spin implements Parcelable {
     }
 }
 
-///**
-// * Interface for the strategy design pattern of the Spin Behavior
-// */
-//interface SpinBehavior{
-//    public boolean spinFunc(Spin spin);
-//}
-//
-//class SingleSpinBehavior implements SpinBehavior{
-//    /**
-//     * The spin func will be in charge of choosing the place and update the person's SpunPlaces
-//     * @param spin The spin class that belongs to the person that will get their SpunPlaces populated
-//     * @return True if it was able to add the person's sucessfully, false otherwise
-//     */
-//    public boolean spinFunc(Spin spin){
-//        //needs to be implemented
-//        //Randomly choose one of the places in the array for now and adds it into the person's class
-//        boolean checker;
-//        Random random = new Random();
-//        Place randomPlace = spin.getListOfPlaces().get(random.nextInt(spin.getListOfPlaces().size()));
-//        checker = spin.getPerson().getSpunPlaces().addPlace(randomPlace);
-//        if(!checker){
-//            System.out.println("Unable to Spin");
-//            return false;
-//        }
-//        return true;
-//    }
-//}
-//
-//
-//class RoomSpinBehavior implements SpinBehavior{
-//    /**
-//     * The spin func will be in charge of choosing the place and update the every person in the room's SpunPlaces
-//     * @param spin The spin class that belongs to a group of people that will get their SpunPlaces populated
-//     * @return True if it was able to add the person's sucessfully, false otherwise
-//     */
-//    public boolean spinFunc(Spin spin){
-//        //needs to be implemented
-//        boolean checker;
-//        Random random = new Random();
-//        Place randomPlace = spin.getListOfPlaces().get(random.nextInt(spin.getListOfPlaces().size()));
-//        int sizeOfRoom = spin.getGroupOfPeople().size();
-//        for(int i = 0; i < sizeOfRoom; i++)
-//        {
-//            checker = spin.getGroupOfPeople().get(i).getSpunPlaces().addPlace(randomPlace);
-//            if(!checker){
-//                System.out.println("Unable to Spin");
-//                return false;
-//            }
-//        }
-//        return true;
-//    }
-//}

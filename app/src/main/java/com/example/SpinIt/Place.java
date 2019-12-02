@@ -46,8 +46,14 @@ public class Place implements Parcelable{
     }
     /************************************************/
 
-
-
+    /**
+     * This is the main constructor that we use when we are parsing the yelp json output and populate a place
+     * @param longitude
+     * @param latitude
+     * @param url
+     * @param name
+     * @param address
+     */
     Place(double longitude, double latitude, String url, String name, String address)
     {
         this.longitude = longitude;
@@ -60,7 +66,6 @@ public class Place implements Parcelable{
     /**
      **
      * This is needed for checking equality of Places, which is automatically used
-     *
      * @param o This is the other object
      * @return true if the longitude, latitude AND URL are equivalent, otherwise it's false
      *
@@ -88,6 +93,14 @@ public class Place implements Parcelable{
      * @return URL for the yelp of the place
      */
     public String getURL(){ return this.url; }
+    /**
+     * getter for the name of the place
+     * @return name of the place
+     */
     public String getName(){return this.name;}
+    /**
+     * getter for the address of the place
+     * @return address of the place
+     */
     public String getAddress() {return this.address;}
 }
