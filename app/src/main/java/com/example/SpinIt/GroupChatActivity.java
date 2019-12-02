@@ -53,6 +53,7 @@ public class GroupChatActivity extends AppCompatActivity {
     private Person currentPerson;
     private Spin currentSpin;
 
+    private boolean winnerFlag = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,7 +101,8 @@ public class GroupChatActivity extends AppCompatActivity {
         });
         if(winningPlace != null){
             //populate
-            userMessageInput.setText("We spun this place:" + winningPlace.getName());
+            userMessageInput.setText("This place was spun:\n" + winningPlace.getName() + ".\n" + "Here is the address:\n" + winningPlace.getAddress() + ".\n" + "Here is the URL: " + "\n" + winningPlace.getURL());
+            winnerFlag = true;
             SaveMessageInfoToDatabase();
             userMessageInput.setText("");
         }
@@ -201,6 +203,10 @@ public class GroupChatActivity extends AppCompatActivity {
 
             GroupMessageKeyRef = GroupNameRef.child(messagekEY);
 
+            if(winnerFlag){
+                currentUserName = "Spinner";
+                winnerFlag = false;
+            }
             HashMap<String, Object> messageInfoMap = new HashMap<>();
             messageInfoMap.put("name", currentUserName);
             messageInfoMap.put("message", message);

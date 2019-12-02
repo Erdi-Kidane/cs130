@@ -61,6 +61,12 @@ public class MainPageActivity extends AppCompatActivity {
                 }
                 else{
                     //insert toast
+                    String valOfSelection = "Please set your preferences and set your location";
+                    Toast toast = Toast.makeText(MainPageActivity.this, " " + valOfSelection,2);
+                    //toast.setGravity(49, 0, 50);
+                    toast.show();
+
+
                     Log.d("tag", "The location + food preferences need to be set in preference");
                 }
             }
@@ -69,6 +75,7 @@ public class MainPageActivity extends AppCompatActivity {
             @Override
             public void onClick(View view)
             {
+
                 Intent registerIntent = new Intent(MainPageActivity.this, Profile.class);
                 registerIntent.putExtra("Person", currentPerson);
                 registerIntent.putExtra("Spin", currentSpin);
@@ -79,10 +86,19 @@ public class MainPageActivity extends AppCompatActivity {
             @Override
             public void onClick(View view)
             {
-                Intent registerIntent = new Intent(MainPageActivity.this, MainActivity.class);
-                registerIntent.putExtra("Person", currentPerson);
-                registerIntent.putExtra("Spin", currentSpin);
-                startActivity(registerIntent);
+                if(currentSpin.getListOfPlaces() != null && !currentSpin.getListOfPlaces().isEmpty()) {
+                    Intent registerIntent = new Intent(MainPageActivity.this, MainActivity.class);
+                    registerIntent.putExtra("Person", currentPerson);
+                    registerIntent.putExtra("Spin", currentSpin);
+                    startActivity(registerIntent);
+                }
+                else
+                {
+                    String valOfSelection = "Please set your preferences and set your location";
+                    Toast toast = Toast.makeText(MainPageActivity.this, " " + valOfSelection,2);
+                    //toast.setGravity(49, 0, 50);
+                    toast.show();
+                }
             }
         });
     }
