@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
+
                 if (dataSnapshot.exists())
                 {
                     currentUserName = dataSnapshot.child("name").getValue().toString();

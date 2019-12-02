@@ -19,6 +19,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+
 
 public class MainPageActivity extends AppCompatActivity {
     private ImageButton mSpinButton, mGroupButton, mPrefenceButton;
@@ -48,22 +50,38 @@ public class MainPageActivity extends AppCompatActivity {
 
         Log.d("tag", "before get() in MainPageActivity........");
 
-        //getPerson();
-        //getSpin();
+        getPerson();
+        getSpin();
         mSpinButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view)
             {
-                Intent registerIntent = new Intent(MainPageActivity.this, Spinner.class);
-                registerIntent.putExtra("groupName" ,"a" );
-                registerIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(registerIntent);
+                if(currentSpin.getListOfPlaces() != null && !currentSpin.getListOfPlaces().isEmpty()) {
+                    ArrayList<Place> tempPl = currentSpin.getRandomPlaces();
+                    Intent registerIntent = new Intent(MainPageActivity.this, Spinner.class);
+                    registerIntent.putExtra("groupName", "thisisaforbiddenchatnamedontuseitplease");
+                    registerIntent.putExtra("Person", currentPerson);
+                    registerIntent.putExtra("Spin", currentSpin);
+                    registerIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(registerIntent);
+                }
+                else{
+                    //insert toast
+                    String valOfSelection = "Please set your preferences and set your location";
+                    Toast toast = Toast.makeText(MainPageActivity.this, " " + valOfSelection,2);
+                    //toast.setGravity(49, 0, 50);
+                    toast.show();
+
+
+                    Log.d("tag", "The location + food preferences need to be set in preference");
+                }
             }
         });
         mPrefenceButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view)
             {
+
                 Intent registerIntent = new Intent(MainPageActivity.this, Profile.class);
                 registerIntent.putExtra("Person", currentPerson);
                 registerIntent.putExtra("Spin", currentSpin);
@@ -74,10 +92,19 @@ public class MainPageActivity extends AppCompatActivity {
             @Override
             public void onClick(View view)
             {
-                Intent registerIntent = new Intent(MainPageActivity.this, MainActivity.class);
-                registerIntent.putExtra("Person", currentPerson);
-                registerIntent.putExtra("Spin", currentSpin);
-                startActivity(registerIntent);
+                if(currentSpin.getListOfPlaces() != null && !currentSpin.getListOfPlaces().isEmpty()) {
+                    Intent registerIntent = new Intent(MainPageActivity.this, MainActivity.class);
+                    registerIntent.putExtra("Person", currentPerson);
+                    registerIntent.putExtra("Spin", currentSpin);
+                    startActivity(registerIntent);
+                }
+                else
+                {
+                    String valOfSelection = "Please set your preferences and set your location";
+                    Toast toast = Toast.makeText(MainPageActivity.this, " " + valOfSelection,2);
+                    //toast.setGravity(49, 0, 50);
+                    toast.show();
+                }
             }
         });
     }
@@ -100,7 +127,6 @@ public class MainPageActivity extends AppCompatActivity {
 
     private void VerifyUserExistance() {
         String currentUserID = mAuth.getCurrentUser().getUid();
-
         mRootRef.child("Users").child(currentUserID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
@@ -123,59 +149,59 @@ public class MainPageActivity extends AppCompatActivity {
 
     }
 
-//    /*****************for testing***************************************************************/
-//    private void getPerson(){
-//        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-//        final String currentUID = user.getUid();
-//        Log.d("tag", "Now in Get(), after current ID: " + currentUID );
-//
-//        DatabaseReference mPersonRef;
-//        mPersonRef = mRootRef.child("Users").child(currentUID).child("Person");
-//        ValueEventListener personListener = new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//
-//                if (dataSnapshot.getValue() != null){
-//                    currentPerson = new Person(dataSnapshot);
-//
-//                    Log.d("tag", "In get(), Person SUCCESSFULLY GET: " + currentPerson.getCurrentUID());
-//                }
-//                Log.d("tag", "In get(), after get the arrList ");
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                Log.w("tag", "loadPost:onCancelled", databaseError.toException());
-//
-//            }
-//        };
-//        mPersonRef.addValueEventListener(personListener);
-//    }
-//
-//    private void getSpin(){
-//        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-//        final String currentUID = user.getUid();
-//        Log.d("tag", "Now in Get(), after current ID: " + currentUID );
-//
-//        DatabaseReference mPersonRef;
-//        mPersonRef = mRootRef.child("Users").child(currentUID).child("Spin");
-//        ValueEventListener personListener = new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//
-//                if (dataSnapshot.getValue() != null){
-//                    currentSpin = new Spin(dataSnapshot);
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                Log.w("tag", "loadPost:onCancelled", databaseError.toException());
-//
-//            }
-//        };
-//        mPersonRef.addValueEventListener(personListener);
-//    }
+///*****************for testing***************************************************************/
+   private void getPerson(){
+       FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+       final String currentUID = user.getUid();
+       Log.d("tag", "Now in Get(), after current ID: " + currentUID );
+
+       DatabaseReference mPersonRef;
+       mPersonRef = mRootRef.child("Users").child(currentUID).child("Person");
+       ValueEventListener personListener = new ValueEventListener() {
+           @Override
+           public void onDataChange(DataSnapshot dataSnapshot) {
+
+               if (dataSnapshot.getValue() != null){
+                   currentPerson = new Person(dataSnapshot);
+
+                   Log.d("tag", "In get(), Person SUCCESSFULLY GET: " + currentPerson.getCurrentUID());
+               }
+               Log.d("tag", "In get(), after get the arrList ");
+           }
+
+           @Override
+           public void onCancelled(DatabaseError databaseError) {
+               Log.w("tag", "loadPost:onCancelled", databaseError.toException());
+
+           }
+       };
+       mPersonRef.addValueEventListener(personListener);
+   }
+
+   private void getSpin(){
+       FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+       final String currentUID = user.getUid();
+       Log.d("tag", "Now in Get(), after current ID: " + currentUID );
+
+       DatabaseReference mPersonRef;
+       mPersonRef = mRootRef.child("Users").child(currentUID).child("Spin");
+       ValueEventListener personListener = new ValueEventListener() {
+           @Override
+           public void onDataChange(DataSnapshot dataSnapshot) {
+
+               if (dataSnapshot.getValue() != null){
+                   currentSpin = new Spin(dataSnapshot);
+
+               }
+           }
+
+           @Override
+           public void onCancelled(DatabaseError databaseError) {
+               Log.w("tag", "loadPost:onCancelled", databaseError.toException());
+
+           }
+       };
+       mPersonRef.addValueEventListener(personListener);
+   }
     /*****************for testing****************************************************************/
 }

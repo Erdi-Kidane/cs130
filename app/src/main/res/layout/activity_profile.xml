@@ -26,6 +26,69 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+<!--<AutoCompleteTextView-->
+<!--    android:id="@+id/locationInput"-->
+<!--    android:layout_width="250dp"-->
+<!--    android:layout_height="250dp"-->
+<!--    app:layout_constraintStart_toStartOf="parent"-->
+<!--    app:layout_constraintTop_toTopOf="parent"-->
+<!--    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--    app:layout_constraintEnd_toEndOf="parent"-->
+<!--    android:background ="@drawable/buttons"-->
+<!--    android:imeOptions="actionDone"-->
+<!--    android:inputType="text"-->
+
+<!--    />-->
+        <LinearLayout
+            android:id="@+id/layoutInputAddress"
+            android:layout_width="200dp"
+            android:layout_height="70dp"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:background="#ffffff"
+            android:layout_marginTop="15dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            >
+
+
+            <EditText
+                android:id="@+id/editTextDialogUserInput"
+
+                android:inputType="number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#000000"
+
+                android:hint = "Max dist (miles)"
+
+
+
+
+                >
+
+
+                <requestFocus />
+            </EditText>
+
+            <Button
+                android:id="@+id/doneBTN"
+                android:layout_width="50dp"
+                android:layout_height="20dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+
+                android:layout_marginStart="130dp"
+                android:layout_marginTop="-15dp"
+                android:layout_marginEnd="7dp"
+
+                android:background="@drawable/buttons"
+                android:text="Done"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </LinearLayout>
 
         <Button
             android:id="@+id/foodTypeBtn"
@@ -88,6 +151,21 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/dietaryBtn" />
+        <Button
+            android:id="@+id/locationBTN"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="294dp"
+            android:background="@drawable/buttons"
+            android:text="Set Location"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="17.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/selectedDietary" />
+
+
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

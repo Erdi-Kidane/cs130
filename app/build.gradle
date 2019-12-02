@@ -52,6 +52,7 @@ dependencies {
 
     //for google signin
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
+    implementation files('json-20190722.jar')
 
 }
 apply plugin: 'com.google.gms.google-services'

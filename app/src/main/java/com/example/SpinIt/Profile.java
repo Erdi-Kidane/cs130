@@ -1,7 +1,12 @@
 package com.example.SpinIt;
 
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -12,34 +17,48 @@ import com.google.firebase.database.DatabaseReference;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 
+import android.provider.Settings;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import android.content.DialogInterface;
+import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
 public class Profile extends AppCompatActivity {
 
-    Button foodBtn;
+    Button foodBtn, doneBTN;
     TextView showSelectedFood;
     String[] listItems;
     boolean[] checkedItems;
     ArrayList<Integer> kUserItems = new ArrayList<>();
     ArrayList<String> foodListChosen = new ArrayList<>();
+    //*****
+    private EditText result;
+    LinearLayout linearLocation;
+    private static  final int REQUEST_LOCATION=1;
+    LocationManager locationManager;
+    String latitude,longitude;
+    //******
 
-
-    Button dietaryBtn;
-    TextView showSelectedDietary;
+    Button dietaryBtn, locationBTN;
+    TextView showSelectedDietary, addressMessage;
     String[] dietaryItems;
     boolean[] checkedDietaryItems;
     ArrayList<Integer> kUserItems2 = new ArrayList<>();
     ArrayList<String> dietaryListChosen = new ArrayList<>();
-
+    String radius;
     private Person currentPerson;
     private Spin currentSpin = null;
     @Override
@@ -48,7 +67,18 @@ public class Profile extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
 //        Toolbar toolbar = findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
+        //**************
+        doneBTN = (Button)findViewById(R.id.doneBTN);
+        linearLocation = (LinearLayout) findViewById(R.id.layoutInputAddress);
+      //  addressMessage = (TextView)findViewById(R.id.userAddressTV);
+        linearLocation.setVisibility(View.INVISIBLE);
+        result = (EditText)findViewById(R.id.editTextDialogUserInput);
+        locationBTN = (Button)findViewById(R.id.locationBTN);
+        ActivityCompat.requestPermissions(this,new String[]
+                {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
 
+
+        //**********
         foodBtn = (Button) findViewById(R.id.foodTypeBtn);
         showSelectedFood = (TextView) findViewById((R.id.selectedFood));
         showSelectedFood.setMovementMethod(new ScrollingMovementMethod());
@@ -59,15 +89,7 @@ public class Profile extends AppCompatActivity {
         currentPerson = (Person) mIntent.getParcelableExtra("Person");
         currentSpin = (Spin)mIntent.getParcelableExtra("Spin");
 
-        if(currentSpin != null)
-        {
-            Log.d("tag", "In get(), after get the arrList " + currentSpin.getLatitude());
-        }
-        if(currentSpin.getPerson() != null)
-        {
-            Log.d("tag", "In get(), after get the arrList " + currentSpin.getPerson().getCurrentUID());
-        }
-
+        Log.d("tag", "CurrentSpins person prefList "+ currentSpin.getPerson().getPrefList().getFoodPref().size());
         // UPDATE already added boxes
         ArrayList<String> tempFoodList = new ArrayList<>();
         if(currentPerson.getPrefList() != null && currentPerson.getPrefList().getFoodPref() != null) {
@@ -145,7 +167,8 @@ public class Profile extends AppCompatActivity {
                         showSelectedFood.setText(item);
                         PrefList tempPL = new PrefList();
                         tempPL.setFoodPref(tempList);
-                        tempPL.setDietaryPref(currentPerson.getPrefList().getDietaryPref());
+                        tempPL.setDietaryPref(currentSpin.getPerson().getPrefList().getDietaryPref());
+                        currentSpin.getPerson().updatePrefList(tempPL);
                         currentPerson.updatePrefList(tempPL);
                     }
                 });
@@ -161,7 +184,8 @@ public class Profile extends AppCompatActivity {
                             foodListChosen.clear();
                         }
                         PrefList empty = new PrefList();
-                        empty.setDietaryPref(currentPerson.getPrefList().getDietaryPref());
+                        empty.setDietaryPref(currentSpin.getPerson().getPrefList().getDietaryPref());
+                        currentSpin.getPerson().updatePrefList(empty);
                         currentPerson.updatePrefList(empty);
                     }
                 });
@@ -263,7 +287,8 @@ public class Profile extends AppCompatActivity {
                         showSelectedDietary.setText(item);
                         PrefList tempPL = new PrefList();
                         tempPL.setDietaryPref(tempList);
-                        tempPL.setFoodPref(currentPerson.getPrefList().getFoodPref());
+                        tempPL.setFoodPref(currentSpin.getPerson().getPrefList().getFoodPref());
+                        currentSpin.getPerson().updatePrefList(tempPL);
                         currentPerson.updatePrefList(tempPL);
                     }
                 });
@@ -279,7 +304,8 @@ public class Profile extends AppCompatActivity {
                             dietaryListChosen.clear();
                         }
                         PrefList empty = new PrefList();
-                        empty.setFoodPref(currentPerson.getPrefList().getFoodPref());
+                        empty.setFoodPref(currentSpin.getPerson().getPrefList().getFoodPref());
+                        currentSpin.getPerson().updatePrefList(empty);
                         currentPerson.updatePrefList(empty);
                     }
                 });
@@ -298,6 +324,109 @@ public class Profile extends AppCompatActivity {
         });
 
 
+        locationBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                linearLocation.setVisibility(View.VISIBLE);
+                //addressMessage.bringToFront();
+                linearLocation.bringToFront();
+
+                radius = result.getText().toString();
+                //
+                Log.d("tag", "raidus value: " + result.getText());
+            }
+        });
+        doneBTN.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                radius = result.getText().toString();
+                int convertedVal = Integer.parseInt(radius);
+                currentSpin.setRadius(convertedVal);
+                linearLocation.setVisibility(View.INVISIBLE);
+                Log.d("tag", "radius value in done BUTTON: " + radius);
+                locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+                if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
+                {
+                    OnGPS();
+                }
+                else
+                {
+                    getLocation();
+                }
+
+            }
+        });
+    }
+
+    private void getLocation(){
+        if (ActivityCompat.checkSelfPermission(Profile.this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(Profile.this,
+
+                Manifest.permission.ACCESS_COARSE_LOCATION) !=PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(this,new String[]
+                    {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
+        }
+        else
+        {
+           // Location LocationGPS = locationManager.get
+            Location LocationGps= locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            Location LocationNetwork=locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            Location LocationPassive=locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+
+            if(LocationGps != null)
+            {
+                double lat = LocationGps.getLatitude();
+                double longi = LocationGps.getLongitude();
+//                latitude = String.valueOf(lat);
+//                longitude = String.valueOf(longi);
+//                addressMessage.setText("Your lat = "+ latitude + "and your long = " + longitude);
+                currentSpin.setLocation(lat, longi);
+                currentSpin.setPlaces();
+                Log.d("tag", "printing out size of places: "+ currentSpin.getListOfPlaces().size());
+            }
+            else if(LocationNetwork != null)
+            {
+                double lat = LocationNetwork.getLatitude();
+                double longi = LocationNetwork.getLongitude();
+                currentSpin.setLocation(lat, longi);
+                currentSpin.setPlaces();
+                Log.d("tag", "printing out size of places: "+ currentSpin.getListOfPlaces().size());
+            }
+            else if(LocationPassive != null)
+            {
+                double lat = LocationPassive.getLatitude();
+                double longi = LocationPassive.getLongitude();
+                currentSpin.setLocation(lat, longi);
+                currentSpin.setPlaces();
+                Log.d("tag", "printing out size of places: "+ currentSpin.getListOfPlaces().size());
+
+            }
+            else
+            {
+                Toast.makeText(this, "Can't get your location", Toast.LENGTH_SHORT).show();
+            }
+
+
+        }
+
+
+    }
+    private void OnGPS(){
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Enable GPS").setCancelable(false).setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+            }
+        }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                dialog.cancel();
+            }
+        });
+        final AlertDialog alertDialog=builder.create();
+        alertDialog.show();
     }
 
 

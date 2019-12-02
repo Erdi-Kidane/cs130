@@ -21,7 +21,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public class Spinner extends AppCompatActivity implements Animation.AnimationListener {
     boolean blnButtonRotation = true;
@@ -31,7 +33,7 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
     LinearLayout linearFoodPlace1 , linearFoodPlace2, linearFoodPlace3;
     private double savedDegree;
     private String currentGroupName;
-    private String[] spinnerChoices = {"Bplate", "In and out", "What a burger", "Subway", "Something really really long", "six", "seven", "eight"};
+    private String[] spinnerChoices;
 
     ObjectAnimator boxes;
     Button b_start, b_increase, b_decrease,btn;
@@ -39,9 +41,15 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
     TextView popup;
     int childCount = 0;
     private Person currentPerson;
+    private Spin currentSpin = null;
+    ArrayList<Place> randPlaces;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Intent mIntent = getIntent();
+        currentPerson = (Person) mIntent.getParcelableExtra("Person");
+        currentSpin = (Spin)mIntent.getParcelableExtra("Spin");
+
         getWindow().addFlags(1024);
         requestWindowFeature(1);
         super.onCreate(savedInstanceState);
@@ -64,15 +72,33 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
         linearFoodPlace2 = (LinearLayout) findViewById(R.id.foodPlaceImage2);
         linearFoodPlace1 = (LinearLayout) findViewById(R.id.foodPlaceImage1);
         currentGroupName = getIntent().getExtras().get("groupName").toString();
+//**for debugging
+b_decrease.setVisibility(View.INVISIBLE);
+b_increase.setVisibility(View.INVISIBLE);
 
-        Intent mIntent = getIntent();
-        currentPerson = (Person) mIntent.getParcelableExtra("Person");
-
-
+        //TimeUnit.SECONDS.sleep(30);
+        randPlaces = currentSpin.getRandomPlaces();
+        spinnerChoices = new String[randPlaces.size()];
+        for(int i = 0; i < randPlaces.size() ; i++){
+            spinnerChoices[i] = randPlaces.get(i).getName();
+        }
         // Drawable d = Drawable.createFromPath()
 
         //linearFoodPlace.setBackgroundResource(R.drawable.foodplace1);
         //   imageRoulette.setImageDrawable(getResources().getDrawable(R.drawable.spin3));
+        switch(randPlaces.size())
+        {
+            case 2:
+                intNumber = 1;
+                break;
+            case 4:
+                intNumber = 2;
+                break;
+            case 8:
+                intNumber = 3;
+                break;
+        }
+        //intNumber = randPlaces.size();
         setImageRoulette(this.intNumber);
 
 /*
@@ -95,7 +121,7 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
     public void onClickButtonBack(View v)
     {
         Log.d("tag", "Before IF: the value of currentGroupName: " + currentGroupName);
-        if (currentGroupName.equals("a")){
+        if (currentGroupName.equals("thisisaforbiddenchatnamedontuseitplease")){
             Intent newIntent = new Intent(Spinner.this, MainPageActivity.class);
             //newIntent.putExtra("groupName" , currentGroupName);
             startActivity(newIntent);
@@ -154,9 +180,9 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
         }
         else if(wheelType == 3)
         {
-            if(degree >= 0 && degree <= 45)
+            if(degree >= 0 && degree <= 44)
                 return 6;
-            if(degree >= 46 && degree <= 90)
+            if(degree >= 45 && degree <= 90)
                 return 5;
             if(degree >= 91 && degree <= 135)
                 return 1;
@@ -166,9 +192,9 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
                 return 2;
             if(degree >=226 && degree <= 270)
                 return 8;
-            if(degree >= 271 && degree <= 315)
+            if(degree >= 271 && degree <= 316)
                 return 4;
-            if(degree >= 316 && degree <= 360)
+            if(degree >= 317 && degree <= 360)
                 return 3;
         }
         return 0;
@@ -213,6 +239,9 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
             public void run(){
                 Intent displayPopUp= new Intent(Spinner.this, Popup.class);
                 displayPopUp.putExtra("info", spinnerChoices[outputSelection(castDegreeToInt, intNumber) -1]);
+                displayPopUp.putExtra("winningPlace", randPlaces.get(outputSelection(castDegreeToInt, intNumber)-1));
+                displayPopUp.putExtra("spin", currentSpin);
+                displayPopUp.putExtra("currentGroup", currentGroupName);
                 startActivity(displayPopUp);
             }
         }, 1000);
@@ -237,21 +266,21 @@ public class Spinner extends AppCompatActivity implements Animation.AnimationLis
     }
     public void buttonPlus(View v)
     {
-//        if(this.intNumber != 3)
-//        {
-//            this.intNumber++;
-//            setImageRoulette(this.intNumber);
-//            b_decrease.setVisibility(View.VISIBLE);
-///*            SharedPreferences.Editor editor = this.sharedPreferences.edit();
-//           editor.putInt("INT_NUMBER", this.intNumber);
-//            editor.commit();*/
-//
-//        }
-//        if(this.intNumber == 3)
-//        {
-//            b_increase.setVisibility(View.INVISIBLE);
-//            //  b_decrease.setVisibility(View.VISIBLE);
-//        }
+        if(this.intNumber != 3)
+        {
+            this.intNumber++;
+            setImageRoulette(this.intNumber);
+            b_decrease.setVisibility(View.VISIBLE);
+/*            SharedPreferences.Editor editor = this.sharedPreferences.edit();
+           editor.putInt("INT_NUMBER", this.intNumber);
+            editor.commit();*/
+
+        }
+        if(this.intNumber == 3)
+        {
+            b_increase.setVisibility(View.INVISIBLE);
+            //  b_decrease.setVisibility(View.VISIBLE);
+        }
         if(currentPerson != null)
             Log.d("tag", "tests for person transfer " + currentPerson.getCurrentUID());
         else
