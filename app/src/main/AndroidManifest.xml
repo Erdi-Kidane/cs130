@@ -14,7 +14,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".AddFriendActivity"></activity>
-        <activity android:name=".AddFriend" />
         <activity
             android:name=".Spinner"
             android:label="@string/title_activity_spinner"
@@ -26,15 +25,12 @@
             android:name=".Profile"/>
 
 
-        <activity android:name=".GetAndPut" />
 
-
-        <activity android:name=".MainPageActivity" />
+        <activity android:name=".MainActivity" />
         <activity android:name=".GroupChatActivity" />
-        <activity android:name=".SettingsActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".LoginActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainPageActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

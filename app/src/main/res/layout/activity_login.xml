@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity">
+    tools:context=".LoginActivity"
+    android:background="@color/white"
+    >
 
     <ScrollView
         android:layout_width="match_parent"
@@ -57,7 +59,7 @@
 
                 android:padding="4dp"
                 android:drawableLeft="@drawable/password"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="30dp"
                 android:layout_marginLeft="27dp"
                 android:layout_marginRight="27dp"
                 />
@@ -68,9 +70,9 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/login_password"
                 android:padding="4dp"
-                android:layout_marginTop="14dp"
-                android:layout_marginLeft="29dp"
-                android:layout_marginRight="230dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginLeft="60dp"
+                android:layout_marginRight="60dp"
                 android:text="Login"
                 android:textAllCaps="false"
                 android:textSize="18sp"
@@ -82,15 +84,11 @@
                 android:id="@+id/ButtonGoogleSignIn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/login_password"
-                android:layout_marginLeft="230dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginRight="29dp"
-
-                android:background="@drawable/buttons"
-
-                android:padding="2dp"
-
+                android:layout_below="@+id/need_new_account_link"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="21dp"
+                android:layout_marginRight="50dp"
+                android:padding="4dp"
                 android:textAllCaps="false"
                 android:textSize="24sp"
                 />
@@ -100,34 +98,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/login_button"
+                android:layout_marginLeft="60dp"
+                android:layout_marginTop="21dp"
+                android:layout_marginRight="60dp"
+                android:background="@drawable/buttons"
                 android:padding="4dp"
-                android:layout_marginTop="14dp"
-                android:layout_marginLeft="29dp"
-                android:layout_marginRight="230dp"
                 android:text="New User"
                 android:textAllCaps="false"
-                android:textSize="18sp"
                 android:textColor="@android:color/background_dark"
-                android:background="@drawable/buttons"
-                />
-
-            <Button
-                android:id="@+id/ButtonGoogleSignOut"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/login_button"
-                android:padding="4dp"
-                android:layout_marginTop="14dp"
-                android:layout_marginLeft="230dp"
-                android:layout_marginRight="29dp"
-                android:text="Sign Out"
-                android:textAllCaps="false"
-                android:textSize="18sp"
-
-                android:textColor="@android:color/holo_blue_dark"
-
-                android:background="@drawable/buttons"
-                />
+                android:textSize="18sp" />
 
         </RelativeLayout>
 

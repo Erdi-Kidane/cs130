@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:title="Invite People"
+        android:title="Member"
         android:id = "@+id/main_invite_option"
         app:showAsAction= "never"
         >
@@ -14,7 +14,7 @@
         >
     </item>
     <item
-        android:title="Back to Room"
+        android:title="Back to Main Room"
         android:id = "@+id/back_option"
         app:showAsAction= "never"
         >
@@ -26,7 +26,7 @@
         >
     </item>
     <item
-        android:title="Quit from Group"
+        android:title="Quit from Room"
         android:id = "@+id/quit"
         app:showAsAction= "never"
         >

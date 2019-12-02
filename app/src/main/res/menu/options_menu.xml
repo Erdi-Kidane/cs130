@@ -26,7 +26,7 @@
         >
     </item>
     <item
-        android:title="BacktoMain"
+        android:title="Back to Main"
         android:id = "@+id/option1"
         app:showAsAction= "never"
         >

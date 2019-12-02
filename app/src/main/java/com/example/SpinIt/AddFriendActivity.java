@@ -5,21 +5,16 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,7 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
-import android.util.Log;
+
 
 
 
@@ -37,11 +32,9 @@ public class AddFriendActivity extends AppCompatActivity {
     private ViewPager myViewPager;
     private TabLayout myTabLayout;
     private NewAccessorAdapter myTabsAccessorAdapter;
-    private FirebaseUser currentuser;
     private FirebaseAuth mAuth;
     private DatabaseReference RootRef;
-    private Person newp;
-    private String testValue,currentGroupName;
+    private String currentGroupName;
     @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,10 +46,9 @@ public class AddFriendActivity extends AppCompatActivity {
         myViewPager.setAdapter(myTabsAccessorAdapter);
         myTabLayout =(TabLayout)findViewById(R.id.main_tabs);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle("AddFriend");
+        getSupportActionBar().setTitle("Friends");
         myTabLayout.setupWithViewPager(myViewPager);
         mAuth = FirebaseAuth.getInstance();
-        currentuser = mAuth.getCurrentUser();
         RootRef = FirebaseDatabase.getInstance().getReference();
         currentGroupName = getIntent().getExtras().get("groupName").toString();
     }
@@ -71,17 +63,23 @@ public class AddFriendActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         super.onOptionsItemSelected(item);
 
-        if (item.getItemId() == R.id.main_logout_option)
-        {
-            //updateUserStatus("offline");
-            mAuth.signOut();
-            SendUserToLoginActivity();
-        }
         if (item.getItemId() == R.id.back_to_room_option)
         {
-
             Intent loginIntent = new Intent(AddFriendActivity.this,GroupChatActivity.class);
             loginIntent.putExtra("groupName" , currentGroupName);
+            loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(loginIntent);
+            finish();
+        }
+        if (item.getItemId() == R.id.add)
+        {
+
+            Addfriend();
+        }
+        if (item.getItemId() == R.id.main_logout_option)
+        {
+            mAuth.signOut();
+            Intent loginIntent = new Intent(AddFriendActivity.this,LoginActivity.class);
             loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(loginIntent);
             finish();
@@ -91,13 +89,72 @@ public class AddFriendActivity extends AppCompatActivity {
         return true;
     }
 
-    private void SendUserToLoginActivity(){
-        Intent loginIntent = new Intent(AddFriendActivity.this,LoginActivity.class);
-        loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(loginIntent);
-        finish();
+    private void Addfriend()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(AddFriendActivity.this, R.style.AlertDialog);
+        builder.setTitle("Enter Friend's Name :");
+        final EditText friendName = new EditText(AddFriendActivity.this);
+        friendName.setHint("e.g BestBuddy");
+        builder.setView(friendName);
+        builder.setPositiveButton(" Add ", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i)
+            {
+                final String groupName = friendName.getText().toString();
+                if (TextUtils.isEmpty(groupName))
+                {
+                    Toast.makeText(AddFriendActivity.this, "Please write Friend Name...", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    DatabaseReference mdatabaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
+                    mdatabaseReference.orderByChild("name").equalTo(groupName).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if(dataSnapshot.exists()){
+                                for (DataSnapshot childSnapshot: dataSnapshot.getChildren()) {
+                                    String uid = childSnapshot.getKey();
+                                    CreateFriend(uid,groupName);
+                                    break;
+                                }
+                            }
+                            else{
+                                Toast.makeText(AddFriendActivity.this, "No such person!!!", Toast.LENGTH_SHORT).show();
+                            }
+
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) { 
+                        }
+                    });
+                }
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i)
+            {
+                dialogInterface.cancel();
+            }
+        });
+
+        builder.show();
     }
 
-
-
+    private void CreateFriend(final String memberName,final String m)
+    {
+        String currentUserID = mAuth.getCurrentUser().getUid();   
+        RootRef.child("Users").child(currentUserID).child("Friendlist").child(m).setValue(memberName)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task)
+                    {
+                        if (task.isSuccessful())
+                        {
+                            Toast.makeText(AddFriendActivity.this, m + " is adding successfully...", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
 }

@@ -39,14 +39,14 @@ import java.util.Iterator;
 public class GroupChatActivity extends AppCompatActivity {
 
     private Toolbar mToolbar;
-    private ImageButton SendMessageButton;
+    private ImageButton MessageButton;
     private Button SpinButton;
-    private EditText userMessageInput;
+    private EditText uMinput;
     private ScrollView mScrollView;
-    private TextView displayTextMessages;
+    private TextView TextMessage;
 
     private FirebaseAuth mAuth;
-    private DatabaseReference UsersRef, GroupNameRef, GroupMessageKeyRef, myRef;
+    private DatabaseReference UsersRef, GnRf, GmRF, myRef,newGnRf;
 
     private String currentGroupName, currentUserID, currentUserName, currentDate, currentTime;
     private Place winningPlace = null;
@@ -60,13 +60,38 @@ public class GroupChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_group_chat);
         SpinButton = (Button) findViewById(R.id.littleSpin);
         currentGroupName = getIntent().getExtras().get("groupName").toString();
-        //Toast.makeText(GroupChatActivity.this, currentGroupName, Toast.LENGTH_SHORT).show();
 
         mAuth = FirebaseAuth.getInstance();
         currentUserID = mAuth.getCurrentUser().getUid();
         UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         myRef = FirebaseDatabase.getInstance().getReference();
-        GroupNameRef = FirebaseDatabase.getInstance().getReference().child("Groups").child(currentGroupName).child("Message");
+
+        GnRf = FirebaseDatabase.getInstance().getReference().child("Groups").child(currentGroupName).child("Message");
+        newGnRf = FirebaseDatabase.getInstance().getReference().child("Groups").child(currentGroupName).child("Member");
+        Intent getPerson = getIntent();
+        currentPerson = getPerson.getParcelableExtra("Person");
+        mToolbar = (Toolbar) findViewById(R.id.group_chat_bar_layout);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setTitle(currentGroupName);
+        MessageButton = (ImageButton) findViewById(R.id.send_message_button);
+        uMinput = (EditText) findViewById(R.id.input_group_message);
+        TextMessage = (TextView) findViewById(R.id.group_chat_text_display);
+        mScrollView = (ScrollView) findViewById(R.id.my_scroll_view);
+        UsersRef.child(currentUserID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                if (dataSnapshot.exists())
+                {
+                    currentUserName = dataSnapshot.child("name").getValue().toString();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         winningPlace = getIntent().getParcelableExtra("winningPlace");
 
         getPerson();
@@ -74,15 +99,35 @@ public class GroupChatActivity extends AppCompatActivity {
 
         InitializeFields();
         GetUserInfo();
+        newGnRf.addValueEventListener(new ValueEventListener() {
 
-        SendMessageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                if (dataSnapshot.hasChild(currentUserID))
+                {
+
+                }
+                else{
+                    Intent loginIntent = new Intent(GroupChatActivity.this,MainActivity.class);
+                    loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(loginIntent);
+                    finish();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        MessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view)
             {
-                SaveMessageInfoToDatabase();
-
-                userMessageInput.setText("");
-
+                Indatabase();
+                uMinput.setText("");
                 mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
             }
         });
@@ -96,7 +141,6 @@ public class GroupChatActivity extends AppCompatActivity {
                 registerIntent.putExtra("Spin", currentSpin);
                 registerIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(registerIntent);
-
             }
         });
         if(winningPlace != null){
@@ -111,7 +155,7 @@ public class GroupChatActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        GroupNameRef.addChildEventListener(new ChildEventListener() {
+        GnRf.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s)
             {
@@ -148,71 +192,35 @@ public class GroupChatActivity extends AppCompatActivity {
 
     }
 
-    private void InitializeFields()
+    private void Indatabase()
     {
-        mToolbar = (Toolbar) findViewById(R.id.group_chat_bar_layout);
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle(currentGroupName);
-
-        SendMessageButton = (ImageButton) findViewById(R.id.send_message_button);
-        userMessageInput = (EditText) findViewById(R.id.input_group_message);
-        displayTextMessages = (TextView) findViewById(R.id.group_chat_text_display);
-        mScrollView = (ScrollView) findViewById(R.id.my_scroll_view);
-    }
-
-    private void GetUserInfo()
-    {
-        UsersRef.child(currentUserID).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot)
-            {
-                if (dataSnapshot.exists())
-                {
-                    currentUserName = dataSnapshot.child("name").getValue().toString();
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-    private void SaveMessageInfoToDatabase()
-    {
-        String message = userMessageInput.getText().toString();
-        String messagekEY = GroupNameRef.push().getKey();
+        String message = uMinput.getText().toString();
+        String messagekEY = GnRf.push().getKey();
 
         if (TextUtils.isEmpty(message))
         {
-            Toast.makeText(this, "Please write message first...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Text Can not be Empty!", Toast.LENGTH_SHORT).show();
         }
         else
         {
-            Calendar calForDate = Calendar.getInstance();
-            SimpleDateFormat currentDateFormat = new SimpleDateFormat("MMM dd, yyyy");
-            currentDate = currentDateFormat.format(calForDate.getTime());
-
-            Calendar calForTime = Calendar.getInstance();
-            SimpleDateFormat currentTimeFormat = new SimpleDateFormat("hh:mm a");
-            currentTime = currentTimeFormat.format(calForTime.getTime());
-
-
             HashMap<String, Object> groupMessageKey = new HashMap<>();
-            GroupNameRef.updateChildren(groupMessageKey);
 
-            GroupMessageKeyRef = GroupNameRef.child(messagekEY);
+            GnRf.updateChildren(groupMessageKey);
+            GmRF = GnRf.child(messagekEY);
+
+           
+
+        
 
             if(winnerFlag){
                 currentUserName = "Spinner";
                 winnerFlag = false;
             }
+
             HashMap<String, Object> messageInfoMap = new HashMap<>();
             messageInfoMap.put("name", currentUserName);
             messageInfoMap.put("message", message);
-            //messageInfoMap.put("date", currentDate);
-            //messageInfoMap.put("time", currentTime);
-            GroupMessageKeyRef.updateChildren(messageInfoMap);
+            GmRF.updateChildren(messageInfoMap);
         }
     }
     private void DisplayMessages(DataSnapshot dataSnapshot)
@@ -221,13 +229,9 @@ public class GroupChatActivity extends AppCompatActivity {
 
         while(iterator.hasNext())
         {
-           //String chatDate = (String) ((DataSnapshot)iterator.next()).getValue();
             String chatMessage = (String) ((DataSnapshot)iterator.next()).getValue();
             String chatName = (String) ((DataSnapshot)iterator.next()).getValue();
-            //String chatTime = (String) ((DataSnapshot)iterator.next()).getValue();
-
-            displayTextMessages.append(chatName + ":\n" + chatMessage + "\n\n\n");
-
+            TextMessage.append(chatName + ":\n" + chatMessage + "\n\n\n");
             mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
         }
     }
@@ -244,9 +248,11 @@ public class GroupChatActivity extends AppCompatActivity {
 
         if (item.getItemId() == R.id.main_logout_option)
         {
-            //updateUserStatus("offline");
             mAuth.signOut();
-            SendUserToLoginActivity();
+            Intent loginIntent = new Intent(GroupChatActivity.this,LoginActivity.class);
+            loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(loginIntent);
+            finish();
         }
         if (item.getItemId() == R.id.main_invite_option)
         {
@@ -259,30 +265,23 @@ public class GroupChatActivity extends AppCompatActivity {
         }
         if (item.getItemId() == R.id.back_option)
         {
-
             Intent loginIntent = new Intent(GroupChatActivity.this,MainActivity.class);
-            //loginIntent.putExtra("groupName" , currentGroupName);
             loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(loginIntent);
             finish();
         }
         if (item.getItemId() == R.id.make_public)
         {
-            //String currentUserID = mAuth.getCurrentUser().getUid();
             MakePublic();
         }
         if (item.getItemId() == R.id.quit)
         {
-            //String currentUserID = mAuth.getCurrentUser().getUid();
             DeleteUser();
             Intent loginIntent = new Intent(GroupChatActivity.this,MainActivity.class);
-            //loginIntent.putExtra("groupName" , currentGroupName);
             loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(loginIntent);
             finish();
         }
-
-
         return true;
     }
     private void DeleteUser(){
@@ -299,36 +298,9 @@ public class GroupChatActivity extends AppCompatActivity {
                     }
                 });
     }
-    private void SendUserToLoginActivity(){
-        Intent loginIntent = new Intent(GroupChatActivity.this,LoginActivity.class);
-        loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(loginIntent);
-        finish();
-    }
-    private void CreateNewGroup(final String memberName)
-    {
-        String currentUserID = mAuth.getCurrentUser().getUid();
-        //UsersRef.child("Groups").child(groupName).child("Host").setValue(currentUserID);
-        myRef.child("Groups").child(currentGroupName).child("Member").child(memberName).setValue("")
-        //UsersRef.child("Groups").child(groupName).child("Message").setValue("")
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task)
-                    {
-                        if (task.isSuccessful())
-                        {
-                            Toast.makeText(GroupChatActivity.this, memberName + " group is Created Successfully...", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-    }
-
     private void MakePublic()
     {
-        //String currentUserID = mAuth.getCurrentUser().getUid();
-        //UsersRef.child("Groups").child(groupName).child("Host").setValue(currentUserID);
         myRef.child("Groups").child(currentGroupName).child("Public").setValue("1")
-                //UsersRef.child("Groups").child(groupName).child("Message").setValue("")
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task)
@@ -341,65 +313,8 @@ public class GroupChatActivity extends AppCompatActivity {
                 });
     }
 
-    private void RequestNewGroup()
-    {
-        AlertDialog.Builder builder = new AlertDialog.Builder(GroupChatActivity.this, R.style.AlertDialog);
-        builder.setTitle("Enter Group member Name :");
+                                  
 
-        final EditText groupNameField = new EditText(GroupChatActivity.this);
-
-        groupNameField.setHint("e.g Kevin");
-        builder.setView(groupNameField);
-
-
-        builder.setPositiveButton("Intive", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i)
-            {
-                String groupName = groupNameField.getText().toString();
-                if (TextUtils.isEmpty(groupName))
-                {
-                    Toast.makeText(GroupChatActivity.this, "Please write Member Name...", Toast.LENGTH_SHORT).show();
-                }
-                else
-                {
-
-                    DatabaseReference mdatabaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
-                    mdatabaseReference.orderByChild("name").equalTo(groupName).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if(dataSnapshot.exists()){
-                                for (DataSnapshot childSnapshot: dataSnapshot.getChildren()) {
-                                    String uid = childSnapshot.getKey();
-                                    CreateNewGroup(uid);
-                                    break;
-                                }
-                            }
-                            else{
-                                Toast.makeText(GroupChatActivity.this, "Please Type the correct member name...", Toast.LENGTH_SHORT).show();
-                            }
-
-                        }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) { // ToDo: Do something for errors too
-                        }
-                    });
-                    //CreateNewGroup(groupName);
-
-                }
-            }
-        });
-
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i)
-            {
-                dialogInterface.cancel();
-            }
-        });
-
-        builder.show();
-    }
     /*****************for testing***************************************************************/
     private void getPerson(){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -456,4 +371,5 @@ public class GroupChatActivity extends AppCompatActivity {
         mPersonRef.addValueEventListener(personListener);
     }
     /*****************for testing****************************************************************/
+
 }
