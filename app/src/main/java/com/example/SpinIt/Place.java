@@ -48,7 +48,6 @@ public class Place implements Parcelable{
 
 
 
-
     Place(double longitude, double latitude, String url, String name, String address)
     {
         this.longitude = longitude;
@@ -89,4 +88,6 @@ public class Place implements Parcelable{
      * @return URL for the yelp of the place
      */
     public String getURL(){ return this.url; }
+    public String getName(){return this.name;}
+    public String getAddress() {return this.address;}
 }

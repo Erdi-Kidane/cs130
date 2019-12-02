@@ -13,11 +13,15 @@
         android:textColor="#FFF200"
         android:textSize="16sp"
         android:textStyle="bold"
-         />
+        android:autoLink="web"
+        />
 
     <Button
         android:id="@+id/yelpAccept"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Button" />
+        android:layout_width="250dp"
+        android:layout_height="100dp"
+        android:layout_marginLeft="15dp"
+        android:background="@drawable/buttons"
+        android:text="Accept"
+        />
 </LinearLayout>

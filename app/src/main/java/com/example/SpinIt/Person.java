@@ -18,8 +18,7 @@ public class Person implements Parcelable {
     //private Set<String> listOfFriends;
     private SpunPlaces spunPlaces = new SpunPlaces();
     private PrefList prefList = new PrefList();
-    private String currentUID;
-    private Spin currentSpin;
+    private String currentUID = new String();
 /**************************************************/
 //This is all for Parcelable stuff
 
@@ -51,7 +50,9 @@ public class Person implements Parcelable {
         in.readStringList(listOfStatus);
     }
 /************************************************/
+    Person(){
 
+    }
     Person(String currentUID){
         this.listOfStatus = new ArrayList<>();
         this.prefList = new PrefList();
@@ -84,8 +85,8 @@ public class Person implements Parcelable {
                     double lat = temp.child("latitude").getValue(double.class);
                     double longi = temp.child("longitude").getValue(double.class);
                     String url = temp.child("url").getValue(String.class);
-                    String name = temp.child("url").getValue(String.class);
-                    String location = temp.child("url").getValue(String.class);
+                    String name = temp.child("name").getValue(String.class);
+                    String location = temp.child("address").getValue(String.class);
                     //EXPANSION OF PLACE
                     Place tp = new Place(longi, lat, url, name, location);
                     tempCheck.add(tp);
@@ -96,8 +97,8 @@ public class Person implements Parcelable {
                     double lat = temp.child("latitude").getValue(double.class);
                     double longi = temp.child("longitude").getValue(double.class);
                     String url = temp.child("url").getValue(String.class);
-                    String name = temp.child("url").getValue(String.class);
-                    String location = temp.child("url").getValue(String.class);
+                    String name = temp.child("name").getValue(String.class);
+                    String location = temp.child("address").getValue(String.class);
                     //EXPANSION OF PLACE
                     Place tp = new Place(longi, lat, url, name, location);
                     tempSpun.add(tp);
@@ -133,6 +134,7 @@ public class Person implements Parcelable {
 
         this.currentUID = snapshot.child("currentUID").getValue(String.class);
     }
+
     /**
      * Updating a status add a new status onto a person's status, this the updated status will appear on a person's profile
      * @param status The status to be added onto profile
@@ -154,8 +156,15 @@ public class Person implements Parcelable {
         this.prefList = dietaryList;
         DatabaseReference RootRef = FirebaseDatabase.getInstance().getReference();
         RootRef.child("Users").child(this.currentUID).child("Person").setValue(this);
-        RootRef.child("Users").child(this.currentUID).child("Spin").child("Person").setValue(this);
+        RootRef.child("Users").child(this.currentUID).child("Spin").child("person").setValue(this);
         return true;
+    }
+    public void setSpunPlaces(SpunPlaces places)
+    {
+        this.spunPlaces = places;
+        DatabaseReference RootRef = FirebaseDatabase.getInstance().getReference();
+        RootRef.child("Users").child(this.currentUID).child("Person").setValue(this);
+        RootRef.child("Users").child(this.currentUID).child("Spin").child("person").setValue(this);
     }
 
     /**
