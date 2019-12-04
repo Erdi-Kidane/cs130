@@ -159,9 +159,9 @@
             android:layout_marginTop="20dp"
             android:layout_marginRight="294dp"
             android:background="@drawable/buttons"
-            android:text="Set Location"
+            android:text="Set Radius"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="17.0"
+            app:layout_constraintHorizontal_bias="11.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/selectedDietary" />
 

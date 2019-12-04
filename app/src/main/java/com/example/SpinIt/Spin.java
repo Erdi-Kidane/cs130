@@ -350,7 +350,6 @@ public class Spin implements Parcelable {
      * @return an array list of 8, 4, or 2 places for the spinner
      */
     public ArrayList<Place> getRandomPlaces() {
-        Log.d("tag", "this is list of places.size " + listOfPlaces.size());
         ArrayList<Place> tempPlaceList = new ArrayList<>();
         int bound;
         if (this.listOfPlaces.size() >= 8)

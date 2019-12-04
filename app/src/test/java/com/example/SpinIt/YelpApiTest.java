@@ -1,5 +1,7 @@
 package com.example.SpinIt;
 
+import android.os.Handler;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -10,8 +12,9 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class YelpApiTest {
+    Spin spin = null;
     @Test
-    public void testingYelpAPI(){
+    public void testingYelpAPI() throws InterruptedException {
 
         //First create an empty person then we can create a Spin for that person
         ArrayList<String> listOfStatus = new ArrayList<String>();
@@ -33,7 +36,7 @@ public class YelpApiTest {
 
         Person per1 = new Person("lol", pl, sp1, listOfStatus);
 
-        Spin spin = new Spin(per1, "lol");
+        spin = new Spin(per1, "lol");
 
         boolean checker;
         //This should fail because we haven't set a longitude and/or a latitude
@@ -48,7 +51,7 @@ public class YelpApiTest {
 
         ArrayList<Place> temp = spin.getListOfPlaces();
 
-        for(int i = 0; i < temp.size(); i++){
+        for(int i = 0; i < temp.size(); i++) {
             System.out.println("Values");
             System.out.println(temp.get(i).getURL());
             System.out.println(temp.get(i).getLatitude());
@@ -56,6 +59,12 @@ public class YelpApiTest {
             System.out.println(temp.get(i).getName());
             System.out.println(temp.get(i).getAddress());
         }
-    }
+//            new Handler().postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    assertEquals(false, spin.getRandomPlaces().isEmpty());
+//                }
+//            }, 1000);
 
+    }
 }
