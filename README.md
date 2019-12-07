@@ -34,4 +34,6 @@ To tun the application, you must go to the top right part of the window and it s
 * Places should display on a stack and a spinner, click Spin when you are ready. Once the Spin is complete, you may accept or just click out. If you do accept it will take you back to the dashboard to do other things.
 
 # Testing Files
-The directory that these files are under is: cs130/app/src/test/java/com/example/SpinIt/
+The directory that these files are under is:
+cs130/app/src/test/java/com/example/SpinIt/ for junit tests
+cs130/app/src/androidTest/java/com/example/SpinIt/ for an instrumented test
